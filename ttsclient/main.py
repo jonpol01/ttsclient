@@ -132,7 +132,7 @@ def start_cui(
 
         # 各種プロセス起動
         app_status = AppStatus.get_instance()
-        # # (1) VCServer 起動
+        # # (1) TTSServer 起動
         allow_origins = "*"
         tts_server = TTSServer.get_instance(host=host, port=port, https=https, allow_origins=allow_origins)
         tts_server_port = tts_server.start()
@@ -244,7 +244,7 @@ def start_cui(
             # if launch_client:
             #     clinet_launcher.stop()
 
-            # # (1) VCServer 終了処理
+            # # (1) TTSServer 終了処理
             print(f"{bold_green_start}tts client is terminating...{reset}")
             tts_server.stop()
             print(f"{bold_green_start}tts client is terminated.[{tts_server_port}]{reset}")
