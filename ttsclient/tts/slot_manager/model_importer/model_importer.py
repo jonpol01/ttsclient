@@ -26,6 +26,7 @@ def import_model(model_dir: Path, model_importer_param: ModelImportParamMember, 
             # generate config file
             assert model_importer_param.slot_index is not None
             slot_info = GPTSoVITSSlotInfo(
+                version=model_importer_param.version,
                 slot_index=model_importer_param.slot_index,
                 name=model_importer_param.name,
                 icon_file=Path(model_importer_param.icon_file.name) if model_importer_param.icon_file is not None else None,

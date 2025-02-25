@@ -36,6 +36,12 @@ TTSTypes: list[TTSType] = [
     "BROKEN",
 ]
 
+GPTSoVITSVersion: TypeAlias = Literal["v2", "v3"]
+GPTSoVITSVersions: list[GPTSoVITSVersion] = [
+    "v2",
+    "v3",
+]
+
 SemanticPredictorType: TypeAlias = Literal["GPTSemanticPredictor",]
 SemanticPredictorTypes: list[SemanticPredictorType] = [
     "GPTSemanticPredictor",

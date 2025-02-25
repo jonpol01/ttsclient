@@ -11,6 +11,7 @@ import {
     TTSType,
     ReferenceVoice,
     GenerateVoiceParam,
+    GPTSoVITSVersion,
 } from "tts-client-typescript-client-lib";
 import { UploadFile, VoiceCharacterUploadFile } from "../../const";
 
@@ -36,6 +37,7 @@ export type ServerConfigStateAndMethod = ServerConfigState & {
         tTSType: TTSType,
         files: UploadFile[],
         onprogress: (progress: number, end: boolean) => void,
+        gptSovitVersion?: GPTSoVITSVersion | null,
     ) => Promise<void>;
     updateServerSlotInfo: (slotInfo: SlotInfoMember) => Promise<void>;
     deleteServerSlotInfo: (slotIndex: number) => Promise<void>;
@@ -176,6 +178,7 @@ export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateA
         tTSType: TTSType,
         files: UploadFile[],
         onprogress: (progress: number, end: boolean) => void,
+        gptSovitVersion: GPTSoVITSVersion | null = null
     ) => {
         if (!restClient.current) {
             return;
@@ -183,7 +186,7 @@ export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateA
         if (tTSType === "GPT-SoVITS") {
             const semanticPredictorModelFile = files.find((f) => f.kind === "semanticPredictorModelFile")?.file || null;
             const synthesizerModelFile = files.find((f) => f.kind === "synthesizerModelFile")?.file || null;
-            await restClient.current.uploadGPTSoVITSModelFile(slotIndex, semanticPredictorModelFile, synthesizerModelFile, onprogress);
+            await restClient.current.uploadGPTSoVITSModelFile(slotIndex, gptSovitVersion!, semanticPredictorModelFile, synthesizerModelFile, onprogress);
         } else {
             throw new Error("Not supported voice changer type");
         }

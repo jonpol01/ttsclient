@@ -301,11 +301,27 @@ export const textInputAreaInput = style({});
 export const selectInputArea = style({
     display: "flex",
     flexDirection: "row",
+    gap: "10px",
     alignItems: "center",
     padding: "2px 0px 20px 0px",
 });
 export const selectInputAreaLabel = style({});
 export const selectInputAreaInput = style({});
+
+export const radioInputArea = style({
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    padding: "2px 0px 20px 0px",
+});
+export const radioInputAreaLabel = style({});
+export const radioInputAreaInput = style({});
+export const radioButton = style({
+    padding: "0px 10px 0px 10px",
+    gap: "5px",
+});
+
+
 export const uploadStatusArea = style({
     height: "1rem",
     textAlign: "center",
