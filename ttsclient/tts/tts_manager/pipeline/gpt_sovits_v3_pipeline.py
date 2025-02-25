@@ -19,10 +19,11 @@ from ttsclient.tts.tts_manager.utils.get_spec import get_spepc
 from ttsclient.tts.tts_manager.utils.text_cutter import cut1, cut2, cut3, cut4, cut5, merge_short_text_in_array, process_text, splits
 
 
-class GPTSoVITSPipeline(Pipeline):
+class GPTSoVITSV3Pipeline(Pipeline):
     def __init__(self, slot_info: SlotInfoMember):
         assert isinstance(slot_info, GPTSoVITSSlotInfo)
 
+        print("new instance v3")
         self.slot_info = slot_info
         self.slot_index = self.slot_info.slot_index
 

@@ -74,6 +74,21 @@ REGISTERD_MODULES: list[ModuleInfo] = [
         save_to=ModuleDir / Path("chinese-hubert-base/preprocessor_config.json"),
         hash="dcd684124d06722947939d41ea6ae58dbf10968c60a11a29f23ddc602c64a29b",
     ),
+    # bigvgan (v3)
+    ModuleInfo(
+        id="bigvgan_v2_24khz_100band_256x_bigvgan_generator_pt",
+        display_name="bigvgan_v2_24khz_100band_256x_bigvgan_generator_pt",
+        url="https://huggingface.co/lj1995/GPT-SoVITS/resolve/main/models--nvidia--bigvgan_v2_24khz_100band_256x/bigvgan_generator.pt",
+        save_to=ModuleDir / Path("bigvgan_v2_24khz_100band_256x/bigvgan_generator.pt"),
+        hash="6f9c5715550c9d0f11159ceb8935638da5aeb19e27d1e63677632df095e376f5",
+    ),
+    ModuleInfo(
+        id="bigvgan_v2_24khz_100band_256x_config.json",
+        display_name="bigvgan_v2_24khz_100band_256x_config_json",
+        url="https://huggingface.co/lj1995/GPT-SoVITS/resolve/main/models--nvidia--bigvgan_v2_24khz_100band_256x/config.json",
+        save_to=ModuleDir / Path("bigvgan_v2_24khz_100band_256x/config.json"),
+        hash="d77e2c96583ca2296ac112a56ec7cc6bd5da4bf7681ceff18448bedc4fcf6512",
+    ),
     # ---------------------- #
     # Intial Models
     # ---------------------- #
@@ -143,6 +158,8 @@ REQUIRED_MODULES = [
     "chinese-hubert-base_bin",
     "chinese-hubert-base_config",
     "chinese-hubert-base_preprocessor_config",
+    "bigvgan_v2_24khz_100band_256x_bigvgan_generator_pt",
+    "bigvgan_v2_24khz_100band_256x_config.json",
 ]
 INITIAL_MODELS = [
     "GPT-SoVITS_icon",
