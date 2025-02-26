@@ -5,6 +5,7 @@ from simple_performance_timer.Timer import Timer
 import librosa
 import numpy as np
 import torch
+import torchaudio
 from ttsclient.const import LOGGER_NAME, CutMethod, ModelDir
 from ttsclient.tts.configuration_manager.configuration_manager import ConfigurationManager
 from ttsclient.tts.data_types.slot_manager_data_types import GPTSoVITSSlotInfo, SlotInfoMember
@@ -18,12 +19,13 @@ from ttsclient.tts.tts_manager.synthesizer.synthesizer_manager import Synthesize
 from ttsclient.tts.tts_manager.utils.get_spec import get_spepc
 from ttsclient.tts.tts_manager.utils.text_cutter import cut1, cut2, cut3, cut4, cut5, merge_short_text_in_array, process_text, splits
 
+from ..models.synthesizer_v3.mel_processing import mel_spectrogram_torch
+
 
 class GPTSoVITSV3Pipeline(Pipeline):
     def __init__(self, slot_info: SlotInfoMember):
         assert isinstance(slot_info, GPTSoVITSSlotInfo)
 
-        print("new instance v3")
         self.slot_info = slot_info
         self.slot_index = self.slot_info.slot_index
 
@@ -33,6 +35,7 @@ class GPTSoVITSV3Pipeline(Pipeline):
 
         module_manager = ModuleManager.get_instance()
         if self.slot_info.semantic_predictor_model is None:
+            # TODO: デフォルトモデル
             logging.getLogger(LOGGER_NAME).info("use default sematic predictor")
             gpt_model = module_manager.get_module_filepath("gpt_model")
         else:
@@ -46,12 +49,13 @@ class GPTSoVITSV3Pipeline(Pipeline):
         )
 
         if self.slot_info.synthesizer_path is None:
+            # TODO: デフォルトモデル
             sovit_model = module_manager.get_module_filepath("sovits_model")
         else:
             sovit_model = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.synthesizer_path
             logging.getLogger(LOGGER_NAME).info(f"use custom sematic predictor {sovit_model}")
         self.vq_model = SynthesizerManager.get_synthesizer(
-            "SovitsSynthesizer",
+            "SovitsSynthesizerV3",
             sovit_model,
             self.gpu_device_id,
             self.slot_info.backend_mode == "all_onnx" or self.slot_info.backend_mode == "synthesizer_onnx",
@@ -75,6 +79,36 @@ class GPTSoVITSV3Pipeline(Pipeline):
         self.force_stop_flag = False
 
         self.reference_cache = {}  # type:ignore
+
+        mel_fn_args = {
+            "n_fft": 1024,
+            "win_size": 1024,
+            "hop_size": 256,
+            "num_mels": 100,
+            "sampling_rate": 24000,
+            "fmin": 0,
+            "fmax": None,
+            "center": False,
+        }
+        self.mel_fn = lambda x: mel_spectrogram_torch(x, **mel_fn_args)
+        self.resample_transform_dict = {}
+
+        # from ..models.BigVGAN import bigvgan
+
+        import sys
+
+        sys.path.append("ttsclient/tts/tts_manager/models/BigVGAN")
+        import bigvgan
+
+        bigvgan_dir = module_manager.get_module_filepath("bigvgan_v2_24khz_100band_256x_bigvgan_generator_pt").parent
+        self.bigvgan = bigvgan.BigVGAN.from_pretrained(bigvgan_dir, use_cuda_kernel=False)  # if True, RuntimeError: Ninja is required to load C++ extensions
+
+        self.bigvgan.remove_weight_norm()
+        self.bigvgan = self.bigvgan.eval()
+        if self.is_half == True:
+            self.bigvgan = self.bigvgan.half().to(self.device)
+        else:
+            self.bigvgan = self.bigvgan.to(self.device)
 
     def _validate_ref_text(self, prompt_text: str, prompt_language):
         prompt_text = prompt_text.strip("\n")
@@ -177,6 +211,21 @@ class GPTSoVITSV3Pipeline(Pipeline):
     def force_stop(self):
         self.force_stop_flag = True
 
+    def _resample(self, audio_tensor, sr0):
+        if sr0 not in self.resample_transform_dict:
+            self.resample_transform_dict[sr0] = torchaudio.transforms.Resample(sr0, 24000).to(self.device)
+        return self.resample_transform_dict[sr0](audio_tensor)
+
+    def _norm_spec(self, x):
+        spec_min = -12
+        spec_max = 2
+        return (x - spec_min) / (spec_max - spec_min) * 2 - 1
+
+    def _denorm_spec(self, x):
+        spec_min = -12
+        spec_max = 2
+        return (x + 1) / 2 * (spec_max - spec_min) + spec_min
+
     def run(
         self,
         ref_wav_path: str,
@@ -206,7 +255,7 @@ class GPTSoVITSV3Pipeline(Pipeline):
 
         # 参照音声とテキストの処理
         # version = os.environ.get("version", "v2")
-        version = "v2"
+        version = "v2"  # model_versionとversionの扱いが異なる。影響範囲を見極め切れていないのでとりあえずここはv2で固定。
         with Timer("generate reference content"):
             if ref_wav_path in self.reference_cache:
                 phones1, bert1, prompt = self.reference_cache[ref_wav_path]
@@ -239,7 +288,7 @@ class GPTSoVITSV3Pipeline(Pipeline):
                 # print("実際に入力された目標テキスト（文ごと）", text)
                 # print("フロントエンド処理後のテキスト（文ごと）:", norm_text2)
 
-                if not ref_free:
+                if not ref_free:  # v3はref_freeはサポートされていないが、この分岐は一応残しておく。
                     bert = torch.cat([bert1, bert2], 1)
                     all_phoneme_ids = torch.LongTensor(phones1 + phones2).to(self.device).unsqueeze(0)
                 else:
@@ -256,6 +305,7 @@ class GPTSoVITSV3Pipeline(Pipeline):
 
                 # ここからターゲットテキストのsematicを抽出
                 if i_text in self.cache and if_freeze is True:
+                    # TODO: このキャッシュはrefの情報がキーに含まれていない？だとすると、refが異なる時にキャッシュが使われると問題が発生する。確認が必要。
                     pred_semantic = self.cache[i_text]
                 else:
                     with torch.no_grad():
@@ -277,40 +327,58 @@ class GPTSoVITSV3Pipeline(Pipeline):
                 # 途中終了チェック（３）
                 if self.force_stop_flag is True:
                     break
+                refer = get_spepc(self.hps, ref_wav_path).to(self.torch_dtype).to(self.device)
 
-                if inp_refs:
-                    for path_str in inp_refs:
-                        try:
-                            path = Path(path_str)
-                            refer = get_spepc(self.hps, path.name).to(self.torch_dtype).to(self.device)
-                            refers.append(refer)
-                        except:
-                            traceback.print_exc()
-                if len(refers) == 0:
-                    # パフォーマンスを見るとtorchのほうが早い 62ms(torch) vs 265ms(onnx) (10回あたり)
-                    # with Timer("get soec torch"):
-                    #     for i in range(10):
-                    #         refers = [get_spepc(self.hps, ref_wav_path).to(self.torch_dtype).to(self.device)]
+                phoneme_ids0 = torch.LongTensor(phones1).to(self.device).unsqueeze(0)
+                phoneme_ids1 = torch.LongTensor(phones2).to(self.device).unsqueeze(0)
 
-                    # with Timer("get soec onnx"):
-                    #     for i in range(10):
-                    #         refers2 = [torch.Tensor(self.vq_model.get_spec(ref_wav_path)).to(self.torch_dtype).to(self.device)]
+                fea_ref, ge = self.vq_model.decode_encp(prompt.unsqueeze(0), phoneme_ids0, refer)
+                ref_audio, sr = torchaudio.load(ref_wav_path)
+                ref_audio = ref_audio.to(self.device).float()
 
-                    refers = [get_spepc(self.hps, ref_wav_path).to(self.torch_dtype).to(self.device)]
-                    # refers2 = [torch.Tensor(self.vq_model.get_spec(ref_wav_path)).to(self.torch_dtype).to(self.device)]
-                    # print(f"refers:{refers[0].shape}, refers2:{refers2[0].shape}")
-                    # print(f"refers:{refers[0][0, :10]}")
-                    # print(f"refers2:{refers2[0][0, :10]}")
+                if ref_audio.shape[0] == 2:
+                    ref_audio = ref_audio.mean(0).unsqueeze(0)
+                if sr != 24000:
+                    ref_audio = self._resample(ref_audio, sr)
 
-                phones2 = torch.LongTensor(phones2).to(self.device).unsqueeze(0)
+                mel2 = self.mel_fn(ref_audio)
+                mel2 = self._norm_spec(mel2)
+                T_min = min(mel2.shape[2], fea_ref.shape[2])
+                mel2 = mel2[:, :, :T_min]
+                fea_ref = fea_ref[:, :, :T_min]
+                if T_min > 468:
+                    mel2 = mel2[:, :, -468:]
+                    fea_ref = fea_ref[:, :, -468:]
+                    T_min = 468
+                chunk_len = 934 - T_min
 
-                audio = self.vq_model.decode(
-                    pred_semantic,
-                    phones2,
-                    refers,
-                    speed=speed,
-                    ref_wav_path=ref_wav_path,
-                )
+                mel2 = mel2.to(self.torch_dtype)
+                fea_todo, ge = self.vq_model.decode_encp(pred_semantic, phoneme_ids1, refer, ge)
+
+                cfm_resss = []
+                idx = 0
+
+                # TODO: sample_steps適当に決め打ち。
+                sample_steps = 8
+                while 1:
+                    fea_todo_chunk = fea_todo[:, :, idx : idx + chunk_len]
+                    if fea_todo_chunk.shape[-1] == 0:
+                        break
+                    idx += chunk_len
+                    fea = torch.cat([fea_ref, fea_todo_chunk], 2).transpose(2, 1)
+                    # set_seed(123)
+                    cfm_res = self.vq_model.cfm_inference(fea, torch.LongTensor([fea.size(1)]).to(fea.device), mel2, sample_steps, inference_cfg_rate=0)
+                    cfm_res = cfm_res[:, :, mel2.shape[2] :]
+                    mel2 = cfm_res[:, :, -T_min:]
+                    # print("fea", fea)
+                    # print("mel2in", mel2)
+                    fea_ref = fea_todo_chunk[:, :, -T_min:]
+                    cfm_resss.append(cfm_res)
+                cmf_res = torch.cat(cfm_resss, 2)
+                cmf_res = self._denorm_spec(cmf_res)
+                with torch.inference_mode():
+                    wav_gen = self.bigvgan(cmf_res)
+                    audio = wav_gen[0][0].cpu().detach().numpy()
 
                 max_audio = np.abs(audio).max()  # 简单防止16bit爆音
                 if max_audio > 1:
@@ -318,5 +386,6 @@ class GPTSoVITSV3Pipeline(Pipeline):
                 audio_opt.append(audio)
                 audio_opt.append(self.zero_wav)
 
-        # yield hps.data.sampling_rate, (np.concatenate(audio_opt, 0) * 32768).astype(np.int16)
-        return self.hps.data.sampling_rate, (np.concatenate(audio_opt, 0) * 32768).astype(np.int16)
+        sample_rate = 24000  # v3は固定
+
+        return sample_rate, (np.concatenate(audio_opt, 0) * 32768).astype(np.int16)

@@ -6,7 +6,7 @@ authors = ["wok <test@test.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10,<3.13"
+python = "^3.10,<3.11"
 fire = "0.6.0"
 pythonnet = "3.0.3"
 numpy = "1.26.4"
@@ -41,11 +41,14 @@ g2pw = "0.1.1"
 opencc = "1.1.9"
 pyjyutping = "1.0.0"
 simple-performance-timer = "0.1.3"
-torch = "2.3.1"
 onnx = "1.16.2"
 torchmetrics = "1.4.2"
-onnxsim = "0.4.36"
 onnxruntime ="1.19.2"
+onnxsim = "^0.4.36"
+onnxruntime-gpu = "1.19.2"
+torch = {version = "2.3.1", source = "torch_cuda12"}
+x-transformers = "^2.1.2"
+torchaudio = "2.3.1"
 
 
 [tool.poetry.group.dev.dependencies]
