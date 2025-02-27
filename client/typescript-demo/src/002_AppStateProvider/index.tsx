@@ -59,7 +59,7 @@ export const AppStateProvider = ({ children }: Props) => {
     const [inferenceLanguage, setInferenceLanguage] = useState<LanguageType>("all_ja");
     const [cutMethod, setCutMethod] = useState<CutMethod>("Slice by every punct")
     const [speed, setSpeed] = useState<number>(1.0)
-    const [sampleSteps, setSampleSteps] = useState<number>(8)
+    const [sampleSteps, setSampleSteps] = useState<number>(20)
 
     const [audioInput, setAudioInput] = useState<MediaStream | string>("default");
     const [audioOutput, setAudioOutput] = useState<string>("default");

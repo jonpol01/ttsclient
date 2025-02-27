@@ -109,8 +109,15 @@ REGISTERD_MODULES: list[ModuleInfo] = [
     ModuleInfo(
         id="GPT-SoVITS_icon",
         display_name="GPT-SoVITS_icon",
-        url="https://huggingface.co/wok000/gpt-sovits-models/resolve/main/pretrained/pretrained.png",
-        save_to=UPLOAD_DIR / Path("pretrained.png"),
+        url="https://huggingface.co/wok000/gpt-sovits-models/resolve/main/pretrained/gpt_sovits_pretrain_v2.png",
+        save_to=UPLOAD_DIR / Path("gpt_sovits_pretrain_v2.png"),
+        hash="af664eb8a206e62313b0b9a5880c73d4d266ec61f2ebde5753ee4a391371bee0",
+    ),
+    ModuleInfo(
+        id="GPT-SoVITS_icon_v3",
+        display_name="GPT-SoVITS_icon_v3",
+        url="https://huggingface.co/wok000/gpt-sovits-models/resolve/main/pretrained/gpt_sovits_pretrain_v3.png",
+        save_to=UPLOAD_DIR / Path("gpt_sovits_pretrain_v3.png"),
         hash="af664eb8a206e62313b0b9a5880c73d4d266ec61f2ebde5753ee4a391371bee0",
     ),
     ModuleInfo(
@@ -179,6 +186,7 @@ REQUIRED_MODULES = [
 ]
 INITIAL_MODELS = [
     "GPT-SoVITS_icon",
+    "GPT-SoVITS_icon_v3",
     "GPT-SoVITS_FT_JVNV_semantice",
     "GPT-SoVITS_FT_JVNV_synthesizer",
     "GPT-SoVITS_FT_JVNV_icon",

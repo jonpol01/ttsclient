@@ -6,7 +6,6 @@ import { CutMethod, LanguageType, GenerateVoiceParam, GPTSoVITSSlotInfo, GPTSoVI
 import { useAppState } from "../../002_AppStateProvider";
 import { useAppRoot } from "../../001_AppRootProvider";
 import { AUDIO_ELEMENT_FOR_PLAY_MONITOR, AUDIO_ELEMENT_FOR_PLAY_RESULT } from "../../const";
-import { use } from "i18next";
 import { BasicButton } from "../../styles/style-components/buttons/01_basic-button.css"
 import { BasicInput } from "../../styles/style-components/inputs/01_basic-input.css";
 import { normalButtonThema } from "../../styles/style-components/buttons/thema/button-thema.css";
@@ -17,7 +16,7 @@ import { SectionHeader } from "../../styles/style-components/labels/02_section-h
 export const TextInputArea = () => {
     const { t } = useTranslation();
     const { triggerToast, serverConfigState } = useAppRoot();
-    const { inferenceLanguage, setInferenceLanguage: setInferenceLanguage, speed, setSpeed, cutMethod, setCutMethod, curretVoiceCharacterSlotIndex, currentReferenceVoiceIndexes, audioOutput, audioMonitor, generatedVoice, setGeneratedVoice, elapsedTime, setElapsedTime, sampleSteps, steSampleSteps } = useAppState();
+    const { inferenceLanguage, setInferenceLanguage: setInferenceLanguage, speed, setSpeed, cutMethod, setCutMethod, curretVoiceCharacterSlotIndex, currentReferenceVoiceIndexes, audioOutput, audioMonitor, generatedVoice, setGeneratedVoice, elapsedTime, setElapsedTime, sampleSteps, setSampleSteps } = useAppState();
 
     const { setDialog2Name, setDialog2Props } = useGuiState()
     useEffect(() => {
@@ -329,20 +328,20 @@ export const TextInputArea = () => {
 
         let sampleStepsInput = <></>
         if (gptSovitsVersion == "v3") {
+            const sampleStepsOptions = Array(100).fill(0).map((x, i) => { return (<option key={i + 1} value={i + 1}>{i + 1}</option>) })
+
             sampleStepsInput = (
                 <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
                     <div>{t("text_input_area_sample_steps_label")}</div>
-                    <input
-                        type="number"
-                        id="inference-voice-area-sample-steps-input"
+                    <select
                         defaultValue={sampleSteps}
-                        max="100"
-                        min="1"
+                        id="inference-voice-area-sample-steps-select"
                         onChange={(e) => {
-                            steSampleSteps(parseInt(e.target.value))
+                            setSampleSteps(parseInt(e.target.value))
                         }}
-                        className={BasicInput()}
-                    />
+                    >
+                        {sampleStepsOptions}
+                    </select >
                 </div>
             )
         }

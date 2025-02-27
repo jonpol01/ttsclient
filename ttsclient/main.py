@@ -62,11 +62,21 @@ def download_initial_models() -> None:
     module_manager.download_initial_models(download_callback)
 
     # プレトレインの設定
-    gpt_sovits_icon = module_manager.get_module_filepath("GPT-SoVITS_icon")
+    gpt_sovits_icon_v3 = module_manager.get_module_filepath("GPT-SoVITS_icon_v3")
     model_import_param = GPTSoVITSModelImportParam(
         version="v3",
         tts_type="GPT-SoVITS",
         name="pretrained_v3",
+        terms_of_use_url="https://huggingface.co/wok000/gpt-sovits-models/raw/main/pretrained/term_of_use.txt",
+        icon_file=gpt_sovits_icon_v3,
+    )
+    slot_manager.set_new_slot(model_import_param, remove_src=True)
+
+    gpt_sovits_icon = module_manager.get_module_filepath("GPT-SoVITS_icon")
+    model_import_param = GPTSoVITSModelImportParam(
+        version="v2",
+        tts_type="GPT-SoVITS",
+        name="pretrained_v2(deprecated)",
         terms_of_use_url="https://huggingface.co/wok000/gpt-sovits-models/raw/main/pretrained/term_of_use.txt",
         icon_file=gpt_sovits_icon,
     )
