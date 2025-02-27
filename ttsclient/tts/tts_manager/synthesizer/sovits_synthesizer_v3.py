@@ -23,7 +23,7 @@ from simple_performance_timer.Timer import Timer
 
 class SovitsSynthesizerV3(Synthesizer):
     def __init__(self, model_path: Path, device_id: int, use_onnx: bool, del_enc: bool = True):
-        print("load new syntehtizer: SovitsSynthesizer")
+        print("load new syntehtizer: SovitsSynthesizerV3")
         self.device = DeviceManager.get_instance().get_pytorch_device(device_id)
         self.is_half = DeviceManager.get_instance().half_precision_available(device_id)
         self.model_path = model_path

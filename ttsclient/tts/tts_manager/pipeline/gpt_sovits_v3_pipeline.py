@@ -35,9 +35,8 @@ class GPTSoVITSV3Pipeline(Pipeline):
 
         module_manager = ModuleManager.get_instance()
         if self.slot_info.semantic_predictor_model is None:
-            # TODO: デフォルトモデル
             logging.getLogger(LOGGER_NAME).info("use default sematic predictor")
-            gpt_model = module_manager.get_module_filepath("gpt_model")
+            gpt_model = module_manager.get_module_filepath("gpt_model_v3")
         else:
             gpt_model = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.semantic_predictor_model
             logging.getLogger(LOGGER_NAME).info(f"use custom sematic predictor {gpt_model}")
@@ -49,8 +48,7 @@ class GPTSoVITSV3Pipeline(Pipeline):
         )
 
         if self.slot_info.synthesizer_path is None:
-            # TODO: デフォルトモデル
-            sovit_model = module_manager.get_module_filepath("sovits_model")
+            sovit_model = module_manager.get_module_filepath("sovits_model_v3")
         else:
             sovit_model = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.synthesizer_path
             logging.getLogger(LOGGER_NAME).info(f"use custom sematic predictor {sovit_model}")
@@ -306,6 +304,7 @@ class GPTSoVITSV3Pipeline(Pipeline):
                 # ここからターゲットテキストのsematicを抽出
                 if i_text in self.cache and if_freeze is True:
                     # TODO: このキャッシュはrefの情報がキーに含まれていない？だとすると、refが異なる時にキャッシュが使われると問題が発生する。確認が必要。
+                    # ↑ if_freezeが常にFalseなので、この分岐は実質使われない。
                     pred_semantic = self.cache[i_text]
                 else:
                     with torch.no_grad():
@@ -358,7 +357,7 @@ class GPTSoVITSV3Pipeline(Pipeline):
                 cfm_resss = []
                 idx = 0
 
-                # TODO: sample_steps適当に決め打ち。
+                # TODO: sample_steps決め打ち。
                 sample_steps = 8
                 while 1:
                     fea_todo_chunk = fea_todo[:, :, idx : idx + chunk_len]

@@ -27,6 +27,20 @@ REGISTERD_MODULES: list[ModuleInfo] = [
         save_to=ModuleDir / Path("s2G2333k.pth"),
         hash="924fdccaa3c574bf139c25c9759aa1ed3b3f99e19a7c529ee996c2bc17663695",
     ),
+    ModuleInfo(
+        id="gpt_model_v3",
+        display_name="gpt_model_v3",
+        url="https://huggingface.co/lj1995/GPT-SoVITS/resolve/main/s1v3.ckpt",
+        save_to=ModuleDir / Path("s1v3.ckpt"),
+        hash="87133414860ea14ff6620c483a3db5ed07b44be42e2c3fcdad65523a729a745a",
+    ),
+    ModuleInfo(
+        id="sovits_model_v3",
+        display_name="sovits_model_v3",
+        url="https://huggingface.co/lj1995/GPT-SoVITS/resolve/main/s2Gv3.pth",
+        save_to=ModuleDir / Path("s2Gv3.pth"),
+        hash="f33abb1920076d988e1711d5f41b5c9c6d7f92575b4acf0ad4fae6a4ebf0cf19",
+    ),
     # // chinese-roberta-wwm-ext-large // #
     ModuleInfo(
         id="chinese-roberta-wwm-ext-large_bin",
@@ -152,6 +166,8 @@ REGISTERD_MODULES: list[ModuleInfo] = [
 REQUIRED_MODULES = [
     "gpt_model",
     "sovits_model",
+    "gpt_model_v3",
+    "sovits_model_v3",
     "chinese-roberta-wwm-ext-large_bin",
     "chinese-roberta-wwm-ext-large_config",
     "chinese-roberta-wwm-ext-large_tokenizer",

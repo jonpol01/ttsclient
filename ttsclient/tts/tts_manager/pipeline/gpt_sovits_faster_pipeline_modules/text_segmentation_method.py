@@ -132,7 +132,7 @@ def cut2(inp):
     if tmp_str != "":
         opts.append(tmp_str)
     # print(opts)
-    if len(opts) > 1 and len(opts[-1]) < 50:  # #如果最后一个太短了，和前一个合一起
+    if len(opts) > 1 and len(opts[-1]) < 50:  ##如果最后一个太短了，和前一个合一起
         opts[-2] = opts[-2] + opts[-1]
         opts = opts[:-1]
     opts = [item for item in opts if not set(item).issubset(punctuation)]
@@ -152,7 +152,7 @@ def cut3(inp):
 @register_method("cut4")
 def cut4(inp):
     inp = inp.strip("\n")
-    opts = ["%s" % item for item in inp.strip(".").split(".")]
+    opts = re.split(r"(?<!\d)\.(?!\d)", inp.strip("."))
     opts = [item for item in opts if not set(item).issubset(punctuation)]
     return "\n".join(opts)
 

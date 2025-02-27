@@ -64,8 +64,9 @@ def download_initial_models() -> None:
     # プレトレインの設定
     gpt_sovits_icon = module_manager.get_module_filepath("GPT-SoVITS_icon")
     model_import_param = GPTSoVITSModelImportParam(
+        version="v3",
         tts_type="GPT-SoVITS",
-        name="pretrained",
+        name="pretrained_v3",
         terms_of_use_url="https://huggingface.co/wok000/gpt-sovits-models/raw/main/pretrained/term_of_use.txt",
         icon_file=gpt_sovits_icon,
     )
