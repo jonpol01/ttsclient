@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import React from "react";
 import { textInputArea } from "../../styles/textInputArea.css";
 import { useTranslation } from "react-i18next";
-import { CutMethod, LanguageType, GenerateVoiceParam, GPTSoVITSSlotInfo } from "tts-client-typescript-client-lib";
+import { CutMethod, LanguageType, GenerateVoiceParam, GPTSoVITSSlotInfo, GPTSoVITSVersion } from "tts-client-typescript-client-lib";
 import { useAppState } from "../../002_AppStateProvider";
 import { useAppRoot } from "../../001_AppRootProvider";
 import { AUDIO_ELEMENT_FOR_PLAY_MONITOR, AUDIO_ELEMENT_FOR_PLAY_RESULT } from "../../const";
@@ -17,7 +17,7 @@ import { SectionHeader } from "../../styles/style-components/labels/02_section-h
 export const TextInputArea = () => {
     const { t } = useTranslation();
     const { triggerToast, serverConfigState } = useAppRoot();
-    const { inferenceLanguage, setInferenceLanguage: setInferenceLanguage, speed, setSpeed, cutMethod, setCutMethod, curretVoiceCharacterSlotIndex, currentReferenceVoiceIndexes, audioOutput, audioMonitor, generatedVoice, setGeneratedVoice, elapsedTime, setElapsedTime } = useAppState();
+    const { inferenceLanguage, setInferenceLanguage: setInferenceLanguage, speed, setSpeed, cutMethod, setCutMethod, curretVoiceCharacterSlotIndex, currentReferenceVoiceIndexes, audioOutput, audioMonitor, generatedVoice, setGeneratedVoice, elapsedTime, setElapsedTime, sampleSteps, steSampleSteps } = useAppState();
 
     const { setDialog2Name, setDialog2Props } = useGuiState()
     useEffect(() => {
@@ -86,18 +86,20 @@ export const TextInputArea = () => {
         let topP = 1.0
         let temperature = 1.0
         let batchSize = 20
+        let gptSovitsVersion: GPTSoVITSVersion | null = null
         if (slotInfo.tts_type == "GPT-SoVITS") {
-            const gptSovitsSlotImnfo = slotInfo as GPTSoVITSSlotInfo
-            topK = gptSovitsSlotImnfo.top_k
-            topP = gptSovitsSlotImnfo.top_p
-            temperature = gptSovitsSlotImnfo.temperature
-            batchSize = gptSovitsSlotImnfo.batch_size
+            const gptSovitsSlotInfo = slotInfo as GPTSoVITSSlotInfo
+            topK = gptSovitsSlotInfo.top_k
+            topP = gptSovitsSlotInfo.top_p
+            temperature = gptSovitsSlotInfo.temperature
+            batchSize = gptSovitsSlotInfo.batch_size
+            gptSovitsVersion = gptSovitsSlotInfo.version
         }
 
         const languageSelect = (
             <select
                 defaultValue={inferenceLanguage}
-                id="reference-voice-area-language-select"
+                id="inference-voice-area-language-select"
                 onChange={(e) => {
                     setInferenceLanguage(e.target.value as LanguageType);
                 }}
@@ -115,7 +117,7 @@ export const TextInputArea = () => {
         const speedInput = (
             <input
                 type="number"
-                id="reference-voice-area-speed-input"
+                id="inference-voice-area-speed-input"
                 defaultValue={speed}
                 step="0.05"
                 min="0.6"
@@ -129,7 +131,7 @@ export const TextInputArea = () => {
         const cutMethodSelect = (
             <select
                 defaultValue={cutMethod}
-                id="reference-voice-area-cut-method-select"
+                id="inference-voice-area-cut-method-select"
                 onChange={(e) => {
                     setCutMethod(e.target.value as CutMethod);
                 }}
@@ -166,6 +168,7 @@ export const TextInputArea = () => {
                 language: inferenceLanguage,
                 speed: speed,
                 cutMethod: cutMethod,
+                sample_steps: sampleSteps
             }
             try {
                 const blob = await serverConfigState.generateVoice(param)
@@ -196,7 +199,7 @@ export const TextInputArea = () => {
         const topKSelect = (
             <select
                 defaultValue={topK}
-                id="reference-voice-area-top-k-select"
+                id="inference-voice-area-top-k-select"
                 onChange={(e) => {
                     if (!serverConfigState.serverConfiguration) return
                     if (!serverConfigState.serverSlotInfos) return
@@ -217,7 +220,7 @@ export const TextInputArea = () => {
         const topPSelect = (
             <select
                 defaultValue={topP}
-                id="reference-voice-area-top-p-select"
+                id="inference-voice-area-top-p-select"
                 onChange={(e) => {
                     if (!serverConfigState.serverConfiguration) return
                     if (!serverConfigState.serverSlotInfos) return
@@ -238,7 +241,7 @@ export const TextInputArea = () => {
         const temperatureSelect = (
             <select
                 defaultValue={temperature}
-                id="reference-voice-area-temperature-select"
+                id="inference-voice-area-temperature-select"
                 onChange={(e) => {
                     if (!serverConfigState.serverConfiguration) return
                     if (!serverConfigState.serverSlotInfos) return
@@ -274,7 +277,7 @@ export const TextInputArea = () => {
         const batchSizeSelector = (
             <select
                 defaultValue={batchSize}
-                id="reference-voice-area-batch-size-select"
+                id="inference-voice-area-batch-size-select"
                 onChange={(e) => {
                     if (!serverConfigState.serverConfiguration) return
                     if (!serverConfigState.serverSlotInfos) return
@@ -292,6 +295,57 @@ export const TextInputArea = () => {
 
         )
 
+        let speedSelect = <></>
+        if (gptSovitsVersion == "v2") {
+            speedSelect = (
+                <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
+                    <div>{t("text_input_area_speed_label")}</div>
+                    <div>
+                        {speedInput}
+                    </div>
+                </div>
+
+            )
+        }
+
+        let fastControl = <></>
+        if (gptSovitsVersion == "v2") {
+            fastControl = (
+                <div style={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
+                    <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
+                        {useFasterCheckBox}
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
+                        <div>{t("text_input_area_batch_size_label")}</div>
+                        <div>
+                            {batchSizeSelector}
+                        </div>
+                    </div>
+
+
+                </div>
+            )
+        }
+
+        let sampleStepsInput = <></>
+        if (gptSovitsVersion == "v3") {
+            sampleStepsInput = (
+                <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
+                    <div>{t("text_input_area_sample_steps_label")}</div>
+                    <input
+                        type="number"
+                        id="inference-voice-area-sample-steps-input"
+                        defaultValue={sampleSteps}
+                        max="100"
+                        min="1"
+                        onChange={(e) => {
+                            steSampleSteps(parseInt(e.target.value))
+                        }}
+                        className={BasicInput()}
+                    />
+                </div>
+            )
+        }
 
         return (
             <div className={textInputArea}>
@@ -305,12 +359,8 @@ export const TextInputArea = () => {
                             {languageSelect}
                         </div>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
-                        <div>{t("text_input_area_speed_label")}</div>
-                        <div>
-                            {speedInput}
-                        </div>
-                    </div>
+                    {speedSelect}
+
                     <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
                         <div>{t("text_input_area_cut_method_label")}</div>
                         <div>
@@ -347,20 +397,7 @@ export const TextInputArea = () => {
                     <div style={{ display: "flex", flexDirection: "column" }}>
                         <div className={BasicLabel({ width: "x-large" })}>{t("text_input_area_model_setting_label")}</div>
 
-                        <div style={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
-                            <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
-                                {useFasterCheckBox}
-                            </div>
-                            <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
-                                <div>{t("text_input_area_batch_size_label")}</div>
-                                <div>
-                                    {batchSizeSelector}
-                                </div>
-                            </div>
-
-
-                        </div>
-
+                        {fastControl}
 
                         <div style={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
                             <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
@@ -382,6 +419,7 @@ export const TextInputArea = () => {
                                 </div>
                             </div>
                         </div>
+                        {sampleStepsInput}
 
 
                         <div className={BasicLabel({ width: "x-large" })}>{t("text_input_area_generated_voice_label")}[{elapsedTime.toFixed(0)}ms]</div>
@@ -423,6 +461,7 @@ export const TextInputArea = () => {
         serverConfigState.serverSlotInfos,
         serverConfigState.serverConfiguration,
         elapsedTime,
+        sampleSteps,
     ]);
     return area;
 };

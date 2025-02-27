@@ -123,6 +123,7 @@
   "text_input_area_model_setting_label": "詳細設定",
   "text_input_area_enable faster inference_label": "ファスト",
   "text_input_area_batch_size_label": "バッチサイズ",
+  "text_input_area_sample_steps_label": "ステップ",
   "text_input_area_top_k_label": "top_k",
   "text_input_area_top_p_label": "top_p",
   "text_input_area_temperature_label": "tempe.",

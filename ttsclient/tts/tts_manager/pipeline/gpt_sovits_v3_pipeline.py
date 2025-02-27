@@ -246,6 +246,8 @@ class GPTSoVITSV3Pipeline(Pipeline):
         seed: int = -1,
         parallel_infer: bool = True,
         repetition_penalty: float = 1.35,
+        # v3追加オプション
+        sample_steps: int = 8,
     ):
         print("START NORMAL PIPELINE!")
         ref_free: bool = False
@@ -357,8 +359,6 @@ class GPTSoVITSV3Pipeline(Pipeline):
                 cfm_resss = []
                 idx = 0
 
-                # TODO: sample_steps決め打ち。
-                sample_steps = 8
                 while 1:
                     fea_todo_chunk = fea_todo[:, :, idx : idx + chunk_len]
                     if fea_todo_chunk.shape[-1] == 0:

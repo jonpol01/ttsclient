@@ -59,6 +59,7 @@ export type SlotInfo = {
 };
 export type GPTSoVITSSlotInfo = SlotInfo & {
     tts_type: "GPT-SoVITS";
+    version: GPTSoVITSVersion;
     enable_faster: boolean
     semantic_predictor_model: string;
     synthesizer_path: string;
@@ -202,6 +203,8 @@ export type GenerateVoiceParam = {
     language: LanguageType
     speed: number
     cutMethod: CutMethod
+    // v3追加オプション
+    sample_steps: number
 }
 
 ////////////////////////////////////////////

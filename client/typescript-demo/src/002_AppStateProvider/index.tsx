@@ -19,6 +19,7 @@ type AppStateValue = {
     setAudioMonitor: (audioMonitor: string) => void
     setGeneratedVoice: (generatedVoice: Blob | null) => void
     setElapsedTime: (elapsedTime: number) => void
+    setSampleSteps: (sampleSteps: number) => void
     displayColorMode: DisplayColorMode
     curretVoiceCharacterSlotIndex: number | null
     currentReferenceVoiceIndexes: { [key: number]: number[] }
@@ -31,6 +32,7 @@ type AppStateValue = {
     audioMonitor: string
     generatedVoice: Blob | null
     elapsedTime: number
+    sampleSteps: number
 };
 
 const AppStateContext = React.createContext<AppStateValue | null>(null);
@@ -57,6 +59,7 @@ export const AppStateProvider = ({ children }: Props) => {
     const [inferenceLanguage, setInferenceLanguage] = useState<LanguageType>("all_ja");
     const [cutMethod, setCutMethod] = useState<CutMethod>("Slice by every punct")
     const [speed, setSpeed] = useState<number>(1.0)
+    const [sampleSteps, setSampleSteps] = useState<number>(8)
 
     const [audioInput, setAudioInput] = useState<MediaStream | string>("default");
     const [audioOutput, setAudioOutput] = useState<string>("default");
@@ -159,6 +162,7 @@ export const AppStateProvider = ({ children }: Props) => {
         setAudioMonitor,
         setGeneratedVoice,
         setElapsedTime,
+        setSampleSteps,
         displayColorMode,
         curretVoiceCharacterSlotIndex,
         currentReferenceVoiceIndexes,
@@ -170,8 +174,8 @@ export const AppStateProvider = ({ children }: Props) => {
         audioOutput,
         audioMonitor,
         generatedVoice,
-        elapsedTime
-
+        elapsedTime,
+        sampleSteps
     };
     return <AppStateContext.Provider value={providerValue}>{children}</AppStateContext.Provider>;
 };

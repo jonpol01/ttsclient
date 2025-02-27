@@ -73,6 +73,8 @@ class GPTSoVITSFasterPipeline(Pipeline):
         seed: int = -1,
         parallel_infer: bool = True,
         repetition_penalty: float = 1.35,
+        # v3追加オプション
+        sample_steps: int = 8,
     ):
         print("START FAST PIPELINE!")
 

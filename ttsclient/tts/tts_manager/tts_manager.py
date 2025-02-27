@@ -100,6 +100,8 @@ class TTSManager:
             seed=slot_info.seed,
             parallel_infer=slot_info.parallel_infer,
             repetition_penalty=slot_info.repetition_penalty,
+            # v3追加オプション
+            sample_steps=8,
         )
         last_sampling_rate, last_audio_data = synthesis_result
 

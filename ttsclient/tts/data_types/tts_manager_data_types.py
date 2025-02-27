@@ -10,3 +10,5 @@ class GenerateVoiceParam(BaseModel):
     language: LanguageType
     speed: float
     cutMethod: CutMethod
+    # v3追加オプション
+    sample_steps: int | None = None
