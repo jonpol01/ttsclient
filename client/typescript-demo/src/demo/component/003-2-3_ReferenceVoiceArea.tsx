@@ -11,12 +11,30 @@ import { BasicInput } from "../../styles/style-components/inputs/01_basic-input.
 import { BasicAudio } from "../../styles/style-components/audios/01_basic-audio.css";
 import { BasicLabel } from "../../styles/style-components/labels/01_basic-label.css";
 import { useGuiState } from "../GuiStateProvider";
+import { AudioRecorder } from "./003-2-3-1_AudioRecorder";
 
 export const ReferenceVoiceArea = () => {
     const { serverConfigState, triggerToast, generateGetPathFunc } = useAppRoot();
     const { t } = useTranslation();
-    const { currentReferenceVoiceIndexes, curretVoiceCharacterSlotIndex, referenceVoiceMode, setReferenceVoiceMode } = useAppState();
+    const { currentReferenceVoiceIndexes, curretVoiceCharacterSlotIndex, referenceVoiceMode, setReferenceVoiceMode, audioOutput } = useAppState();
     const { setDialog2Props, setDialog2Name } = useGuiState()
+
+    useEffect(() => {
+        const updateSink = async () => {
+            const audioElemOutput = document.getElementById("reference-voice-player") as HTMLAudioElement
+            if (!audioElemOutput) return
+            if (audioOutput == "none") {
+                audioElemOutput.volume = 0
+                return
+            }
+
+            audioElemOutput.volume = 1
+            await audioElemOutput.setSinkId(audioOutput)
+        }
+        updateSink()
+    }, [audioOutput])
+
+
 
     const handleFiles = (files) => {
         if (curretVoiceCharacterSlotIndex == null) {
@@ -120,9 +138,9 @@ export const ReferenceVoiceArea = () => {
                         <p>{t("reference_voice_area_fileupload_area_text")}</p>
                     </div >
                     <input type="file" hidden id="reference-voice-area-audio-file-elem" />
+                    <AudioRecorder></AudioRecorder>
                 </>
             );
-
         }
 
         // if (voices[0]) {
@@ -139,7 +157,7 @@ export const ReferenceVoiceArea = () => {
             <div className={characterAreaControl}>
                 <div className={BasicLabel()}>{t("reference_voice_area_audio")}:</div>
                 <div className={characterAreaControlField}>
-                    <audio controls src={audioUrl} className={BasicAudio()} />
+                    <audio id="reference-voice-player" controls src={audioUrl} className={BasicAudio()} />
                 </div>
             </div>
         )
@@ -219,21 +237,6 @@ export const ReferenceVoiceArea = () => {
             </div>
         )
 
-        const downloadClicked = async () => {
-            const blob = await serverConfigState.downloadVoiceCharacter(curretVoiceCharacterSlotIndex)
-            if (!blob) {
-                triggerToast("error", t("reference_voice_area_download_error"))
-                return
-            }
-            const a = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            a.href = url;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
         const buttonArea = (
             <div className={characterAreaControl}>
                 <button
@@ -244,25 +247,6 @@ export const ReferenceVoiceArea = () => {
                     onClick={() => { serverConfigState.deleteReferenceVoice(curretVoiceCharacterSlotIndex, selectedId) }}
                     className={`${BasicButton()} ${normalButtonThema}`}
                 >{t("reference_voice_area_delete_button")}</button>
-                <button
-                    onClick={async () => {
-                        setDialog2Props({
-                            title: t("reference_voice_area_download_waiting_dialog_title"),
-                            instruction: `${t("reference_voice_area_download_waiting_dialog_instruction")}`,
-                            defaultValue: "",
-                            resolve: () => { },
-                            options: null,
-                        });
-                        setDialog2Name("waitDialog");
-                        await downloadClicked()
-                        setDialog2Name("none");
-
-
-
-
-                    }}
-                    className={`${BasicButton()} ${normalButtonThema}`}
-                >{t("reference_voice_area_download_button")}</button>
 
             </div>
         )

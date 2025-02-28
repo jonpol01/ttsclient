@@ -18,11 +18,12 @@ export const BasicButton = recipe({
                 color: buttonThemeContract.color.textActive,
                 backgroundColor: buttonThemeContract.color.backgroundActive,
                 border: `solid ${buttonThemeContract.border.width} ${buttonThemeContract.color.borderActive}`,
-                ":hover": {
-                    color: buttonThemeContract.color.textHover,
-                    backgroundColor: buttonThemeContract.color.backgroundHover,
-                    border: `solid ${buttonThemeContract.border.width} ${buttonThemeContract.color.borderHover}`,
-                },
+                cursor: 'default',
+                // ":hover": {
+                //     color: buttonThemeContract.color.textHover,
+                //     backgroundColor: buttonThemeContract.color.backgroundHover,
+                //     border: `solid ${buttonThemeContract.border.width} ${buttonThemeContract.color.borderHover}`,
+                // },
 
             },
             false: {

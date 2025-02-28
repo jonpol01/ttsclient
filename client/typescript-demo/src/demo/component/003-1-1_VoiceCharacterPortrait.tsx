@@ -1,11 +1,14 @@
 import { useMemo } from "react";
-import { portrait } from "../../styles/characterArea.css";
+import { portrait, portraitFocused } from "../../styles/characterArea.css";
 import React from "react";
 import { useAppRoot } from "../../001_AppRootProvider";
 import { useTranslation } from "react-i18next";
 import { useAppState } from "../../002_AppStateProvider";
 
-export const VoiceCharacterPortrait = () => {
+export type VoiceCharacterPortraitProps = {
+}
+
+export const VoiceCharacterPortrait = (props: VoiceCharacterPortraitProps) => {
     const { t } = useTranslation();
     const { serverConfigState, generateGetPathFunc } = useAppRoot();
     const { currentReferenceVoiceIndexes, curretVoiceCharacterSlotIndex } = useAppState();
@@ -46,8 +49,17 @@ export const VoiceCharacterPortrait = () => {
 
         iconUrl = generateGetPathFunc(iconUrl)
 
+        // const imgCalss = props.isPortraitContainerFocused ? portraitFocused : portrait
+        const imgCalss = portrait
+        const portraitComponent = (
+            <img
+                contentEditable={true}
+                className={imgCalss}
+                src={iconUrl}
+                alt={voiceCharacter.name}
+            />
 
-        const portraitComponent = <img className={portrait} src={iconUrl} alt={voiceCharacter.name} />;
+        )
         return portraitComponent;
     }, [serverConfigState.voiceCharacterSlotInfos, currentReferenceVoiceIndexes, curretVoiceCharacterSlotIndex]);
     return portraitComponent;

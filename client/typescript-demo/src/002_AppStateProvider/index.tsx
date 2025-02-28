@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ReactNode } from "react";
 import { CutMethod, LanguageType } from "tts-client-typescript-client-lib";
 import { useAppRoot } from "../001_AppRootProvider";
+import { AudioRecorderStateAndMethod, useAudioRecorder } from "./hooks/001_useAudioRecorder";
 type Props = {
     children: ReactNode;
 };
@@ -33,6 +34,8 @@ type AppStateValue = {
     generatedVoice: Blob | null
     elapsedTime: number
     sampleSteps: number
+
+    audioRecorderState: AudioRecorderStateAndMethod
 };
 
 const AppStateContext = React.createContext<AppStateValue | null>(null);
@@ -66,6 +69,18 @@ export const AppStateProvider = ({ children }: Props) => {
     const [audioMonitor, setAudioMonitor] = useState<string>("default");
     const [generatedVoice, setGeneratedVoice] = useState<Blob | null>(null);
     const [elapsedTime, setElapsedTime] = useState<number>(0);
+
+    const { audioConfigState } = useAppRoot();
+    const audioRecorderState = useAudioRecorder({
+        enableFlatPath: false,
+        workOnColab: false,
+    });
+    useEffect(() => {
+        if (!audioConfigState.audioContext) {
+            return;
+        }
+        audioRecorderState.initializeAudioRecorder(audioConfigState.audioContext);
+    }, [audioConfigState.audioContext]);
 
     // デフォルトの挙動
     // 現在のスロットのモデルがなくなったとき。最も若い存在するスロットに自動移動。ない場合は-1
@@ -175,7 +190,9 @@ export const AppStateProvider = ({ children }: Props) => {
         audioMonitor,
         generatedVoice,
         elapsedTime,
-        sampleSteps
+        sampleSteps,
+
+        audioRecorderState,
     };
     return <AppStateContext.Provider value={providerValue}>{children}</AppStateContext.Provider>;
 };

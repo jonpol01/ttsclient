@@ -311,6 +311,20 @@ export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotMan
                 serverConfigState.moveVoiceCharacter(slotIndex, dstSlotIndex);
             }
         };
+        const onDownloadClicked = async (slotIndex: number) => {
+            const blob = await serverConfigState.downloadVoiceCharacter(slotIndex)
+            if (!blob) {
+                triggerToast("error", t("reference_voice_area_download_error"))
+                return
+            }
+            const a = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            a.href = url;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
 
         const slotRow = serverConfigState.voiceCharacterSlotInfos
             .filter((x) => x.slot_index < MAX_VOICE_CHARACTER_SLOT_INDEX)
@@ -353,21 +367,47 @@ export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotMan
                         </div>
                     );
                 }
-                // edit button
-                let editButton = <></>;
+                // // edit button
+                // let editButton = <></>;
+                // if (x.tts_type != null) {
+                //     editButton = (
+                //         <div
+                //             className={modelSlotButton}
+                //             onClick={() => {
+                //                 // props.openEditor(index);
+                //                 triggerToast("error", "Not implemented yet");
+                //             }}
+                //         >
+                //             {t("voice_character_slot_manager_main_edit")}
+                //         </div>
+                //     );
+                // }
+
+                // download
+                let downloadButton = <></>;
                 if (x.tts_type != null) {
-                    editButton = (
+                    downloadButton = (
                         <div
                             className={modelSlotButton}
-                            onClick={() => {
-                                // props.openEditor(index);
-                                triggerToast("error", "Not implemented yet");
+                            onClick={async () => {
+
+                                setDialog2Props({
+                                    title: t("reference_voice_area_download_waiting_dialog_title"),
+                                    instruction: `${t("reference_voice_area_download_waiting_dialog_instruction")}`,
+                                    defaultValue: "",
+                                    resolve: () => { },
+                                    options: null,
+                                });
+                                setDialog2Name("waitDialog");
+                                await onDownloadClicked(x.slot_index);
+                                setDialog2Name("none");
                             }}
                         >
-                            {t("voice_character_slot_manager_main_edit")}
+                            {t("voice_character_slot_manager_main_download")}
                         </div>
                     );
                 }
+
                 // move button
                 let moveButton = <></>;
                 if (x.tts_type != null) {
@@ -396,7 +436,8 @@ export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotMan
                         <div className={modelSlotButtonsArea}>
                             {uploadButton}
                             {deleteButton}
-                            {editButton}
+                            {/* {editButton} */}
+                            {downloadButton}
                             {moveButton}
                         </div>
                     </div>

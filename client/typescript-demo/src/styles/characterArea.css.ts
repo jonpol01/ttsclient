@@ -6,6 +6,9 @@ export const characterArea = style({
     padding: "20px",
     // background: "#fffaf0"
 });
+export const portraitAreaContainer = style({
+    height: "22rem",
+});
 export const portraitArea = style({
     width: "20rem",
     height: "20rem",
@@ -23,10 +26,51 @@ export const portraitContainer = style({
     height: "20rem",
     borderRadius: "1rem",
     overflow: "hidden",
+    outline: "2px solid rgb(0, 0, 0)",
 });
+export const portraitContainerFocused = style({
+    position: "relative",
+    width: "20rem",
+    height: "20rem",
+    borderRadius: "1rem",
+    overflow: "hidden",
+    outline: "4px solid rgb(110, 188, 240)",
+});
+
+export const portraitContainerImagePasteDiv = style({
+    position: "absolute",
+    width: "20rem",
+    height: "20rem",
+    borderRadius: "1rem",
+    overflow: "hidden",
+    cursor: "pointer",
+    fontSize: "10rem"
+});
+
+export const portraitContainerButton = style({
+    display: "flex",
+    margin: "0.5rem",
+    justifyContent: "end",
+});
+
 export const portrait = style({
     width: "100%",
     height: "100%",
+    outline: "0px solid #000000",
+    // border: "5px solid #000000",
+});
+export const portrait2 = style({
+    width: "50%",
+    height: "500%",
+    outline: "0px solid #000000",
+    // border: "5px solid #000000",
+});
+
+export const portraitFocused = style({
+    width: "100%",
+    height: "100%",
+    outline: "0px solid #000000",
+    // border: "5px solid #007BFF",
 });
 export const portraitAreaStatus = style({
     width: "auto",
@@ -82,12 +126,25 @@ export const characterAreaControl = style({
     display: "flex",
     gap: "5px",
 });
+export const characterAreaControlText = style({
+    fontSize: "0.8rem",
+    fontWeight: "700",
+    paddingLeft: "0.5rem",
+});
+
 export const characterAreaControlTitle = style({
     width: "6rem",
     fontWeight: "700",
 });
 export const characterAreaControlField = style({
     display: "flex",
+    flexDirection: "row",
+    gap: "0.3rem",
+    // flexDirection: "column",
+});
+export const characterAreaControlFieldColumn = style({
+    display: "flex",
+    gap: "0.3rem",
     flexDirection: "column",
 });
 export const characterAreaControlFieldFullWidth = style({
