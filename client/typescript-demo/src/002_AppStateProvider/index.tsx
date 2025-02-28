@@ -21,6 +21,7 @@ type AppStateValue = {
     setGeneratedVoice: (generatedVoice: Blob | null) => void
     setElapsedTime: (elapsedTime: number) => void
     setSampleSteps: (sampleSteps: number) => void
+    setReferenceRecorderAudioInput: (audioInput: string) => void
     displayColorMode: DisplayColorMode
     curretVoiceCharacterSlotIndex: number | null
     currentReferenceVoiceIndexes: { [key: number]: number[] }
@@ -34,6 +35,8 @@ type AppStateValue = {
     generatedVoice: Blob | null
     elapsedTime: number
     sampleSteps: number
+
+    referenceRecorderAudioInput: string
 
     audioRecorderState: AudioRecorderStateAndMethod
 };
@@ -69,6 +72,9 @@ export const AppStateProvider = ({ children }: Props) => {
     const [audioMonitor, setAudioMonitor] = useState<string>("default");
     const [generatedVoice, setGeneratedVoice] = useState<Blob | null>(null);
     const [elapsedTime, setElapsedTime] = useState<number>(0);
+
+    const [referenceRecorderAudioInput, setReferenceRecorderAudioInput] = useState<string>("default")
+
 
     const { audioConfigState } = useAppRoot();
     const audioRecorderState = useAudioRecorder({
@@ -178,6 +184,7 @@ export const AppStateProvider = ({ children }: Props) => {
         setGeneratedVoice,
         setElapsedTime,
         setSampleSteps,
+        setReferenceRecorderAudioInput,
         displayColorMode,
         curretVoiceCharacterSlotIndex,
         currentReferenceVoiceIndexes,
@@ -191,6 +198,7 @@ export const AppStateProvider = ({ children }: Props) => {
         generatedVoice,
         elapsedTime,
         sampleSteps,
+        referenceRecorderAudioInput,
 
         audioRecorderState,
     };

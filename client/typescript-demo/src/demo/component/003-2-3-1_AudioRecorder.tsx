@@ -14,26 +14,12 @@ import { isDesktopApp } from "../../util/isDesctopApp";
 export const AudioRecorder = () => {
     const { audioConfigState, serverConfigState, triggerToast } = useAppRoot();
     const { t } = useTranslation();
-    const [audioInput, setAudioInput] = useState<string>("default")
+    // const [audioInput, setAudioInput] = useState<string>("default")
     const [audioInputMediaStream, setAudioInputMediaStream] = useState<MediaStream | null>(null)
     const inputRecordingBuffer = useRef<Float32Array[]>([])
-    const { currentReferenceVoiceIndexes, curretVoiceCharacterSlotIndex, audioRecorderState, audioOutput } = useAppState();
+    const { currentReferenceVoiceIndexes, curretVoiceCharacterSlotIndex, audioRecorderState, audioOutput, referenceRecorderAudioInput, setReferenceRecorderAudioInput } = useAppState();
 
 
-    useEffect(() => {
-        const updateSink = async () => {
-            const audioElemOutput = document.getElementById("input-record-audio") as HTMLAudioElement
-            if (!audioElemOutput) return
-            if (audioOutput == "none") {
-                audioElemOutput.volume = 0
-                return
-            }
-
-            audioElemOutput.volume = 1
-            await audioElemOutput.setSinkId(audioOutput)
-        }
-        updateSink()
-    }, [audioOutput])
 
     const onUploadClicked = () => {
         if (curretVoiceCharacterSlotIndex == null) {
@@ -77,9 +63,9 @@ export const AudioRecorder = () => {
         return (
             <select
                 style={{ width: "100%" }}
-                value={audioInput}
+                value={referenceRecorderAudioInput}
                 onChange={(e) => {
-                    setAudioInput(e.target.value)
+                    setReferenceRecorderAudioInput(e.target.value)
                 }}
             >
                 {audioConfigState.audioInputs.map((input) => {
@@ -91,7 +77,7 @@ export const AudioRecorder = () => {
                 })}
             </select>
         )
-    }, [audioConfigState.audioInputs, audioInput])
+    }, [audioConfigState.audioInputs, referenceRecorderAudioInput])
 
     useEffect(() => {
         if (!audioRecorderState.audioRecorderInitialized) {
@@ -115,19 +101,19 @@ export const AudioRecorder = () => {
         }
     }
     useEffect(() => {
-        if (audioInput == "screen") {
+        if (referenceRecorderAudioInput == "screen") {
             closeMediaStream()
         } else {
             closeMediaStream()
-            audioRecorderState.setAudioInput(audioInput)
+            audioRecorderState.setAudioInput(referenceRecorderAudioInput)
         }
-    }, [audioInput])
+    }, [referenceRecorderAudioInput])
 
 
 
     const onStartClicked = async () => {
         inputRecordingBuffer.current = []
-        if (audioInput == "screen") {
+        if (referenceRecorderAudioInput == "screen") {
             closeMediaStream()
             const captureStart = async () => {
                 let displayMediaStream: MediaStream | null = null;
@@ -254,6 +240,20 @@ export const AudioRecorder = () => {
         audioInputSelector,
         audioRecorderState.audioRecorderStarted
     ]);
+    useEffect(() => {
+        const updateSink = async () => {
+            const audioElemOutput = document.getElementById("input-record-audio") as HTMLAudioElement
+            if (!audioElemOutput) return
+            if (audioOutput == "none") {
+                audioElemOutput.volume = 0
+                return
+            }
+
+            audioElemOutput.volume = 1
+            await audioElemOutput.setSinkId(audioOutput)
+        }
+        updateSink()
+    }, [audioOutput, component])
 
     return component
 };

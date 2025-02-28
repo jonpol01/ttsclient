@@ -19,22 +19,6 @@ export const ReferenceVoiceArea = () => {
     const { currentReferenceVoiceIndexes, curretVoiceCharacterSlotIndex, referenceVoiceMode, setReferenceVoiceMode, audioOutput } = useAppState();
     const { setDialog2Props, setDialog2Name } = useGuiState()
 
-    useEffect(() => {
-        const updateSink = async () => {
-            const audioElemOutput = document.getElementById("reference-voice-player") as HTMLAudioElement
-            if (!audioElemOutput) return
-            if (audioOutput == "none") {
-                audioElemOutput.volume = 0
-                return
-            }
-
-            audioElemOutput.volume = 1
-            await audioElemOutput.setSinkId(audioOutput)
-        }
-        updateSink()
-    }, [audioOutput])
-
-
 
     const handleFiles = (files) => {
         if (curretVoiceCharacterSlotIndex == null) {
@@ -299,6 +283,22 @@ export const ReferenceVoiceArea = () => {
         }
 
     }, [serverConfigState.voiceCharacterSlotInfos, currentReferenceVoiceIndexes, curretVoiceCharacterSlotIndex, referenceVoiceMode]);
+
+    useEffect(() => {
+        const updateSink = async () => {
+            const audioElemOutput = document.getElementById("reference-voice-player") as HTMLAudioElement
+            if (!audioElemOutput) return
+            if (audioOutput == "none") {
+                audioElemOutput.volume = 0
+                return
+            }
+
+            audioElemOutput.volume = 1
+            await audioElemOutput.setSinkId(audioOutput)
+        }
+        updateSink()
+    }, [audioOutput, component])
+
 
     return component
 };
