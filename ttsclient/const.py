@@ -158,3 +158,62 @@ BackendMode: TypeAlias = Literal[
     "semantic_onnx",
     "synthesizer_onnx",
 ]
+
+TranscriberModelSize: TypeAlias = Literal[
+    "tiny",
+    "base",
+    "small",
+    "medium",
+    "large-v1",
+    "large-v2",
+    "large-v3",
+    "large",
+    "distil-large-v2",
+    "distil-large-v3",
+    "large-v3-turbo",
+    "turbo",
+]
+TranscriberModelSizes: list[TranscriberModelSize] = [
+    "tiny",
+    "base",
+    "small",
+    "medium",
+    "large-v1",
+    "large-v2",
+    "large-v3",
+    "large",
+    "distil-large-v2",
+    "distil-large-v3",
+    "large-v3-turbo",
+    "turbo",
+]
+
+TranscriberDevice: TypeAlias = Literal[
+    "cpu",
+    "cuda",
+]
+TranscriberDevices: list[TranscriberDevice] = [
+    "cpu",
+    "cuda",
+]
+
+TranscriberComputeType: TypeAlias = Literal[
+    "int8",
+    "int8_float32",
+    "int8_float16",
+    "int8_bfloat16",
+    "int16",
+    "float16",
+    "bfloat16",
+    "float32",
+]
+TranscriberComputeTypes: list[TranscriberComputeType] = [
+    "int8",
+    "int8_float32",
+    "int8_float16",
+    "int8_bfloat16",
+    "int16",
+    "float16",
+    "bfloat16",
+    "float32",
+]

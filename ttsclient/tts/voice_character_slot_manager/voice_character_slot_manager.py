@@ -5,7 +5,10 @@ from pathlib import Path
 import shutil
 import uuid
 import zipfile
-from ttsclient.const import LOGGER_NAME, MAX_REFERENCE_VOICE_SLOT_INDEX, MAX_VOICE_CHARACTER_SLOT_INDEX, VOICE_CHARACTER_SLOT_PARAM_FILE, VoiceCharacterDir
+
+from faster_whisper import WhisperModel
+from ttsclient.const import LOGGER_NAME, MAX_REFERENCE_VOICE_SLOT_INDEX, MAX_VOICE_CHARACTER_SLOT_INDEX, VOICE_CHARACTER_SLOT_PARAM_FILE, TranscriberComputeType, TranscriberDevice, TranscriberModelSize, VoiceCharacterDir
+from ttsclient.tts.configuration_manager.configuration_manager import ConfigurationManager
 from ttsclient.tts.data_types.slot_manager_data_types import MoveModelParam, MoveReferenceVoiceParam, ReferenceVoice, ReferenceVoiceImportParam, SetIconParam, VoiceCharacter, VoiceCharacterImportParam
 from ttsclient.tts.voice_character_slot_manager.importer.importer import import_voice_character
 
@@ -58,6 +61,10 @@ class VoiceCharacterSlotManager:
 
     def __init__(self):
         self.reload()
+        self.transcriber: WhisperModel | None = None
+        self.current_transcriber_model_size: TranscriberModelSize | None = None
+        self.current_transcriber_device: TranscriberDevice | None = None
+        self.current_transcriber_compute_type: TranscriberComputeType | None = None
 
     def reload(self, use_log=True) -> list[VoiceCharacter]:
         logging.getLogger(LOGGER_NAME).debug("Reloading Slot info")
@@ -187,6 +194,7 @@ class VoiceCharacterSlotManager:
         return next_index
 
     def add_voice_audio(self, index: int, import_params: ReferenceVoiceImportParam, remove_src: bool = False):
+        config = ConfigurationManager.get_instance().get_tts_configuration()
         try:
             voice_character = self.get_slot_info(index)
             assert voice_character.tts_type is not None, f"voice_character_slot_index:{index} is not exists."
@@ -198,6 +206,37 @@ class VoiceCharacterSlotManager:
             wav_name = uuid.uuid4()
             audio_dst_path = VoiceCharacterDir / f"{index}" / f"{wav_name}.wav"
             shutil.move(import_params.wav_file, audio_dst_path)
+
+            # 音声書き起こし
+            # モデルのロード
+            try:
+                if config.transcribe_audio is True:
+                    if self.transcriber is None or self.current_transcriber_model_size != config.transcriber_model_size or self.current_transcriber_device != config.transcriber_device or self.current_transcriber_compute_type != config.transcriber_compute_type:
+                        print(f"Initialize Transcriber.... {config.transcriber_model_size}, {config.transcriber_device}, {config.transcriber_compute_type}")
+                        os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+                        self.transcriber = WhisperModel(config.transcriber_model_size, device=config.transcriber_device, compute_type=config.transcriber_compute_type)
+                        self.current_transcriber_model_size = config.transcriber_model_size
+                        self.current_transcriber_device = config.transcriber_device
+                        self.current_transcriber_compute_type = config.transcriber_compute_type
+                        print("Initialize Transcriber.... done.")
+            except Exception as e:
+                print(f"Error in initializing Transcriber: {e}")
+                self.transcriber = None
+
+            # 書き起こし
+            text = ""
+            if self.transcriber is not None:
+                segments, info = self.transcriber.transcribe(
+                    audio_dst_path,
+                    beam_size=5,
+                    vad_filter=True,
+                    without_timestamps=True,
+                )
+                print("Detected language '%s' with probability %f" % (info.language, info.language_probability))
+                for segment in segments:
+                    print("[%.2fs -> %.2fs] %s" % (segment.start, segment.end, segment.text))
+                    text += segment.text
+
             if import_params.icon_file is not None:
                 logging.getLogger(LOGGER_NAME).info(f"icon_file: {import_params.icon_file}")
                 icon_name = uuid.uuid4()
@@ -211,7 +250,7 @@ class VoiceCharacterSlotManager:
                 voice_type=import_params.voice_type,
                 slot_index=import_params.slot_index,
                 wav_file=Path(audio_dst_path.name),
-                text=import_params.text if import_params.text is not None else "",
+                text=import_params.text if import_params.text is not None else text,
                 language="all_ja",
                 icon_file=import_params.icon_file if import_params.icon_file is not None else None,
             )
