@@ -151,8 +151,8 @@ class SovitsSynthesizerV3(Synthesizer):
 
         return audio
 
-    def decode_encp(self, codes, text, refer, ge=None):
-        return self.vq_model.decode_encp(codes, text, refer, ge)
+    def decode_encp(self, codes, text, refer, ge=None, speed=1):
+        return self.vq_model.decode_encp(codes, text, refer, ge, speed)
 
     def cfm_inference(self, mu, x_lens, prompt, n_timesteps, temperature=1.0, inference_cfg_rate=0):
         return self.vq_model.cfm.inference(mu, x_lens, prompt, n_timesteps, temperature, inference_cfg_rate)

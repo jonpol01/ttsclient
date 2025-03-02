@@ -295,7 +295,7 @@ export const TextInputArea = () => {
         )
 
         let speedSelect = <></>
-        if (gptSovitsVersion == "v2") {
+        if (gptSovitsVersion == "v2" || gptSovitsVersion == "v3") {
             speedSelect = (
                 <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
                     <div>{t("text_input_area_speed_label")}</div>

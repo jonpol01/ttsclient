@@ -7,7 +7,7 @@ from ttsclient.tts.tts_manager.phone_extractor.phone_extractor import PhoneExtra
 from transformers import AutoModelForMaskedLM, AutoTokenizer
 
 from ttsclient.tts.tts_manager.phone_extractor.phone_extractor_info import PhoneExtractorInfo
-import LangSegment
+from ttsclient.tts.tts_manager.text.LangSegmenter.langsegmenter import LangSegmenter
 from ttsclient.tts.tts_manager.text import chinese, cleaned_text_to_sequence
 from ttsclient.tts.tts_manager.text.cleaner import clean_text
 
@@ -52,10 +52,10 @@ class BertPhoneExtractor(PhoneExtractor):
         return phone_level_feature.T
 
     def _clean_text_inf(self, text, language, version):
+        language = language.replace("all_", "")
         phones, word2ph, norm_text = clean_text(text, language, version)
-        # print("phones1:", phones)
         phones = cleaned_text_to_sequence(phones, version)
-        # print("phones2:", phones) # 音素のシンボル列を数値(インデックス)の列に置き換えてる。
+        return phones, word2ph, norm_text
 
         return phones, word2ph, norm_text
 
@@ -73,53 +73,42 @@ class BertPhoneExtractor(PhoneExtractor):
 
     def get_phones_and_bert(self, text, language, version, final=False):
         if language in {"en", "all_zh", "all_ja", "all_ko", "all_yue"}:
-            language = language.replace("all_", "")
-            if language == "en":
-                LangSegment.setfilters(["en"])
-                formattext = " ".join(tmp["text"] for tmp in LangSegment.getTexts(text))
-            else:
-                # 因无法区别中日韩文汉字,以用户输入为准
-                formattext = text
+            formattext = text
             while "  " in formattext:
                 formattext = formattext.replace("  ", " ")
-            if language == "zh":
+            if language == "all_zh":
                 if re.search(r"[A-Za-z]", formattext):
                     formattext = re.sub(r"[a-z]", lambda x: x.group(0).upper(), formattext)
                     formattext = chinese.mix_text_normalize(formattext)
                     return self.get_phones_and_bert(formattext, "zh", version)
                 else:
                     phones, word2ph, norm_text = self._clean_text_inf(formattext, language, version)
-                    bert = self._get_bert_feature(norm_text, word2ph).to(self.device)
-            elif language == "yue" and re.search(r"[A-Za-z]", formattext):
+                    bert = self.get_bert_feature(norm_text, word2ph).to(self.device)
+            elif language == "all_yue" and re.search(r"[A-Za-z]", formattext):
                 formattext = re.sub(r"[a-z]", lambda x: x.group(0).upper(), formattext)
                 formattext = chinese.mix_text_normalize(formattext)
                 return self.get_phones_and_bert(formattext, "yue", version)
             else:
                 phones, word2ph, norm_text = self._clean_text_inf(formattext, language, version)
-
                 bert = torch.zeros(
                     (1024, len(phones)),
-                    dtype=torch.float16 if self.is_half is True else torch.float32,
-                ).to(
-                    self.device
-                )  # 日本語はbertを使っていない。
+                    dtype=torch.float16 if self.is_half == True else torch.float32,
+                ).to(self.device)
         elif language in {"zh", "ja", "ko", "yue", "auto", "auto_yue"}:
-            # mixのjaはbertを使っているかもしれない。
             textlist = []
             langlist = []
-            LangSegment.setfilters(["zh", "ja", "en", "ko"])
             if language == "auto":
-                for tmp in LangSegment.getTexts(text):
+                for tmp in LangSegmenter.getTexts(text):
                     langlist.append(tmp["lang"])
                     textlist.append(tmp["text"])
             elif language == "auto_yue":
-                for tmp in LangSegment.getTexts(text):
+                for tmp in LangSegmenter.getTexts(text):
                     if tmp["lang"] == "zh":
                         tmp["lang"] = "yue"
                     langlist.append(tmp["lang"])
                     textlist.append(tmp["text"])
             else:
-                for tmp in LangSegment.getTexts(text):
+                for tmp in LangSegmenter.getTexts(text):
                     if tmp["lang"] == "en":
                         langlist.append(tmp["lang"])
                     else:

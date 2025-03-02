@@ -144,6 +144,7 @@ class GPTSoVITSV3Pipeline(Pipeline):
     ):
         # 参照音声とテキストの処理
         # 参照テキストの処理。
+
         prompt_text = self._validate_ref_text(prompt_text, prompt_language)
         # print("REF TEXT: ", prompt_text)
         phones1, bert1, norm_text1 = self.phone_extractor.get_phones_and_bert(prompt_text, prompt_language, version)
@@ -257,8 +258,9 @@ class GPTSoVITSV3Pipeline(Pipeline):
         # version = os.environ.get("version", "v2")
         version = "v2"  # model_versionとversionの扱いが異なる。影響範囲を見極め切れていないのでとりあえずここはv2で固定。
         with Timer("generate reference content"):
-            if ref_wav_path in self.reference_cache:
-                phones1, bert1, prompt = self.reference_cache[ref_wav_path]
+            key = f"{prompt_language}_{prompt_text}_{ref_wav_path}"
+            if key in self.reference_cache:
+                phones1, bert1, prompt = self.reference_cache[key]
             elif ref_free is False:
                 phones1, bert1, prompt = self._generate_ref_contents(
                     self.ssl_model,
@@ -271,7 +273,7 @@ class GPTSoVITSV3Pipeline(Pipeline):
                     self.zero_wav,
                     version,
                 )
-                self.reference_cache[ref_wav_path] = (phones1, bert1, prompt)
+                self.reference_cache[key] = (phones1, bert1, prompt)
 
         # ターゲットテキストの処理
         with Timer("generate target text"):
@@ -354,7 +356,7 @@ class GPTSoVITSV3Pipeline(Pipeline):
                 chunk_len = 934 - T_min
 
                 mel2 = mel2.to(self.torch_dtype)
-                fea_todo, ge = self.vq_model.decode_encp(pred_semantic, phoneme_ids1, refer, ge)
+                fea_todo, ge = self.vq_model.decode_encp(pred_semantic, phoneme_ids1, refer, ge, speed)
 
                 cfm_resss = []
                 idx = 0
