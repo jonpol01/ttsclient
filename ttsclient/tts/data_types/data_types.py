@@ -10,7 +10,7 @@ class TTSConfiguration(BaseModel):
     transcribe_audio: bool = True
     transcriber_model_size: TranscriberModelSize = "small"
     transcriber_device: TranscriberDevice = "cpu"
-    transcriber_compute_type: TranscriberComputeType = "float32"
+    transcriber_compute_type: TranscriberComputeType = "int8"
 
 
 class GPUInfo(BaseModel):

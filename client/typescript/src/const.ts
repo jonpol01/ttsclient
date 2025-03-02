@@ -7,7 +7,46 @@ export const MAX_REFERENCE_VOICE_SLOT_INDEX = 20
 export type TTSConfiguration = {
     current_slot_index: number;
     gpu_device_id_int: number;
+
+    transcribe_audio: boolean;
+    transcriber_model_size: TranscriberModelSize;
+    transcriber_device: TranscriberDevice;
+    transcriber_compute_type: TranscriberComputeType;
 };
+
+export const TranscriberModelSize = {
+    "tiny": "tiny",
+    "base": "base",
+    "small": "small",
+    "medium": "medium",
+    "large-v1": "large-v1",
+    "large-v2": "large-v2",
+    "large-v3": "large-v3",
+    "large": "large",
+    "distil-large-v2": "distil-large-v2",
+    "distil-large-v3": "distil-large-v3",
+    "large-v3-turbo": "large-v3-turbo",
+    "turbo": "turbo",
+} as const;
+export type TranscriberModelSize = (typeof TranscriberModelSize)[keyof typeof TranscriberModelSize];
+
+export const TranscriberDevice = {
+    "cuda": "cuda",
+    "cpu": "cpu",
+} as const;
+export type TranscriberDevice = (typeof TranscriberDevice)[keyof typeof TranscriberDevice];
+
+export const TranscriberComputeType = {
+    "int8": "int8",
+    "int8_float32": "int8_float32",
+    "int8_float16": "int8_float16",
+    "int8_bfloat16": "int8_bfloat16",
+    "int16": "int16",
+    "float16": "float16",
+    "bfloat16": "bfloat16",
+    "float32": "float32",
+} as const;
+export type TranscriberComputeType = (typeof TranscriberComputeType)[keyof typeof TranscriberComputeType];
 
 export const AudioDeviceType = {
     audioinput: "audioinput",

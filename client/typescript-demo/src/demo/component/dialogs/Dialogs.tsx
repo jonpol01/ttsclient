@@ -8,6 +8,7 @@ import { VoiceCharacterSlotManagerMainDialog } from "./Dialogs_VoiceCharacterSlo
 import { VoiceCharacterSlotManagerFileUploadDialog } from "./Dialogs_VoiceCharacterSlotManagerFileUploadDialog";
 import { AboutVoiceDialog } from "./Dialogs_AboutVoiceDialog";
 import { AboutModelDialog } from "./Dialogs_AboutModelDialog";
+import { AdvancedSettingDialog } from "./Dialogs_AdvancedSettingDialog";
 
 export const Dialogs = () => {
     const guiState = useGuiState();
@@ -39,8 +40,8 @@ export const Dialogs = () => {
         } else if (guiState.dialogName === "voiceCharacterManagerFileUploaderDialog") {
             return <VoiceCharacterSlotManagerFileUploadDialog slotIndex={targetSlotIndex}></VoiceCharacterSlotManagerFileUploadDialog>;
 
-            // } else if (guiState.dialogName === "advancedSettingDialog") {
-            //     return <AdvancedSettingDialog></AdvancedSettingDialog>;
+        } else if (guiState.dialogName === "advancedSettingDialog") {
+            return <AdvancedSettingDialog></AdvancedSettingDialog>;
         } else if (guiState.dialogName === "aboutModelDialog") {
             return <AboutModelDialog></AboutModelDialog>;
         } else if (guiState.dialogName === "aboutVoiceDialog") {

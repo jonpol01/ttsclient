@@ -219,6 +219,8 @@ class VoiceCharacterSlotManager:
                         self.current_transcriber_device = config.transcriber_device
                         self.current_transcriber_compute_type = config.transcriber_compute_type
                         print("Initialize Transcriber.... done.")
+                else:
+                    self.transcriber = None
             except Exception as e:
                 print(f"Error in initializing Transcriber: {e}")
                 self.transcriber = None

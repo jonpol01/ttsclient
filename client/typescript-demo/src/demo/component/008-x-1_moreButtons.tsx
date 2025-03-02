@@ -76,9 +76,9 @@ export const MoreActionsButtons = () => {
                 <div className={BasicLabel()}>{t("config_area_more_actions_area_title")}:</div>
                 <div className={configSubAreaRowField30}>
                     <div className={configSubAreaButtonContainer}>
-                        {/* <div onClick={onOpenAdvacnedSettingClicked} className={configSubAreaButtonContainerButton}>
+                        <button onClick={onOpenAdvacnedSettingClicked} className={`${BasicButton({ width: "large" })} ${normalButtonThema}`}>
                             {t("config_area_more_actions_area_advanced_setting")}
-                        </div> */}
+                        </button>
                         <button onClick={onOpenLogViewerClicked} className={`${BasicButton()} ${normalButtonThema}`}>
                             {t("config_area_more_actions_area_open_log_viewer")}
                         </button>
