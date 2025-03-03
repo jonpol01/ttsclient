@@ -2,18 +2,18 @@
 
 @REM frontend-libのビルド
 cd client\typescript
-call npx ncu -u
-call npm install --force
-call npm run build:prod
-call npm version patch
-call npm publish
+call ncu.CMD -u
+call pnpm install --force
+call pnpm run build:prod
+call pnpm version patch
+call pnpm publish --no-git-checks
 cd ..\..
 
 @REM frontendのビルド。build:prodのなかでライセンス情報を作っている。
 cd client\typescript-demo
-call npx ncu -u
-call npm install --force
-call npm run build:prod
+call ncu.CMD -u
+call pnpm install --force
+call pnpm run build:prod
 cd ..\..
 
 
