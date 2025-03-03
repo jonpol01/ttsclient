@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ttsclient"
-version = "1.0.4"
+version = "1.0.5"
 description = ""
 authors = ["wok <test@test.com>"]
 readme = "README.md"
@@ -77,5 +77,5 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 main = "ttsclient.main:main"
-generate_version_file = "scripts.version_manager:main"
-generate_license_file = "scripts.license_manager:generate"
+generate_version_file = "scripts_.version_manager:main"
+generate_license_file = "scripts_.license_manager:generate"
