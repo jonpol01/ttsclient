@@ -7,12 +7,14 @@ call pnpm install --force
 call pnpm run build:prod
 call pnpm version patch
 call pnpm publish --no-git-checks
-cd ..\..
+@REM cd ..\..
 
 @REM frontendのビルド。build:prodのなかでライセンス情報を作っている。
 cd client\typescript-demo
 call ncu.CMD -u
-call pnpm install --force
+@REM  installだとエラーが出る。operation not permitted, unlink hogehoge.. 意味わからん。
+@REM call pnpm install --force
+call pnpm update
 call pnpm run build:prod
 cd ..\..
 
