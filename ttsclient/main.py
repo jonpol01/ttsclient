@@ -3,6 +3,7 @@ import platform
 import signal
 import fire
 
+from ttsclient.client_launcher.client_launcher import ClientLauncher
 from ttsclient.tts.tts_manager.tts_manager import TTSManager
 from ttsclient.utils.download_callback import get_download_callback
 
@@ -225,10 +226,10 @@ def start_cui(
         logging.getLogger(LOGGER_NAME).info("--- TTSClient READY ---")
         print(f"{bold_green_start}Please press Ctrl+C once to exit ttsclient.{reset}")
 
-        # # # (4)Native Client 起動
-        # # if launch_client and platform.system() != "Darwin":
-        # clinet_launcher = ClientLauncher(app_status.stop_app)
-        # clinet_launcher.launch(port, https)
+        # # (4)Native Client 起動
+        # if launch_client and platform.system() != "Darwin":
+        clinet_launcher = ClientLauncher(app_status.stop_app)
+        clinet_launcher.launch(port, https)
 
     try:
         while True:
@@ -251,9 +252,9 @@ def start_cui(
 
         try:
             signal.signal(signal.SIGINT, ignore_ctrl_c)
-            # # (3)Native Client 終了(サーバとの通信途中でのサーバ停止を極力避けるため、クライアントから落とす。)
-            # if launch_client:
-            #     clinet_launcher.stop()
+            # (3)Native Client 終了(サーバとの通信途中でのサーバ停止を極力避けるため、クライアントから落とす。)
+            if launch_client:
+                clinet_launcher.stop()
 
             # # (1) TTSServer 終了処理
             print(f"{bold_green_start}tts client is terminating...{reset}")

@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Literal, TypeAlias
-
+import sys
 
 # GLOBAL CONSTANTS
 HERE = Path(__file__).parent.absolute()
@@ -27,6 +27,16 @@ SSL_KEY_DIR = Path("ssl_key")
 def get_frontend_path():
     frontend_path = "web_front"
     return Path(frontend_path)
+
+
+# Client
+NATIVE_CLIENT_FILE_WIN = Path(sys._MEIPASS, "native_client", "voice-changer-native-client.exe") if hasattr(sys, "_MEIPASS") else Path("native_client", "voice-changer-native-client.exe")
+NATIVE_CLIENT_FILE_MAC = Path(
+    "voice-changer-native-client.app",
+    "Contents",
+    "MacOS",
+    "voice-changer-native-client",
+)
 
 
 # TTS モジュール
