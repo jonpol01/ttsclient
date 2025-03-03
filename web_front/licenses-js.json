@@ -221,7 +221,7 @@
       "licenseURL": ""
     },
     {
-      "name": "prettier@3.5.2",
+      "name": "prettier@3.5.3",
       "repository": "https://github.com/prettier/prettier",
       "licenseURL": ""
     },
@@ -339,7 +339,7 @@
       "licenseURL": ""
     },
     {
-      "name": "tts-client-typescript-client-lib@1.0.26",
+      "name": "tts-client-typescript-client-lib@1.0.28",
       "repository": "",
       "licenseURL": ""
     },
