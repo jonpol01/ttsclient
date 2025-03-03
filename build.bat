@@ -7,7 +7,7 @@ call pnpm install --force
 call pnpm run build:prod
 call pnpm version patch
 call pnpm publish --no-git-checks
-@REM cd ..\..
+cd ..\..
 
 @REM frontendのビルド。build:prodのなかでライセンス情報を作っている。
 cd client\typescript-demo
