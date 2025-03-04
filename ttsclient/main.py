@@ -231,13 +231,14 @@ def start_cui(
         clinet_launcher = ClientLauncher(app_status.stop_app)
         clinet_launcher.launch(port, https)
 
+    err_msg = ""
     try:
         while True:
             current_time = time.strftime("%Y/%m/%d %H:%M:%S")
             logging.getLogger(LOGGER_NAME).info(f"{current_time}: running...")
             if app_status.end_flag is True:
                 break
-            time.sleep(60)
+            time.sleep(2)
     except KeyboardInterrupt:
         err_msg = "KeyboardInterrupt"
 
