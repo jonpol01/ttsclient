@@ -29,7 +29,6 @@ import {
     ReferenceVoice,
     TTSType,
     GenerateVoiceParam,
-    GPTSoVITSVersion,
 } from "./const";
 
 abstract class RestResult<T> {
@@ -293,7 +292,7 @@ export class TTSRestClient {
         const chunk_num = await this.fileUploaderClient.uploadFile(dir, file, onprogress);
         await this.fileUploaderClient.concatUploadedFile(file.name, chunk_num);
     };
-    uploadGPTSoVITSModelFile = async (slot_index: number | null, version: GPTSoVITSVersion, semanticPredictorModelFile: File | null, synthesizerModelFile: File | null, onprogress: (progress: number, end: boolean) => void) => {
+    uploadGPTSoVITSModelFile = async (slot_index: number | null, semanticPredictorModelFile: File | null, synthesizerModelFile: File | null, onprogress: (progress: number, end: boolean) => void) => {
 
         let uploadFileNum = 0
         if (semanticPredictorModelFile != null) {
@@ -324,7 +323,6 @@ export class TTSRestClient {
         const rvcImportParam: GPTSoVITSModelImportParam = {
             slot_index: slot_index ?? null,
             tts_type: "GPT-SoVITS",
-            version: version,
             name: synthesizerModelFile ? synthesizerModelFile.name : "GPT-SoVITS",
             semantic_predictor_model: semanticPredictorModelFile?.name ?? null,
             synthesizer_path: synthesizerModelFile?.name ?? null,

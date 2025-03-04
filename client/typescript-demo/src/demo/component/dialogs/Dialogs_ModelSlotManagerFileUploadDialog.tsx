@@ -197,9 +197,9 @@ export const ModelSlotManagerFileUploadDialog = (props: ModelSlotManagerFileUplo
             const semanticPredictorModelFile = uploadFiles.find((x) => x.kind === "semanticPredictorModelFile");
             const synthesizerModelFile = uploadFiles.find((x) => x.kind === "synthesizerModelFile");
 
-            // version を取得
-            const gptSovitsVersionInput = document.querySelector('input[name="gpt-sovits-version"]:checked') as HTMLInputElement;
-            const gptSovitsVersion = gptSovitsVersionInput.value as GPTSoVITSVersion
+            // // version を取得
+            // const gptSovitsVersionInput = document.querySelector('input[name="gpt-sovits-version"]:checked') as HTMLInputElement;
+            // const gptSovitsVersion = gptSovitsVersionInput.value as GPTSoVITSVersion
 
             try {
                 const files: UploadFile[] = [];
@@ -212,7 +212,7 @@ export const ModelSlotManagerFileUploadDialog = (props: ModelSlotManagerFileUplo
                 await serverConfigState.uploadModelFile(props.slotIndex, tTSType, files, (progress, end) => {
                     Logger.getLogger().info("progress", progress, end);
                     setUploadProgress(Math.floor(progress - 1));
-                }, gptSovitsVersion);
+                });
 
             } catch (e) {
                 triggerToast("error", `upload failed: ${e.detail || ""}`);
@@ -233,7 +233,7 @@ export const ModelSlotManagerFileUploadDialog = (props: ModelSlotManagerFileUplo
         fileChooserArea = (
             <>
                 <div className={radioInputArea}>
-                    <div className={radioInputAreaLabel}>version: </div>
+                    {/* <div className={radioInputAreaLabel}>version: </div>
                     <div className={radioInputAreaInput}>
                         <span className={radioButton}>
                             <input type="radio" id="v3" name="gpt-sovits-version" value="v3" defaultChecked />
@@ -243,7 +243,7 @@ export const ModelSlotManagerFileUploadDialog = (props: ModelSlotManagerFileUplo
                             <input type="radio" id="v2" name="gpt-sovits-version" value="v2" />
                             <label htmlFor="v2">v2 (depricated)</label>
                         </span>
-                    </div>
+                    </div> */}
                 </div>
                 <GPTSoVITSFileChooser setUploadFile={setUploadFile} uploadFiles={uploadFiles}></GPTSoVITSFileChooser>
             </>

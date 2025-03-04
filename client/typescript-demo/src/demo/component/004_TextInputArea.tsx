@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import React from "react";
 import { textInputArea } from "../../styles/textInputArea.css";
 import { useTranslation } from "react-i18next";
-import { CutMethod, LanguageType, GenerateVoiceParam, GPTSoVITSSlotInfo, GPTSoVITSVersion } from "tts-client-typescript-client-lib";
+import { CutMethod, LanguageType, GenerateVoiceParam, GPTSoVITSSlotInfo, GPTSoVITSVersion, GPTSoVITSModelVersion } from "tts-client-typescript-client-lib";
 import { useAppState } from "../../002_AppStateProvider";
 import { useAppRoot } from "../../001_AppRootProvider";
 import { AUDIO_ELEMENT_FOR_PLAY_MONITOR, AUDIO_ELEMENT_FOR_PLAY_RESULT } from "../../const";
@@ -86,6 +86,7 @@ export const TextInputArea = () => {
         let temperature = 1.0
         let batchSize = 20
         let gptSovitsVersion: GPTSoVITSVersion | null = null
+        let gptSovitsModelVersion: GPTSoVITSModelVersion | null = null
         if (slotInfo.tts_type == "GPT-SoVITS") {
             const gptSovitsSlotInfo = slotInfo as GPTSoVITSSlotInfo
             topK = gptSovitsSlotInfo.top_k
@@ -93,6 +94,7 @@ export const TextInputArea = () => {
             temperature = gptSovitsSlotInfo.temperature
             batchSize = gptSovitsSlotInfo.batch_size
             gptSovitsVersion = gptSovitsSlotInfo.version
+            gptSovitsModelVersion = gptSovitsSlotInfo.model_version
         }
 
         const languageSelect = (
@@ -295,7 +297,7 @@ export const TextInputArea = () => {
         )
 
         let speedSelect = <></>
-        if (gptSovitsVersion == "v2" || gptSovitsVersion == "v3") {
+        if (gptSovitsVersion == "v1" || gptSovitsVersion == "v2" || true) {
             speedSelect = (
                 <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
                     <div>{t("text_input_area_speed_label")}</div>
@@ -308,7 +310,7 @@ export const TextInputArea = () => {
         }
 
         let fastControl = <></>
-        if (gptSovitsVersion == "v2") {
+        if (gptSovitsModelVersion == "v2") {
             fastControl = (
                 <div style={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
                     <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
@@ -327,7 +329,7 @@ export const TextInputArea = () => {
         }
 
         let sampleStepsInput = <></>
-        if (gptSovitsVersion == "v3") {
+        if (gptSovitsModelVersion == "v3") {
             const sampleStepsOptions = Array(100).fill(0).map((x, i) => { return (<option key={i + 1} value={i + 1}>{i + 1}</option>) })
 
             sampleStepsInput = (

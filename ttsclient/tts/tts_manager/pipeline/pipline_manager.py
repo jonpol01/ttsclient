@@ -11,12 +11,12 @@ class PipelineManager:
     def get_pipeline(cls, slot_info: SlotInfo) -> Pipeline:
         if slot_info.tts_type == "GPT-SoVITS":
             assert isinstance(slot_info, GPTSoVITSSlotInfo)
-            if slot_info.version == "v2":
+            if slot_info.model_version == "v2":
                 if slot_info.enable_faster:
                     pipeline: GPTSoVITSFasterPipeline | GPTSoVITSPipeline = GPTSoVITSFasterPipeline(slot_info)
                 else:
                     pipeline = GPTSoVITSPipeline(slot_info)
-            if slot_info.version == "v3":
+            if slot_info.model_version == "v3":
                 pipeline = GPTSoVITSV3Pipeline(slot_info)
             return pipeline
         else:

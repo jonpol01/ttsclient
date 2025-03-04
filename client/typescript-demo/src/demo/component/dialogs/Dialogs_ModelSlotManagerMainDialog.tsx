@@ -218,6 +218,7 @@ const GPTSoVITSDetailArea = (props: GPTSoVITSDetailAreaProps) => {
             <NameRow slotInfo={{ ...slotInfo }}></NameRow>
             <FileRow title="semantic" slotIndex={slotInfo.slot_index} filePath={slotInfo.semantic_predictor_model || "default"}></FileRow>
             <FileRow title="synthesize" slotIndex={slotInfo.slot_index} filePath={slotInfo.synthesizer_path || "default"}></FileRow>
+            <InfoRow info={`GPT-SoVITS, ver: ${slotInfo.version}, m_ver:${slotInfo.model_version}, lora:${slotInfo.if_lora_v3}`}></InfoRow >
         </div>
     );
 };

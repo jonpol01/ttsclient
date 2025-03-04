@@ -83,8 +83,10 @@ export type ModuleStatus = {
 
 export const TTSTypes = ["GPT-SoVITS"] as const;
 export type TTSType = (typeof TTSTypes)[number];
-export const GPTSoVITSVersions = ["v2", "v3"] as const;
+export const GPTSoVITSVersions = ["v1", "v2"] as const;
 export type GPTSoVITSVersion = (typeof GPTSoVITSVersions)[number];
+export const GPTSoVITSModelVersions = ["v1", "v2", "v3"] as const;
+export type GPTSoVITSModelVersion = (typeof GPTSoVITSModelVersions)[number];
 
 export type SlotInfoMember = SlotInfo | GPTSoVITSSlotInfo;
 export type SlotInfo = {
@@ -99,6 +101,8 @@ export type SlotInfo = {
 export type GPTSoVITSSlotInfo = SlotInfo & {
     tts_type: "GPT-SoVITS";
     version: GPTSoVITSVersion;
+    model_version: GPTSoVITSModelVersion;
+    if_lora_v3: boolean;
     enable_faster: boolean
     semantic_predictor_model: string;
     synthesizer_path: string;
@@ -141,7 +145,6 @@ export type GPTSoVITSModelImportParam = ModelImportParam & {
     tts_type: "GPT-SoVITS";
     semantic_predictor_model: string | null;
     synthesizer_path?: string | null;
-    version: GPTSoVITSVersion;
 };
 
 export type MoveModelParam = {

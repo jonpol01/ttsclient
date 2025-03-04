@@ -5,6 +5,7 @@ from typing import cast
 
 from ttsclient.const import LOGGER_NAME, SLOT_PARAM_FILE
 from ttsclient.tts.data_types.slot_manager_data_types import GPTSoVITSModelImportParam, GPTSoVITSSlotInfo, ModelImportParamMember
+from ttsclient.tts.tts_manager.models.synthesizer_v3.utils.process_ckpt import get_sovits_version_from_path_fast
 
 
 def import_model(model_dir: Path, model_importer_param: ModelImportParamMember, remove_src: bool = False):
@@ -13,6 +14,9 @@ def import_model(model_dir: Path, model_importer_param: ModelImportParamMember, 
     try:
         if model_importer_param.tts_type == "GPT-SoVITS":
             assert isinstance(model_importer_param, GPTSoVITSModelImportParam)
+            version, model_version, if_lora_v3 = get_sovits_version_from_path_fast(model_importer_param.synthesizer_path)
+            print(f"version: {version}, model_version: {model_version}, if_lora_v3: {if_lora_v3}")
+
             for src in cast(list[Path | None], [model_importer_param.icon_file, model_importer_param.semantic_predictor_model, model_importer_param.synthesizer_path]):
                 if src is not None:
                     dst = slot_dir / src.name
@@ -26,7 +30,9 @@ def import_model(model_dir: Path, model_importer_param: ModelImportParamMember, 
             # generate config file
             assert model_importer_param.slot_index is not None
             slot_info = GPTSoVITSSlotInfo(
-                version=model_importer_param.version,
+                version=version,
+                model_version=model_version,
+                if_lora_v3=if_lora_v3,
                 slot_index=model_importer_param.slot_index,
                 name=model_importer_param.name,
                 icon_file=Path(model_importer_param.icon_file.name) if model_importer_param.icon_file is not None else None,

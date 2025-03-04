@@ -1,7 +1,7 @@
 from pathlib import Path
 from pydantic import BaseModel
 
-from ttsclient.const import BackendMode, BasicVoiceType, GPTSoVITSVersion, LanguageType, TTSType
+from ttsclient.const import BackendMode, BasicVoiceType, GPTSoVITSModelVersion, GPTSoVITSVersion, LanguageType, TTSType
 
 
 class ModelImportParam(BaseModel):
@@ -15,7 +15,6 @@ class ModelImportParam(BaseModel):
 class GPTSoVITSModelImportParam(ModelImportParam):
     semantic_predictor_model: Path | None = None
     synthesizer_path: Path | None = None
-    version: GPTSoVITSVersion = "v2"
 
 
 ModelImportParamMember = ModelImportParam | GPTSoVITSModelImportParam
@@ -34,6 +33,8 @@ class SlotInfo(BaseModel):
 class GPTSoVITSSlotInfo(SlotInfo):
     tts_type: TTSType = "GPT-SoVITS"
     version: GPTSoVITSVersion = "v2"
+    model_version: GPTSoVITSModelVersion = "v2"
+    if_lora_v3: bool = False
     enable_faster: bool | None = False
     semantic_predictor_model: Path | None = None
     synthesizer_path: Path | None = None

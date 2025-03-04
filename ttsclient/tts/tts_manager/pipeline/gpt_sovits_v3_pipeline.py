@@ -52,12 +52,22 @@ class GPTSoVITSV3Pipeline(Pipeline):
         else:
             sovit_model = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.synthesizer_path
             logging.getLogger(LOGGER_NAME).info(f"use custom sematic predictor {sovit_model}")
-        self.vq_model = SynthesizerManager.get_synthesizer(
-            "SovitsSynthesizerV3",
-            sovit_model,
-            self.gpu_device_id,
-            self.slot_info.backend_mode == "all_onnx" or self.slot_info.backend_mode == "synthesizer_onnx",
-        )
+
+        if slot_info.if_lora_v3:
+            self.vq_model = SynthesizerManager.get_synthesizer(
+                "SovitsSynthesizerV3Lora",
+                sovit_model,
+                self.gpu_device_id,
+                self.slot_info.backend_mode == "all_onnx" or self.slot_info.backend_mode == "synthesizer_onnx",
+            )
+        else:
+            self.vq_model = SynthesizerManager.get_synthesizer(
+                "SovitsSynthesizerV3",
+                sovit_model,
+                self.gpu_device_id,
+                self.slot_info.backend_mode == "all_onnx" or self.slot_info.backend_mode == "synthesizer_onnx",
+            )
+
         self.hps = self.vq_model.get_hps()
 
         cnhubert_base_path = ModuleManager.get_instance().get_module_filepath("chinese-hubert-base_bin")

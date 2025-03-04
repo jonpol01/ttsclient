@@ -46,8 +46,15 @@ TTSTypes: list[TTSType] = [
     "BROKEN",
 ]
 
-GPTSoVITSVersion: TypeAlias = Literal["v2", "v3"]
+GPTSoVITSVersion: TypeAlias = Literal["v1", "v2"]
 GPTSoVITSVersions: list[GPTSoVITSVersion] = [
+    "v1",
+    "v2",
+]
+
+GPTSoVITSModelVersion: TypeAlias = Literal["v1", "v2", "v3"]
+GPTSoVITSModelVersions: list[GPTSoVITSVersion] = [
+    "v1",
     "v2",
     "v3",
 ]
@@ -62,10 +69,11 @@ PhoneExtractorTypes: list[PhoneExtractorType] = [
     "BertPhoneExtractor",
 ]
 
-SynthesizerType: TypeAlias = Literal["SovitsSynthesizer", "SovitsSynthesizerV3"]
+SynthesizerType: TypeAlias = Literal["SovitsSynthesizer", "SovitsSynthesizerV3", "SovitsSynthesizerV3Lora"]
 SynthesizerTypes: list[SynthesizerType] = [
     "SovitsSynthesizer",
     "SovitsSynthesizerV3",
+    "SovitsSynthesizerV3Lora",
 ]
 
 EmbedderType: TypeAlias = Literal["cnhubert",]

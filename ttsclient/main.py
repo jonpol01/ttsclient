@@ -65,23 +65,23 @@ def download_initial_models() -> None:
     # プレトレインの設定
     gpt_sovits_icon_v3 = module_manager.get_module_filepath("GPT-SoVITS_icon_v3")
     model_import_param = GPTSoVITSModelImportParam(
-        version="v3",
         tts_type="GPT-SoVITS",
         name="pretrained_v3",
         terms_of_use_url="https://huggingface.co/wok000/gpt-sovits-models/raw/main/pretrained/term_of_use.txt",
         icon_file=gpt_sovits_icon_v3,
+        semantic_predictor_model=module_manager.get_module_filepath("gpt_model_v3"),
+        synthesizer_path=module_manager.get_module_filepath("sovits_model_v3"),
     )
-    slot_manager.set_new_slot(model_import_param, remove_src=True)
+    slot_manager.set_new_slot(model_import_param, remove_src=False)
 
-    gpt_sovits_icon = module_manager.get_module_filepath("GPT-SoVITS_icon")
-    model_import_param = GPTSoVITSModelImportParam(
-        version="v2",
-        tts_type="GPT-SoVITS",
-        name="pretrained_v2(deprecated)",
-        terms_of_use_url="https://huggingface.co/wok000/gpt-sovits-models/raw/main/pretrained/term_of_use.txt",
-        icon_file=gpt_sovits_icon,
-    )
-    slot_manager.set_new_slot(model_import_param, remove_src=True)
+    # gpt_sovits_icon = module_manager.get_module_filepath("GPT-SoVITS_icon")
+    # model_import_param = GPTSoVITSModelImportParam(
+    #     tts_type="GPT-SoVITS",
+    #     name="pretrained_v2(deprecated)",
+    #     terms_of_use_url="https://huggingface.co/wok000/gpt-sovits-models/raw/main/pretrained/term_of_use.txt",
+    #     icon_file=gpt_sovits_icon,
+    # )
+    # slot_manager.set_new_slot(model_import_param, remove_src=True)
 
     # finetuneの設定
     ft_semantic = module_manager.get_module_filepath("GPT-SoVITS_FT_JVNV_semantice")
@@ -233,12 +233,16 @@ def start_cui(
 
     err_msg = ""
     try:
+        check_alive_count = 0
         while True:
-            current_time = time.strftime("%Y/%m/%d %H:%M:%S")
-            logging.getLogger(LOGGER_NAME).info(f"{current_time}: running...")
+            check_alive_count += 1
+            if check_alive_count % 5 == 0:
+                check_alive_count = 0
+                current_time = time.strftime("%Y/%m/%d %H:%M:%S")
+                logging.getLogger(LOGGER_NAME).info(f"{current_time}: running...")
             if app_status.end_flag is True:
                 break
-            time.sleep(2)
+            time.sleep(1)
     except KeyboardInterrupt:
         err_msg = "KeyboardInterrupt"
 

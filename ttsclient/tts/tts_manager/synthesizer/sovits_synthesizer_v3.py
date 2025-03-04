@@ -9,11 +9,14 @@ import onnxruntime
 import onnx
 from onnxsim import simplify
 import json
+from peft import LoraConfig, PeftModel, get_peft_model
 
 from ttsclient.const import LOGGER_NAME
+from ttsclient.tts.module_manager.module_manager import ModuleManager
 from ttsclient.tts.tts_manager.device_manager.device_manager import DeviceManager
 from ttsclient.tts.tts_manager.models.synthesizer.onnx.models_onnx import Spectrogram, SynthesizerTrnLatent, SynthesizerTrn as SynthesizerTrnOnnx
 from ttsclient.tts.tts_manager.models.synthesizer_v3.models import SynthesizerTrnV3
+from ttsclient.tts.tts_manager.models.synthesizer_v3.utils.process_ckpt import load_sovits_new
 from ttsclient.tts.tts_manager.synthesizer.synthesizer import Synthesizer
 from ttsclient.tts.tts_manager.synthesizer.synthesizer_info import SynthesizerInfo
 from ttsclient.tts.tts_manager.utils.dict_to_attr_recursive import DictToAttrRecursive
@@ -22,7 +25,7 @@ from simple_performance_timer.Timer import Timer
 
 
 class SovitsSynthesizerV3(Synthesizer):
-    def __init__(self, model_path: Path, device_id: int, use_onnx: bool, del_enc: bool = True):
+    def __init__(self, model_path: Path, lora_v3: bool, device_id: int, use_onnx: bool, del_enc: bool = True):
         print("load new syntehtizer: SovitsSynthesizerV3")
         self.device = DeviceManager.get_instance().get_pytorch_device(device_id)
         self.is_half = DeviceManager.get_instance().half_precision_available(device_id)
@@ -35,11 +38,14 @@ class SovitsSynthesizerV3(Synthesizer):
         self.onnx_latent_path = self.model_path.with_name(onnx_latent_stem).with_suffix(".onnx")
         self.use_onnx = use_onnx
 
-        dict_s2 = torch.load(model_path, map_location="cpu")
+        dict_s2 = load_sovits_new(model_path)
+
         self.hps = DictToAttrRecursive(dict_s2["config"])
         if self.use_onnx is False:
             self.hps.model.semantic_frame_rate = "25hz"
-            if dict_s2["weight"]["enc_p.text_embedding.weight"].shape[0] == 322:
+            if "enc_p.text_embedding.weight" not in dict_s2["weight"]:
+                self.hps.model.version = "v2"  # v3model,v2sybomls
+            elif dict_s2["weight"]["enc_p.text_embedding.weight"].shape[0] == 322:
                 self.hps.model.version = "v1"
             else:
                 self.hps.model.version = "v2"
@@ -63,7 +69,25 @@ class SovitsSynthesizerV3(Synthesizer):
             else:
                 self.vq_model = self.vq_model.to(self.device)
             self.vq_model.eval()
-            self.vq_model.load_state_dict(dict_s2["weight"], strict=False)
+
+            if lora_v3 is False:
+                self.vq_model.load_state_dict(dict_s2["weight"], strict=False)
+            else:
+                module_manager = ModuleManager.get_instance()
+                v3_pretrained_path = module_manager.get_module_filepath("sovits_model_v3")
+                self.vq_model.load_state_dict(load_sovits_new(v3_pretrained_path)["weight"], strict=False)
+                lora_rank = dict_s2["lora_rank"]
+                lora_config = LoraConfig(
+                    target_modules=["to_k", "to_q", "to_v", "to_out.0"],
+                    r=lora_rank,
+                    lora_alpha=lora_rank,
+                    init_lora_weights=True,
+                )
+                self.vq_model.cfm = get_peft_model(self.vq_model.cfm, lora_config)
+                print("loading sovits_v3_lora%s" % (lora_rank))
+                self.vq_model.load_state_dict(dict_s2["weight"], strict=False)
+                self.vq_model.cfm = self.vq_model.cfm.merge_and_unload()
+                self.vq_model.eval()
 
             self.info = SynthesizerInfo(
                 synthesizer_type="SovitsSynthesizer",

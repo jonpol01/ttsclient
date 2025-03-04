@@ -171,8 +171,8 @@ REGISTERD_MODULES: list[ModuleInfo] = [
     ),
 ]
 REQUIRED_MODULES = [
-    "gpt_model",
-    "sovits_model",
+    # "gpt_model",
+    # "sovits_model",
     "gpt_model_v3",
     "sovits_model_v3",
     "chinese-roberta-wwm-ext-large_bin",
@@ -185,7 +185,7 @@ REQUIRED_MODULES = [
     "bigvgan_v2_24khz_100band_256x_config.json",
 ]
 INITIAL_MODELS = [
-    "GPT-SoVITS_icon",
+    # "GPT-SoVITS_icon",
     "GPT-SoVITS_icon_v3",
     "GPT-SoVITS_FT_JVNV_semantice",
     "GPT-SoVITS_FT_JVNV_synthesizer",
