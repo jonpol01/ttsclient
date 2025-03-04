@@ -76,42 +76,42 @@
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/eslint-plugin@8.25.0",
+      "name": "@typescript-eslint/eslint-plugin@8.26.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/parser@8.25.0",
+      "name": "@typescript-eslint/parser@8.26.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/scope-manager@8.25.0",
+      "name": "@typescript-eslint/scope-manager@8.26.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/type-utils@8.25.0",
+      "name": "@typescript-eslint/type-utils@8.26.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/types@8.25.0",
+      "name": "@typescript-eslint/types@8.26.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/typescript-estree@8.25.0",
+      "name": "@typescript-eslint/typescript-estree@8.26.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/utils@8.25.0",
+      "name": "@typescript-eslint/utils@8.26.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/visitor-keys@8.25.0",
+      "name": "@typescript-eslint/visitor-keys@8.26.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
@@ -339,7 +339,7 @@
       "licenseURL": ""
     },
     {
-      "name": "tts-client-typescript-client-lib@1.0.28",
+      "name": "tts-client-typescript-client-lib@1.0.30",
       "repository": "",
       "licenseURL": ""
     },
