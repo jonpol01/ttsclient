@@ -2,12 +2,17 @@ import logging
 import platform
 import signal
 import fire
+import time
+import sys
+
+sys.path.append("./third_party/GPT-SoVITS/GPT_SoVITS")
+sys.path.append("./third_party/GPT-SoVITS")
+sys.path.append("./third_party/GPT-SoVITS/GPT_SoVITS/BigVGAN")
 
 from ttsclient.client_launcher.client_launcher import ClientLauncher
 from ttsclient.tts.tts_manager.tts_manager import TTSManager
 from ttsclient.utils.download_callback import get_download_callback
 
-import time
 from ttsclient.misc.download_eunjeon import download_modules
 from ttsclient.app_status import AppStatus
 from ttsclient.const import LOG_FILE, LOGGER_NAME, VERSION

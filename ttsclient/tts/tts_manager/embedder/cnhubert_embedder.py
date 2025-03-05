@@ -1,10 +1,10 @@
 from pathlib import Path
 
 import torch
+from feature_extractor import cnhubert
 from ttsclient.tts.tts_manager.device_manager.device_manager import DeviceManager
 from ttsclient.tts.tts_manager.embedder.embedder import Embedder
 from ttsclient.tts.tts_manager.embedder.embedder_info import EmbedderInfo
-from ttsclient.tts.tts_manager.embedder.models import cnhubert
 
 
 class CNHubertEmbedder(Embedder):

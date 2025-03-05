@@ -9,19 +9,18 @@ import onnxruntime
 import onnx
 from onnxsim import simplify
 import json
-from peft import LoraConfig, PeftModel, get_peft_model
+from peft import LoraConfig, get_peft_model
 
+from simple_performance_timer.Timer import Timer
+from module.models import SynthesizerTrnV3
+from process_ckpt import load_sovits_new
 from ttsclient.const import LOGGER_NAME
+from ttsclient.gpt_sovits_utils import DictToAttrRecursive
 from ttsclient.tts.module_manager.module_manager import ModuleManager
 from ttsclient.tts.tts_manager.device_manager.device_manager import DeviceManager
 from ttsclient.tts.tts_manager.models.synthesizer.onnx.models_onnx import Spectrogram, SynthesizerTrnLatent, SynthesizerTrn as SynthesizerTrnOnnx
-from ttsclient.tts.tts_manager.models.synthesizer_v3.models import SynthesizerTrnV3
-from ttsclient.tts.tts_manager.models.synthesizer_v3.utils.process_ckpt import load_sovits_new
 from ttsclient.tts.tts_manager.synthesizer.synthesizer import Synthesizer
 from ttsclient.tts.tts_manager.synthesizer.synthesizer_info import SynthesizerInfo
-from ttsclient.tts.tts_manager.utils.dict_to_attr_recursive import DictToAttrRecursive
-
-from simple_performance_timer.Timer import Timer
 
 
 class SovitsSynthesizerV3(Synthesizer):

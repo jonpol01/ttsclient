@@ -4,8 +4,10 @@ import numpy as np
 import torch
 import onnxruntime
 from tqdm import tqdm
-from ttsclient.tts.tts_manager.models.ar.onnx.t2s_model_onnx import T2SModel
-from ttsclient.tts.tts_manager.models.ar.t2s_lightning_module import Text2SemanticLightningModule
+
+from AR.models.t2s_lightning_module import Text2SemanticLightningModule
+from AR.models.t2s_lightning_module_onnx import Text2SemanticLightningModule as T2SModel
+
 from ttsclient.tts.tts_manager.semantic_predictor.semantic_predictor_info import SemanticPredictorInfo
 from ttsclient.tts.tts_manager.semantic_predictor.smantic_predictor import SemanticPredictor
 from ttsclient.tts.tts_manager.device_manager.device_manager import DeviceManager

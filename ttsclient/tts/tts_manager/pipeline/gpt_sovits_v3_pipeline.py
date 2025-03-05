@@ -6,6 +6,9 @@ import librosa
 import numpy as np
 import torch
 import torchaudio
+
+from module.mel_processing import mel_spectrogram_torch
+from ttsclient.gpt_sovits_utils import cut1, cut2, cut3, cut4, cut5, get_spepc, merge_short_text_in_array, process_text, splits
 from ttsclient.const import LOGGER_NAME, CutMethod, ModelDir
 from ttsclient.tts.configuration_manager.configuration_manager import ConfigurationManager
 from ttsclient.tts.data_types.slot_manager_data_types import GPTSoVITSSlotInfo, SlotInfoMember
@@ -16,10 +19,6 @@ from ttsclient.tts.tts_manager.phone_extractor.phone_extractor_manager import Ph
 from ttsclient.tts.tts_manager.pipeline.pipeline import Pipeline
 from ttsclient.tts.tts_manager.semantic_predictor.semantic_predictor_manager import SemanticPredictorManager
 from ttsclient.tts.tts_manager.synthesizer.synthesizer_manager import SynthesizerManager
-from ttsclient.tts.tts_manager.utils.get_spec import get_spepc
-from ttsclient.tts.tts_manager.utils.text_cutter import cut1, cut2, cut3, cut4, cut5, merge_short_text_in_array, process_text, splits
-
-from ..models.synthesizer_v3.mel_processing import mel_spectrogram_torch
 
 
 class GPTSoVITSV3Pipeline(Pipeline):
@@ -101,11 +100,6 @@ class GPTSoVITSV3Pipeline(Pipeline):
         self.mel_fn = lambda x: mel_spectrogram_torch(x, **mel_fn_args)
         self.resample_transform_dict = {}
 
-        # from ..models.BigVGAN import bigvgan
-
-        import sys
-
-        sys.path.append("ttsclient/tts/tts_manager/models/BigVGAN")
         import bigvgan
 
         bigvgan_dir = module_manager.get_module_filepath("bigvgan_v2_24khz_100band_256x_bigvgan_generator_pt").parent

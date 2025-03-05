@@ -2,14 +2,16 @@ from pathlib import Path
 import re
 
 import torch
-from ttsclient.tts.tts_manager.device_manager.device_manager import DeviceManager
-from ttsclient.tts.tts_manager.phone_extractor.phone_extractor import PhoneExtractor
+
+# from inference_webui import get_phones_and_bert as get_phones_and_bert_webui
+from text import chinese
+from text.cleaner import clean_text, cleaned_text_to_sequence
+from text.LangSegmenter.langsegmenter import LangSegmenter
 from transformers import AutoModelForMaskedLM, AutoTokenizer
 
+from ttsclient.tts.tts_manager.device_manager.device_manager import DeviceManager
+from ttsclient.tts.tts_manager.phone_extractor.phone_extractor import PhoneExtractor
 from ttsclient.tts.tts_manager.phone_extractor.phone_extractor_info import PhoneExtractorInfo
-from ttsclient.tts.tts_manager.text.LangSegmenter.langsegmenter import LangSegmenter
-from ttsclient.tts.tts_manager.text import chinese, cleaned_text_to_sequence
-from ttsclient.tts.tts_manager.text.cleaner import clean_text
 
 
 class BertPhoneExtractor(PhoneExtractor):
@@ -36,7 +38,14 @@ class BertPhoneExtractor(PhoneExtractor):
     def get_info(self) -> PhoneExtractorInfo:
         return self.info
 
-    def _get_bert_feature(self, text, word2ph):
+    # GPT-SoVITSからコピー
+    def __clean_text_inf(self, text, language, version):
+        language = language.replace("all_", "")
+        phones, word2ph, norm_text = clean_text(text, language, version)
+        phones = cleaned_text_to_sequence(phones, version)
+        return phones, word2ph, norm_text
+
+    def __get_bert_feature(self, text, word2ph):
         with torch.no_grad():
             inputs = self.tokenizer(text, return_tensors="pt")
             for i in inputs:
@@ -51,22 +60,14 @@ class BertPhoneExtractor(PhoneExtractor):
         phone_level_feature = torch.cat(phone_level_feature, dim=0)
         return phone_level_feature.T
 
-    def _clean_text_inf(self, text, language, version):
-        language = language.replace("all_", "")
-        phones, word2ph, norm_text = clean_text(text, language, version)
-        phones = cleaned_text_to_sequence(phones, version)
-        return phones, word2ph, norm_text
-
-        return phones, word2ph, norm_text
-
-    def _get_bert_inf(self, phones, word2ph, norm_text, language):
+    def __get_bert_inf(self, phones, word2ph, norm_text, language):
         language = language.replace("all_", "")
         if language == "zh":
-            bert = self._get_bert_feature(norm_text, word2ph).to(self.device)  # .to(dtype)
+            bert = self.__get_bert_feature(norm_text, word2ph).to(self.device)  # .to(dtype)
         else:
             bert = torch.zeros(
                 (1024, len(phones)),
-                dtype=torch.float16 if self.is_half is True else torch.float32,
+                dtype=torch.float16 if self.is_half == True else torch.float32,
             ).to(self.device)
 
         return bert
@@ -82,14 +83,14 @@ class BertPhoneExtractor(PhoneExtractor):
                     formattext = chinese.mix_text_normalize(formattext)
                     return self.get_phones_and_bert(formattext, "zh", version)
                 else:
-                    phones, word2ph, norm_text = self._clean_text_inf(formattext, language, version)
-                    bert = self.get_bert_feature(norm_text, word2ph).to(self.device)
+                    phones, word2ph, norm_text = self.__clean_text_inf(formattext, language, version)
+                    bert = self.__get_bert_feature(norm_text, word2ph).to(self.device)
             elif language == "all_yue" and re.search(r"[A-Za-z]", formattext):
                 formattext = re.sub(r"[a-z]", lambda x: x.group(0).upper(), formattext)
                 formattext = chinese.mix_text_normalize(formattext)
                 return self.get_phones_and_bert(formattext, "yue", version)
             else:
-                phones, word2ph, norm_text = self._clean_text_inf(formattext, language, version)
+                phones, word2ph, norm_text = self.__clean_text_inf(formattext, language, version)
                 bert = torch.zeros(
                     (1024, len(phones)),
                     dtype=torch.float16 if self.is_half == True else torch.float32,
@@ -122,8 +123,8 @@ class BertPhoneExtractor(PhoneExtractor):
             norm_text_list = []
             for i in range(len(textlist)):
                 lang = langlist[i]
-                phones, word2ph, norm_text = self._clean_text_inf(textlist[i], lang, version)
-                bert = self._get_bert_inf(phones, word2ph, norm_text, lang)
+                phones, word2ph, norm_text = self.__clean_text_inf(textlist[i], lang, version)
+                bert = self.__get_bert_inf(phones, word2ph, norm_text, lang)
                 phones_list.append(phones)
                 norm_text_list.append(norm_text)
                 bert_list.append(bert)

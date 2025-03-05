@@ -20,5 +20,10 @@
   "python.testing.pytestEnabled": true,
   "mypy-type-checker.args": [
     "--config-file=mypy.ini"
+  ],
+  "python.analysis.extraPaths": [
+    "./third_party/GPT-SoVITS/GPT_SoVITS",
+    "./third_party/GPT-SoVITS",
+    "./third_party/GPT-SoVITS/GPT_SoVITS/BigVGAN"
   ]
 }

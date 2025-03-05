@@ -11,7 +11,7 @@ sys.path.append(now_dir)
 
 import re
 import torch
-from ...text.LangSegmenter import LangSegmenter
+from text.LangSegmenter import LangSegmenter
 from ...text import chinese
 from typing import Dict, List, Tuple
 from ...text.cleaner import clean_text
