@@ -987,16 +987,14 @@
       "note": ""
     }
   ],
-  "Other/Proprietary License; Python Software Foundation License": [
+  "UNKNOWN": [
     {
-      "name": "aiohappyeyeballs",
-      "version": "2.4.3",
+      "name": "ToJyutping",
+      "version": "3.2.0",
       "licenseURL": "http://SHOULD_BE_WRITTEN",
       "repositry": "",
       "note": ""
-    }
-  ],
-  "UNKNOWN": [
+    },
     {
       "name": "audioread",
       "version": "3.0.1",
@@ -1021,6 +1019,15 @@
     {
       "name": "uuid",
       "version": "1.30",
+      "licenseURL": "http://SHOULD_BE_WRITTEN",
+      "repositry": "",
+      "note": ""
+    }
+  ],
+  "Other/Proprietary License; Python Software Foundation License": [
+    {
+      "name": "aiohappyeyeballs",
+      "version": "2.4.3",
       "licenseURL": "http://SHOULD_BE_WRITTEN",
       "repositry": "",
       "note": ""
