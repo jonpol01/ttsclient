@@ -285,6 +285,13 @@
       "note": ""
     },
     {
+      "name": "accelerate",
+      "version": "1.4.0",
+      "licenseURL": "http://SHOULD_BE_WRITTEN",
+      "repositry": "",
+      "note": ""
+    },
+    {
       "name": "aiohttp",
       "version": "3.10.8",
       "licenseURL": "http://SHOULD_BE_WRITTEN",
@@ -399,6 +406,13 @@
     {
       "name": "onnxsim",
       "version": "0.4.36",
+      "licenseURL": "http://SHOULD_BE_WRITTEN",
+      "repositry": "",
+      "note": ""
+    },
+    {
+      "name": "peft",
+      "version": "0.14.0",
       "licenseURL": "http://SHOULD_BE_WRITTEN",
       "repositry": "",
       "note": ""
