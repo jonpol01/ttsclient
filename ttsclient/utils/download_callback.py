@@ -32,3 +32,26 @@ def get_download_callback() -> Callable:
                 pbar.close()
 
     return download_callback
+
+
+def get_download_callback_single() -> Callable:
+    pbar_dict_module: dict[str, tqdm] = {}
+
+    def download_callback(status: ModuleDownloadStatus):
+        position = 0
+        if status.id not in pbar_dict_module:
+            pbar_dict_module[status.id] = tqdm(
+                total=100,
+                unit="%",
+                desc=f"Downloading {status.id[:10]}",
+                leave=False,
+                position=position,
+            )
+            position += 1
+        pbar = pbar_dict_module[status.id]
+        pbar.n = int(status.progress * 100)
+        pbar.refresh()
+        if status.status == "done":
+            pbar.close()
+
+    return download_callback

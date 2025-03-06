@@ -66,6 +66,13 @@ REGISTERD_MODULES: list[ModuleInfo] = [
         save_to=ModuleDir / Path("chinese-roberta-wwm-ext-large/tokenizer.json"),
         hash="173796956820ea27bd14f76bf28162607ff4254807e2948253eb5b46f5bb643b",
     ),
+    ModuleInfo(
+        id="chinese-roberta-wwm-ext-large_G2PWModel_1.1.zip",
+        display_name="G2PWModel_1.1.zip",
+        url="https://paddlespeech.bj.bcebos.com/Parakeet/released_models/g2p/G2PWModel_1.1.zip",
+        save_to="GPT_SoVITS/text/G2PWModel_1.1.zip",
+        hash="b116f6930a7ee55eef6576a8d8e14bf40c1106583439e8ae924b901512379c64",
+    ),
     # // chinese-hubert-base // #
     ModuleInfo(
         id="chinese-hubert-base_bin",
@@ -366,11 +373,11 @@ class ModuleManager:
     def download_initial_modules(self, callback: Callable[[list[ModuleDownloadStatus]], None]):
         modules = [x for x in self.get_modules() if x.info.id in REQUIRED_MODULES and x.valid is False]
 
-        logging.getLogger(LOGGER_NAME).info("---- TEST MODULES ---- start")
+        # logging.getLogger(LOGGER_NAME).info("---- TEST MODULES ---- start")
         test_modules = [x for x in self.get_modules() if x.info.id in REQUIRED_MODULES]
         for i in test_modules:
             logging.getLogger(LOGGER_NAME).info(f"Module:{i.info.id} -> Download:{i.downloaded}, Status:{i.valid}")
-        logging.getLogger(LOGGER_NAME).info("---- TEST MODULES ---- end")
+        # logging.getLogger(LOGGER_NAME).info("---- TEST MODULES ---- end")
 
         # x.info.idをキーにした辞書配列でstatusを管理。
         status_dict = {x.info.id: ModuleDownloadStatus(id=x.info.id, status="processing", progress=0.0) for x in modules}
@@ -405,3 +412,8 @@ class ModuleManager:
             threads.join()
         print("")
         print("initial model download fin!")
+
+    def download_one_module(self, id: str, callback: Callable[[list[ModuleDownloadStatus]], None]):
+        self.download(id, callback)
+        for threads in self.threads.values():
+            threads.join()

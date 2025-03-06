@@ -1,6 +1,6 @@
 from pathlib import Path
 import re
-
+import os
 import torch
 
 # from inference_webui import get_phones_and_bert as get_phones_and_bert_webui
@@ -9,9 +9,11 @@ from text.cleaner import clean_text, cleaned_text_to_sequence
 from text.LangSegmenter.langsegmenter import LangSegmenter
 from transformers import AutoModelForMaskedLM, AutoTokenizer
 
+from ttsclient.tts.module_manager.module_manager import ModuleManager
 from ttsclient.tts.tts_manager.device_manager.device_manager import DeviceManager
 from ttsclient.tts.tts_manager.phone_extractor.phone_extractor import PhoneExtractor
 from ttsclient.tts.tts_manager.phone_extractor.phone_extractor_info import PhoneExtractorInfo
+from ttsclient.utils.download_callback import get_download_callback_single
 
 
 class BertPhoneExtractor(PhoneExtractor):
@@ -34,6 +36,7 @@ class BertPhoneExtractor(PhoneExtractor):
             path=model_path,
             phone_extractor_type="BertPhoneExtractor",
         )
+        os.environ["bert_path"] = str(model_path)
 
     def get_info(self) -> PhoneExtractorInfo:
         return self.info
@@ -73,6 +76,29 @@ class BertPhoneExtractor(PhoneExtractor):
         return bert
 
     def get_phones_and_bert(self, text, language, version, final=False):
+        if language in {"zh", "all_zh"}:
+            import os
+            import zipfile
+
+            module_manager = ModuleManager.get_instance()
+            modules = module_manager.get_modules()
+            G2PWModel_zip = [x for x in modules if x.info.id == "chinese-roberta-wwm-ext-large_G2PWModel_1.1.zip"][0]
+            model_dir = "GPT_SoVITS/text/G2PWModel"
+            if os.path.exists(model_dir) is False:
+                if G2PWModel_zip.valid is False:
+                    download_callback = get_download_callback_single()
+                    module_manager.download_one_module("chinese-roberta-wwm-ext-large_G2PWModel_1.1.zip", download_callback)
+
+                parent_directory = os.path.dirname(model_dir)
+                zip_dir = os.path.join(parent_directory, "G2PWModel_1.1.zip")
+                extract_dir = os.path.join(parent_directory, "G2PWModel_1.1")
+                extract_dir_new = os.path.join(parent_directory, "G2PWModel")
+                print("Extracting g2pw model...")
+                with zipfile.ZipFile(zip_dir, "r") as zip_ref:
+                    zip_ref.extractall(parent_directory)
+
+                os.rename(extract_dir, extract_dir_new)
+
         if language in {"en", "all_zh", "all_ja", "all_ko", "all_yue"}:
             formattext = text
             while "  " in formattext:

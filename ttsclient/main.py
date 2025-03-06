@@ -28,7 +28,6 @@ from ttsclient.utils.parseBoolArg import parse_bool_arg
 from ttsclient.utils.resolve_url import resolve_base_url
 from simple_performance_timer.Timer import Timer
 
-
 setup_logger(LOGGER_NAME, LOG_FILE)
 
 import atexit
@@ -241,7 +240,7 @@ def start_cui(
         check_alive_count = 0
         while True:
             check_alive_count += 1
-            if check_alive_count % 5 == 0:
+            if check_alive_count % 60 == 0:
                 check_alive_count = 0
                 current_time = time.strftime("%Y/%m/%d %H:%M:%S")
                 logging.getLogger(LOGGER_NAME).info(f"{current_time}: running...")
