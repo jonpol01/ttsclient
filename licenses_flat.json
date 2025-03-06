@@ -49,6 +49,13 @@
     "repositry": ""
   },
   {
+    "name": "ToJyutping",
+    "version": "3.2.0",
+    "license": "UNKNOWN",
+    "licenseURL": "http://SHOULD_BE_WRITTEN",
+    "repositry": ""
+  },
+  {
     "name": "accelerate",
     "version": "1.4.0",
     "license": "Apache Software License",
