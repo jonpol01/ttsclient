@@ -39,10 +39,10 @@ https://github.com/user-attachments/assets/76b93f6d-0566-46c8-ace9-5a6e07640ca8
 https://github.com/user-attachments/assets/e02e7df3-89bf-485a-9aed-b654eed4ff2a
 
 
-<video width="640" height="360" controls>
-    <source src="https://github.com/user-attachments/assets/d6b94c39-b2d3-478a-bc79-29d00f85e1a0" type="video/mp4">
-    お使いのブラウザは動画タグに対応していません。
-</video>
+|  a | b  | c  |
+|---|---|---|
+|https://github.com/user-attachments/assets/e02e7df3-89bf-485a-9aed-b654eed4ff2a|https://github.com/user-attachments/assets/e02e7df3-89bf-485a-9aed-b654eed4ff2a|https://github.com/user-attachments/assets/e02e7df3-89bf-485a-9aed-b654eed4ff2a|
+
 
 ## 詳細
 
