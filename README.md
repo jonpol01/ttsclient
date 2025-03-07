@@ -30,10 +30,6 @@ Text To Speech(TTS)のクライアントソフトウェアです。
 
 https://github.com/user-attachments/assets/d6b94c39-b2d3-478a-bc79-29d00f85e1a0
 
-## 男性
-
-https://github.com/user-attachments/assets/76b93f6d-0566-46c8-ace9-5a6e07640ca8
-
 ## 多言語
 
 https://github.com/user-attachments/assets/e02e7df3-89bf-485a-9aed-b654eed4ff2a
