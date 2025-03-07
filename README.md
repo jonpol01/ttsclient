@@ -23,6 +23,25 @@ Text To Speech(TTS)のクライアントソフトウェアです。
   - [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
   - coming soon...
 
+
+# サンプル
+
+## 女性
+
+https://github.com/user-attachments/assets/d6b94c39-b2d3-478a-bc79-29d00f85e1a0
+
+## 男性
+
+https://github.com/user-attachments/assets/76b93f6d-0566-46c8-ace9-5a6e07640ca8
+
+## 多言語
+
+https://github.com/user-attachments/assets/e02e7df3-89bf-485a-9aed-b654eed4ff2a
+
+## 詳細
+
+https://youtu.be/Fy7qifNB5T0
+
 ## What's New!
 - v.1.0.13
   - new feature:
@@ -30,8 +49,6 @@ Text To Speech(TTS)のクライアントソフトウェアです。
     - 参照音声登録の強化。直接マイクやPC音声を録音できるようになりました。また、自動でテキストの書き起こしも行われます。
 
 
-
-https://github.com/user-attachments/assets/cdf33212-3077-4ff0-9fa2-8635ee5417f4
 
 
 ## 関連ソフトウェア
