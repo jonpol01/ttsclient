@@ -207,6 +207,21 @@ class VoiceCharacterSlotManager:
             audio_dst_path = VoiceCharacterDir / f"{index}" / f"{wav_name}.wav"
             shutil.move(import_params.wav_file, audio_dst_path)
 
+            # パディング
+            import librosa
+            import soundfile as sf
+
+            # audio_dst_pathのファイルを読み込み
+            y, sr = librosa.load(audio_dst_path, sr=None)
+            # 3秒未満の場合、3秒になるようにパディング
+            if len(y) < sr * 3:
+                y = librosa.util.fix_length(y, size=sr * 3)
+                sf.write(audio_dst_path, y, sr)
+            # 10秒以上の場合、10秒になるようにカット
+            elif len(y) > sr * 10:
+                y = y[: sr * 10]
+                sf.write(audio_dst_path, y, sr)
+
             # 音声書き起こし
             # モデルのロード
             try:

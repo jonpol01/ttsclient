@@ -30,12 +30,20 @@ export const AudioRecorder = () => {
         const dataSize = inputRecordingBuffer.current.reduce((prev, cur) => {
             return prev + cur.length;
         }, 0);
-        if (dataSize < 48000 * 3 || dataSize > 48000 * 10) {
-            console.warn("file size is invalid", dataSize)
-            triggerToast("error", t("reference_voice_area_invalid_audio_length"))
-            return
 
+        // // サーバ側で、パディング、カットする方針に変更。
+        // if (dataSize < 48000 * 3 || dataSize > 48000 * 10) {
+        //     console.warn("file size is invalid", dataSize)
+        //     triggerToast("error", t("reference_voice_area_invalid_audio_length"))
+        //     return
+        // }
+        if (dataSize < 48000 * 3) {
+            triggerToast("warning", t("reference_voice_area_invalid_audio_length_less_than_3sec"))
         }
+        if (dataSize > 48000 * 10) {
+            triggerToast("warning", t("reference_voice_area_invalid_audio_length_more_than_10sec"))
+        }
+
         const samples = new Float32Array(dataSize);
         let sampleIndex = 0;
         for (let i = 0; i < inputRecordingBuffer.current.length; i++) {
