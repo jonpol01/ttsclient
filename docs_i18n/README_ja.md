@@ -10,57 +10,44 @@
 [イタリア語](/docs_i18n/README_it.md)/
 [ラテン語](/docs_i18n/README_la.md)/
 [マレー語](/docs_i18n/README_ms.md)/
-[ロシア語](/docs_i18n/README_ru.md) 
-  *日本語以外は機械翻訳です。
+[ロシア語](/docs_i18n/README_ru.md)
+*日本語以外は機械翻訳です。
 
-TTSClient
----
+## TTSClient
 
 Text To Speech(TTS)のクライアントソフトウェアです。
 各種AIに対応していく計画です。(現時点ではGPT-SoVITS v2, v3のみ)
 
-- 対応 AI
-  - [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
-  - coming soon...
-
-
-# サンプル
-
-## 女性
-
-https://github.com/user-attachments/assets/d6b94c39-b2d3-478a-bc79-29d00f85e1a0
-
-## 多言語
-
-https://github.com/user-attachments/assets/e02e7df3-89bf-485a-9aed-b654eed4ff2a
-
-## 詳細
-
-https://youtu.be/Fy7qifNB5T0
+* 対応 AI
+  * [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
+  * coming soon...
 
 ## What's New!
-- v.1.0.13
-  - new feature:
-    - GPT-SoVITS v3に対応。loraによるfinetuningしたモデルにも対応しています。
-    - 参照音声登録の強化。直接マイクやPC音声を録音できるようになりました。また、自動でテキストの書き起こしも行われます。
 
+* v.1.0.13
+  * new feature:
+    * GPT-SoVITS v3に対応。loraによるfinetuningしたモデルにも対応しています。
+    * 参照音声登録の強化。直接マイクやPC音声を録音できるようになりました。また、自動でテキストの書き起こしも行われます。
 
-
+https://github.com/user-attachments/assets/cdf33212-3077-4ff0-9fa2-8635ee5417f4
 
 ## 関連ソフトウェア
-- [リアルタイムボイスチェンジャ VCClient](https://github.com/w-okada/voice-changer)
+
+* [リアルタイムボイスチェンジャ VCClient](https://github.com/w-okada/voice-changer)
 
 ## ダウンロード
+
 [Hugging Faceのリポジトリ](https://huggingface.co/wok000/ttsclient000/tree/main)よりダウンロードしてください。
 
-- win_stdエディション：Windows向けのCPUで動作するエディションです。cuda版と比較して低速ですが、最近のそれなりのスペックのCPUであれば動きます。
-- win_cudaエディション：Windows向けのNVIDIAのGPUで動作するエディションです。GPUのハードウェアアクセラレーションにより高速に動きます。
-- macエディション：Mac(Apple silicon(M1, M2, M3, etc))向けのエディションです。
+* win_stdエディション：Windows向けのCPUで動作するエディションです。cuda版と比較して低速ですが、最近のそれなりのスペックのCPUであれば動きます。
+* win_cudaエディション：Windows向けのNVIDIAのGPUで動作するエディションです。GPUのハードウェアアクセラレーションにより高速に動きます。
+* macエディション：Mac(Apple silicon(M1, M2, M3, etc))向けのエディションです。
 
 ## 使用方法
-- zipファイルを展開後、`start_http.bat`を実行してください。表示された、URLにブラウザでアクセスしてください。
-- `start_https.bat`を使用すると、リモートからでもアクセスすることができます。
-- (上級者向け)`start_http_with_ngrok.bat`を使用するとngrokを用いたトンネリングを使用してアクセスすることができます。
+
+* zipファイルを展開後、`start_http.bat`を実行してください。表示された、URLにブラウザでアクセスしてください。
+* `start_https.bat`を使用すると、リモートからでもアクセスすることができます。
+* (上級者向け)`start_http_with_ngrok.bat`を使用するとngrokを用いたトンネリングを使用してアクセスすることができます。
 
 note: macエディションは.batを.commandで読み替えてください。
 
@@ -105,7 +92,9 @@ $ poetry run main cui --https true
 ```
 
 ### cudaを使用する場合
+
 モジュールを入れ替えてください。
+
 ```
 $ poetry add onnxruntime-gpu==1.19.2
 $ poetry remove torch
@@ -113,11 +102,13 @@ $ poetry add torch==2.3.1 --source torch_cuda12
 ```
 
 ### directmlを使用する場合
+
 モジュールを入れ替えてください。
+
 ```
 $ poetry add onnxruntime-directml==1.19.2
 ```
 
-
 ## Acknowledgements
-- [JVNVコーパス](https://sites.google.com/site/shinnosuketakamichi/research-topics/jvnv_corpus)
+
+* [JVNVコーパス](https://sites.google.com/site/shinnosuketakamichi/research-topics/jvnv_corpus)
