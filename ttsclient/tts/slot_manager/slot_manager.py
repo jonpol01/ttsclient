@@ -2,7 +2,7 @@ import logging
 import os
 from pathlib import Path
 import shutil
-from ttsclient.const import LOGGER_NAME, MAX_SLOT_INDEX, SLOT_PARAM_FILE, ModelDir
+from ttsclient.const import LOGGER_NAME, MAX_SLOT_INDEX, OPENJTALK_USER_DICT_FILE, SLOT_PARAM_FILE, ModelDir
 from ttsclient.tts.data_types.slot_manager_data_types import GPTSoVITSSlotInfo, ModelImportParamMember, MoveModelParam, SetIconParam, SlotInfo, SlotInfoMember
 from ttsclient.tts.slot_manager.model_importer.model_importer import import_model
 from ttsclient.tts.tts_manager.semantic_predictor.gpt_semantic_predictor import GPTSemanticPredictor

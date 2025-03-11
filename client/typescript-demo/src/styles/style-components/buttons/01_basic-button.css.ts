@@ -5,9 +5,10 @@ import { buttonThemeContract } from './thema/button-thema.css'
 export const BasicButton = recipe({
     base: {
         textAlign: 'center',
-        paddingTop: '0.1rem',
+        // paddingTop: '0.1rem',
         width: '5rem',
         height: '1.5rem',
+        lineHeight: '1.5rem',
         fontSize: '0.8rem',
         borderRadius: buttonThemeContract.border.radius,
         cursor: 'pointer',
@@ -48,11 +49,29 @@ export const BasicButton = recipe({
                 width: '7rem',
             },
         },
+        height: {
+            short: {
+                height: '1rem',
+                fontSize: '0.6rem',
+                lineHeight: '1rem',
+            },
+            midium: {
+                height: '1.5rem',
+                lineHeight: '1.5rem',
+            },
+            tall: {
+                height: '2rem',
+
+                lineHeight: '2rem',
+            }
+
+        }
     },
 
     defaultVariants: {
         active: false,
         width: "medium",
+        height: "midium",
     }
 }
 )

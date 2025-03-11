@@ -29,6 +29,10 @@ import {
     ReferenceVoice,
     TTSType,
     GenerateVoiceParam,
+    GetPhonesParam,
+    GetPhonesResponse,
+    OpenJTalkUserDictRecord,
+    GetJpTextToUserDictRecordsParam,
 } from "./const";
 
 abstract class RestResult<T> {
@@ -481,28 +485,47 @@ export class TTSRestClient {
         return blob
     }
 
+    getPhones = async (param: GetPhonesParam) => {
+        const path = this.generatePath(`/api/tts-manager/operation/getPhones`);
+        const res = await this.restClient.postRequest<GetPhonesResponse>(path, param);
+        console.log(res)
+        return res
+    }
+
+    getJpTextToUserDictRecords = async (param: GetJpTextToUserDictRecordsParam) => {
+        const path = this.generatePath(`/api/tts-manager/operation/getJpTextToUserDictRecords`);
+        const res = await this.restClient.postRequest<OpenJTalkUserDictRecord[]>(path, param);
+        console.log(res)
+        return res
+    }
+
+    addUserDictRecord = async (slotIndex: number, param: OpenJTalkUserDictRecord) => {
+        const path = this.generatePath(`/api/voice-character-slot-manager/slots/${slotIndex}/voices/operation/add_user_dict_record`);
+        await this.restClient.postRequest<null>(path, param);
+    }
+
     // startRecording = async () => {
-    //     const path = this.generatePath(`/api/voice-changer/operation/start_recording`);
+    //     const path = this.generatePath(`/ api / voice - changer / operation / start_recording`);
     //     await this.restClient.postRequest<null>(path, null);
     // };
 
     // stopRecording = async () => {
-    //     const path = this.generatePath(`/api/voice-changer/operation/stop_recording`);
+    //     const path = this.generatePath(`/ api / voice - changer / operation / stop_recording`);
     //     await this.restClient.postRequest<null>(path, null);
     // };
 
     // startServerDevice = async () => {
-    //     const path = this.generatePath(`/api/voice-changer/operation/start_server_device`);
+    //     const path = this.generatePath(`/ api / voice - changer / operation / start_server_device`);
     //     await this.restClient.postRequest<null>(path, null);
     // };
 
     // stopServerDevice = async () => {
-    //     const path = this.generatePath(`/api/voice-changer/operation/stop_server_device`);
+    //     const path = this.generatePath(`/ api / voice - changer / operation / stop_server_device`);
     //     await this.restClient.postRequest<null>(path, null);
     // };
 
     // getVoiceChangerManagerInfo = async () => {
-    //     const path = this.generatePath(`/api/voice-changer-manager/information`);
+    //     const path = this.generatePath(`/ api / voice - changer - manager / information`);
     //     const info = await this.restClient.getRequest<VoiceChangerManagerInfo>(path);
     //     return info;
     // };

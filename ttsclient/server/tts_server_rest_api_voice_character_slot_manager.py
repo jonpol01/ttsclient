@@ -7,6 +7,7 @@ from fastapi import APIRouter, HTTPException, Response
 from ttsclient.const import LOGGER_NAME, UPLOAD_DIR
 from ttsclient.server.validation_error_logging_route import ValidationErrorLoggingRoute
 from ttsclient.tts.data_types.slot_manager_data_types import MoveModelParam, ReferenceVoice, ReferenceVoiceImportParam, SetIconParam, VoiceCharacter, VoiceCharacterImportParam
+from ttsclient.tts.data_types.tts_manager_data_types import OpenJTalkUserDictRecord
 from ttsclient.tts.voice_character_slot_manager.voice_character_slot_manager import VoiceCharacterSlotManager
 
 
@@ -28,6 +29,7 @@ class RestAPIVoiceCharacterSlotManager:
         self.router.add_api_route("/api/voice-character-slot-manager/slots/{index}/voices/operation/move_voice", self.post_move_voice, methods=["POST"])
         self.router.add_api_route("/api/voice-character-slot-manager/slots/{index}/voices/operation/zip_and_download", self.post_zip_and_download, methods=["POST"])
         self.router.add_api_route("/api/voice-character-slot-manager/slots/{index}/voices/{voice_index}/operation/set_icon_file", self.post_set_voice_icon_file, methods=["POST"])
+        self.router.add_api_route("/api/voice-character-slot-manager/slots/{index}/voices/operation/add_user_dict_record", self.post_add_user_dict_record, methods=["POST"])
 
         # {index}_voices_operation_set_icon_fileと{index}_operation_set_icon_fileが混同されないように、長い方を先に登録する。
         self.router.add_api_route("/api_voice-character-slot-manager_slots_{index}_voices", self.post_voice, methods=["POST"])
@@ -44,6 +46,7 @@ class RestAPIVoiceCharacterSlotManager:
         self.router.add_api_route("/api_voice-character-slot-manager_slots_{index}", self.delete_slot_info, methods=["DELETE"])
         self.router.add_api_route("/api_voice-character-slot-manager_slots_operation_move_model", self.post_move_model, methods=["POST"])
         self.router.add_api_route("/api_voice-character-slot-manager_slots_{index}_operation_set_icon_file", self.post_set_icon_file, methods=["POST"])
+        self.router.add_api_route("/api_voice-character-slot-manager_slots_{index}_voices_operation_add_user_dict_record", self.post_add_user_dict_record, methods=["POST"])
 
     def get_slots(self, reload: bool = False):
         slot_manager = VoiceCharacterSlotManager.get_instance()
@@ -127,3 +130,7 @@ class RestAPIVoiceCharacterSlotManager:
         param.icon_file = UPLOAD_DIR / param.icon_file.name
         slot_manager = VoiceCharacterSlotManager.get_instance()
         slot_manager.set_voice_icon_file(index, voice_index, param)
+
+    def post_add_user_dict_record(self, index: int, param: OpenJTalkUserDictRecord):
+        slot_manager = VoiceCharacterSlotManager.get_instance()
+        slot_manager.add_user_dict_record(index, param)

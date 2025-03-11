@@ -1,6 +1,7 @@
 from pathlib import Path
 import re
 import os
+import pyopenjtalk
 import torch
 
 # from inference_webui import get_phones_and_bert as get_phones_and_bert_webui
@@ -41,12 +42,37 @@ class BertPhoneExtractor(PhoneExtractor):
     def get_info(self) -> PhoneExtractorInfo:
         return self.info
 
+    def phone_symbols_to_sequence_and_bert(self, cleaned_text, version):
+        phones = cleaned_text_to_sequence(cleaned_text, version)
+        bert = torch.zeros(
+            (1024, len(phones)),
+            dtype=torch.float16 if self.is_half == True else torch.float32,
+        ).to(self.device)
+
+        return phones, bert
+
     # GPT-SoVITSからコピー
-    def __clean_text_inf(self, text, language, version):
+    def __clean_text_inf(self, text, language, version, is_reference_voice: bool = True):
         language = language.replace("all_", "")
         phones, word2ph, norm_text = clean_text(text, language, version)
-        phones = cleaned_text_to_sequence(phones, version)
-        return phones, word2ph, norm_text
+        # print("phones1:", phones, "word2ph:", word2ph, "norm_text:", norm_text)
+        # phones = ["a", "[", "a", "?", "d", "o", "[", "o", "]", "sh", "i", "t", "e", "#", "k", "o", "[", "N", "]", "n", "a", "[", "n", "i", "#", "a", "[", "r", "a", "a", "r", "a", "sh", "i", "]", "i", "#", "t", "a", "[", "i", "d", "o", "]", "o", "#", "t", "o", "]", "r", "u", "#", "N", "[", "d", "a", "?", "o", "[", "ch", "i", "ts", "u", "i", "t", "e", "#", "h", "a", "[", "n", "a", "sh", "i", "]", "o", "#", "k", "i", "[", "k", "e", "]", "b", "a", "#", "i", "]", "i", "#", "n", "o", "[", "n", "i", "."]
+        # phones = ["a", "]", "a", "?", "d", "o", "]", "o", "sh", "i", "t", "o", "[", "r", "u", "#", "k", "o", "[", "N", "n", "a", "n", "[", "y", "a", "#", "a", "[", "r", "a", "a", "r", "a", "sh", "i", "]", "i", "#", "t", "a", "]", "i", "d", "[", "o", "o", "#", "t", "o", "]", "r", "u", "#", "N", "]", "y", "a", "?", "o", "[", "ch", "i", "ts", "u", "i", "t", "e", "#", "h", "a", "[", "n", "a", "sh", "i", "]", "o", "#", "k", "i", "[", "k", "e", "]", "b", "a", "#", "e", "e", "]", "i", "#", "n", "o", "[", "n", "i", "."]
+        # phones = ["a", "]", "a", "?", "d", "o", "[", "o", "sh", "i", "t", "e", "#", "k", "o", "]", "N", "n", "a", "[", "n", "i", "#", "a", "]", "r", "a", "a", "r", "a", "sh", "[", "i", "#", "t", "a", "[", "i", "d", "o", "o", "#", "t", "o", "]", "r", "u", "#", "N", "[", "d", "a", "?", "o", "]", "ch", "i", "ts", "u", "i", "t", "e", "#", "h", "a", "]", "n", "a", "[", "sh", "i", "o", "#", "k", "i", "]", "k", "e", "[", "b", "a", "#", "i", "[", "i", "#", "n", "o", "]", "n", "i", "."]
+        # phones = ["s", "a", "[", "N", "sh", "o", "o", "o", "]", "N", "s", "e", "e", "w", "a", "n", "a", "i", "t", "o", "#", "i", "[", "k", "e", "n", "a", "i", "#", "n", "o", "[", "d", "a", "."]
+        # from text import symbols2 as symbols_v2
+
+        # symbols = symbols_v2.symbols
+        # phones = ["UNK" if ph not in symbols else ph for ph in phones]
+
+        # if is_reference_voice is False:
+        #     # phones = self.convert_to_kansai_accent(phones)
+        #     phones = ["s", "a", "N", "sh", "o", "o", "o", "N", "s", "e", "e", "w", "a", "n", "a", "i", "t", "o", "UNK", "i", "_", "]", "k", "e", "]", "n", "a", "i", "UNK", "n", "o", "]", "d", "a", "."]
+        # # print("phones2:", phones, "word2ph:", word2ph, "norm_text:", norm_text)
+
+        phones_sequence = cleaned_text_to_sequence(phones, version)
+        # print("phones3:", phones)
+        return phones_sequence, phones, word2ph, norm_text
 
     def __get_bert_feature(self, text, word2ph):
         with torch.no_grad():
@@ -75,7 +101,9 @@ class BertPhoneExtractor(PhoneExtractor):
 
         return bert
 
-    def get_phones_and_bert(self, text, language, version, final=False):
+    def get_phones_and_bert(self, text, language, version, final=False, is_reference_voice: bool = True):
+
+        # G2PWModelのダウンロード
         if language in {"zh", "all_zh"}:
             import os
             import zipfile
@@ -99,6 +127,7 @@ class BertPhoneExtractor(PhoneExtractor):
 
                 os.rename(extract_dir, extract_dir_new)
 
+        # 実処理
         if language in {"en", "all_zh", "all_ja", "all_ko", "all_yue"}:
             formattext = text
             while "  " in formattext:
@@ -109,16 +138,16 @@ class BertPhoneExtractor(PhoneExtractor):
                     formattext = chinese.mix_text_normalize(formattext)
                     return self.get_phones_and_bert(formattext, "zh", version)
                 else:
-                    phones, word2ph, norm_text = self.__clean_text_inf(formattext, language, version)
+                    phones_sequence, phones, word2ph, norm_text = self.__clean_text_inf(formattext, language, version, is_reference_voice=is_reference_voice)
                     bert = self.__get_bert_feature(norm_text, word2ph).to(self.device)
             elif language == "all_yue" and re.search(r"[A-Za-z]", formattext):
                 formattext = re.sub(r"[a-z]", lambda x: x.group(0).upper(), formattext)
                 formattext = chinese.mix_text_normalize(formattext)
                 return self.get_phones_and_bert(formattext, "yue", version)
             else:
-                phones, word2ph, norm_text = self.__clean_text_inf(formattext, language, version)
+                phones_sequence, phones, word2ph, norm_text = self.__clean_text_inf(formattext, language, version, is_reference_voice=is_reference_voice)
                 bert = torch.zeros(
-                    (1024, len(phones)),
+                    (1024, len(phones_sequence)),
                     dtype=torch.float16 if self.is_half == True else torch.float32,
                 ).to(self.device)
         elif language in {"zh", "ja", "ko", "yue", "auto", "auto_yue"}:
@@ -149,16 +178,16 @@ class BertPhoneExtractor(PhoneExtractor):
             norm_text_list = []
             for i in range(len(textlist)):
                 lang = langlist[i]
-                phones, word2ph, norm_text = self.__clean_text_inf(textlist[i], lang, version)
-                bert = self.__get_bert_inf(phones, word2ph, norm_text, lang)
-                phones_list.append(phones)
+                phones_sequence, phones, word2ph, norm_text = self.__clean_text_inf(textlist[i], lang, version, is_reference_voice=is_reference_voice)
+                bert = self.__get_bert_inf(phones_sequence, word2ph, norm_text, lang)
+                phones_list.append(phones_sequence)
                 norm_text_list.append(norm_text)
                 bert_list.append(bert)
             bert = torch.cat(bert_list, dim=1)
-            phones = sum(phones_list, [])
+            phones_sequence = sum(phones_list, [])
             norm_text = "".join(norm_text_list)
 
-        if not final and len(phones) < 6:
+        if not final and len(phones_sequence) < 6:
             return self.get_phones_and_bert("." + text, language, version, final=True)
 
-        return phones, bert.to(self.dtype), norm_text
+        return phones_sequence, bert.to(self.dtype), norm_text, phones

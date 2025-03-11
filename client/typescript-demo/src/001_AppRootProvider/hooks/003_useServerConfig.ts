@@ -11,7 +11,10 @@ import {
     TTSType,
     ReferenceVoice,
     GenerateVoiceParam,
-    GPTSoVITSVersion,
+    GetPhonesParam,
+    GetPhonesResponse,
+    OpenJTalkUserDictRecord,
+    GetJpTextToUserDictRecordsParam,
 } from "tts-client-typescript-client-lib";
 import { UploadFile, VoiceCharacterUploadFile } from "../../const";
 
@@ -62,6 +65,9 @@ export type ServerConfigStateAndMethod = ServerConfigState & {
     updateReferenceVoiceIconFile: (voiceCharacterSlotIndex: number, voiceIndex: number, iconFile: File, onprogress: (progress: number, end: boolean) => void) => Promise<void>
 
     generateVoice: (genearteVoiceParam: GenerateVoiceParam) => Promise<Blob | null>
+    getPhones: (getPhonesParam: GetPhonesParam) => Promise<GetPhonesResponse | null>
+    getJpTextToUserDictRecords: (param: GetJpTextToUserDictRecordsParam) => Promise<OpenJTalkUserDictRecord[] | null>
+    addUserDictRecord: (slotIndex: number, param: OpenJTalkUserDictRecord) => Promise<void | null>
 };
 
 export type UseServerConfigProps = {
@@ -313,6 +319,13 @@ export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateA
         await restClient.current.uploadReferenceVoiceIconFile(voiceCharacterSlotIndex, voiceIndex, iconFile, onprogress);
         reloadVoiceCharacterSlotInfos();
     }
+    const addUserDictRecord = async (slotIndex: number, param: OpenJTalkUserDictRecord) => {
+        if (!restClient.current) {
+            return null;
+        }
+        const records = await restClient.current.addUserDictRecord(slotIndex, param);
+        return records
+    }
 
 
     // オペレーション系
@@ -323,6 +336,20 @@ export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateA
         const blob = await restClient.current.generateVoice(genearteVoiceParam);
         return blob
 
+    }
+    const getPhones = async (getPhonesParam: GetPhonesParam) => {
+        if (!restClient.current) {
+            return null;
+        }
+        const phones = await restClient.current.getPhones(getPhonesParam);
+        return phones
+    }
+    const getJpTextToUserDictRecords = async (param: GetJpTextToUserDictRecordsParam) => {
+        if (!restClient.current) {
+            return null;
+        }
+        const records = await restClient.current.getJpTextToUserDictRecords(param);
+        return records
     }
 
     const initializeServer = async () => {
@@ -370,6 +397,9 @@ export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateA
         // stopServerDevice,
         initializeServer,
         generateVoice,
+        getPhones,
+        getJpTextToUserDictRecords,
+        addUserDictRecord,
     };
     return res;
 };

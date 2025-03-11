@@ -20,6 +20,7 @@ special = [
 
 
 def clean_text(text, language, version=None):
+
     if version is None:
         version = os.environ.get("version", "v2")
     if version == "v1":

@@ -75,6 +75,7 @@ class GPTSoVITSFasterPipeline(Pipeline):
         repetition_penalty: float = 1.35,
         # v3追加オプション
         sample_steps: int = 8,
+        phone_symbols: list[str] | None = None,
     ):
         print("START FAST PIPELINE!")
 

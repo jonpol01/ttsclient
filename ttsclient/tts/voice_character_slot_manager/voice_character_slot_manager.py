@@ -7,9 +7,10 @@ import uuid
 import zipfile
 
 from faster_whisper import WhisperModel
-from ttsclient.const import LOGGER_NAME, MAX_REFERENCE_VOICE_SLOT_INDEX, MAX_VOICE_CHARACTER_SLOT_INDEX, VOICE_CHARACTER_SLOT_PARAM_FILE, TranscriberComputeType, TranscriberDevice, TranscriberModelSize, VoiceCharacterDir
+from ttsclient.const import LOGGER_NAME, MAX_REFERENCE_VOICE_SLOT_INDEX, MAX_VOICE_CHARACTER_SLOT_INDEX, OPENJTALK_USER_DICT_CSV_FILE, VOICE_CHARACTER_SLOT_PARAM_FILE, TranscriberComputeType, TranscriberDevice, TranscriberModelSize, VoiceCharacterDir
 from ttsclient.tts.configuration_manager.configuration_manager import ConfigurationManager
 from ttsclient.tts.data_types.slot_manager_data_types import MoveModelParam, MoveReferenceVoiceParam, ReferenceVoice, ReferenceVoiceImportParam, SetIconParam, VoiceCharacter, VoiceCharacterImportParam
+from ttsclient.tts.data_types.tts_manager_data_types import OpenJTalkUserDictRecord
 from ttsclient.tts.voice_character_slot_manager.importer.importer import import_voice_character
 
 
@@ -350,3 +351,31 @@ class VoiceCharacterSlotManager:
         finally:
             if param.icon_file.exists():
                 param.icon_file.unlink()
+
+    def add_user_dict_record(self, index: int, param: OpenJTalkUserDictRecord):
+        slot_info = self.get_slot_info(index)
+        assert slot_info.tts_type is not None, f"slot_index:{index} is not exists."
+
+        user_dict_file = VoiceCharacterDir / f"{index}" / OPENJTALK_USER_DICT_CSV_FILE
+
+        # Create new entry
+        entry = f"{param.string},*,*,-32767,{param.pos},{param.pos_group1},{param.pos_group2},{param.pos_group3},{param.ctype},{param.cform},{param.orig},{param.read},{param.pron},{param.acc}/{param.mora_size},{param.chain_rule}\n"
+
+        # Read existing entries
+        existing_entries = []
+        if user_dict_file.exists():
+            with open(user_dict_file, "r", encoding="utf-8") as f:
+                existing_entries = f.readlines()
+
+        # Remove entries with matching first column
+        updated_entries = [e for e in existing_entries if e.split(",")[0] != param.string]
+
+        # Add new entry
+        updated_entries.append(entry)
+
+        # Write back all entries
+        with open(user_dict_file, "w", encoding="utf-8") as f:
+            f.writelines(updated_entries)
+
+        logging.getLogger(LOGGER_NAME).debug(f"add_user_dict_record: {entry}")
+        self.reload(use_log=False)

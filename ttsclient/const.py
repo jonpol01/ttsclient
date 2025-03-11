@@ -91,6 +91,10 @@ ModelDir = Path("./models")
 ModelDir.mkdir(parents=True, exist_ok=True)
 MAX_SLOT_INDEX = 20
 SLOT_PARAM_FILE = "params.json"
+OPENJTALK_USER_DICT_CSV_FILE = "user_dict.csv"
+OPENJTALK_USER_DICT_TEMP_CSV_FILE = "user_dict_tmp.csv"
+OPENJTALK_USER_DICT_FILE = "user_dict.dict"
+
 
 # Voice Character Slot Manager
 VoiceCharacterDir = Path("./voice_characters")

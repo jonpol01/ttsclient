@@ -247,7 +247,46 @@ export type GenerateVoiceParam = {
     cutMethod: CutMethod
     // v3追加オプション
     sample_steps: number
+    phone_symbols: string[] | null
 }
+
+export type GetPhonesParam = {
+    text: string
+    language: LanguageType
+    voice_character_slot_index: number
+    user_dict_records: OpenJTalkUserDictRecord[] | null
+
+}
+
+export type GetPhonesResponse = {
+    phones: number[]
+    phone_symbols: string[]
+}
+
+export type GetJpTextToUserDictRecordsParam = {
+    text: string
+    voice_character_slot_index: number
+}
+
+export type OpenJTalkUserDictRecord = {
+    string: string
+    pos: string
+    pos_group1: string
+    pos_group2: string
+    pos_group3: string
+    ctype: string
+    cform: string
+    orig: string
+    read: string
+    pron: string
+    acc: number
+    mora_size: number
+    chain_rule: string
+    chain_flag: number
+}
+
+
+
 
 ////////////////////////////////////////////
 // VoiceChangerClient Settings

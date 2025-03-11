@@ -12,6 +12,7 @@ from ttsclient.gpt_sovits_utils import cut1, cut2, cut3, cut4, cut5, get_spepc, 
 from ttsclient.const import LOGGER_NAME, CutMethod, ModelDir
 from ttsclient.tts.configuration_manager.configuration_manager import ConfigurationManager
 from ttsclient.tts.data_types.slot_manager_data_types import GPTSoVITSSlotInfo, SlotInfoMember
+from ttsclient.tts.data_types.tts_manager_data_types import GetPhonesParam
 from ttsclient.tts.module_manager.module_manager import ModuleManager
 from ttsclient.tts.tts_manager.device_manager.device_manager import DeviceManager
 from ttsclient.tts.tts_manager.embedder.embedder_manager import EmbedderManager
@@ -112,6 +113,11 @@ class GPTSoVITSV3Pipeline(Pipeline):
         else:
             self.bigvgan = self.bigvgan.to(self.device)
 
+    def get_phones(self, text: str, language: str):
+        version = "v2"  # model_versionとversionの扱いが異なる。影響範囲を見極め切れていないのでとりあえずここはv2で固定。
+        phones, bert, norm_text, _phone_symbols = self.phone_extractor.get_phones_and_bert(text, language, version, is_reference_voice=True)
+        return phones, bert, norm_text, _phone_symbols
+
     def _validate_ref_text(self, prompt_text: str, prompt_language):
         prompt_text = prompt_text.strip("\n")
         if prompt_text[-1] not in splits:
@@ -151,7 +157,7 @@ class GPTSoVITSV3Pipeline(Pipeline):
 
         prompt_text = self._validate_ref_text(prompt_text, prompt_language)
         # print("REF TEXT: ", prompt_text)
-        phones1, bert1, norm_text1 = self.phone_extractor.get_phones_and_bert(prompt_text, prompt_language, version)
+        phones1, bert1, norm_text1, _phone_symbols_1 = self.phone_extractor.get_phones_and_bert(prompt_text, prompt_language, version, is_reference_voice=True)
 
         # 参照音声の処理。
         wav16k = self._load_ref_wav(ref_wav_path, is_half, device, zero_wav)
@@ -253,15 +259,16 @@ class GPTSoVITSV3Pipeline(Pipeline):
         repetition_penalty: float = 1.35,
         # v3追加オプション
         sample_steps: int = 8,
+        phone_symbols: list[str] | None = None,
     ):
-        print("START NORMAL PIPELINE!")
+        print("RUN NORMAL PIPELINE!")
         ref_free: bool = False
         if_freeze: bool = False
 
         # 参照音声とテキストの処理
         # version = os.environ.get("version", "v2")
         version = "v2"  # model_versionとversionの扱いが異なる。影響範囲を見極め切れていないのでとりあえずここはv2で固定。
-        with Timer("generate reference content"):
+        with Timer("generate reference content", False):
             key = f"{prompt_language}_{prompt_text}_{ref_wav_path}"
             if key in self.reference_cache:
                 phones1, bert1, prompt = self.reference_cache[key]
@@ -280,17 +287,20 @@ class GPTSoVITSV3Pipeline(Pipeline):
                 self.reference_cache[key] = (phones1, bert1, prompt)
 
         # ターゲットテキストの処理
-        with Timer("generate target text"):
+        with Timer("generate target text", False):
             texts = self._generate_target_contents(how_to_cut, text, text_language, version)
 
         audio_opt = []
         # ここからターゲットテキストごとの処理⇒音声化
-        with Timer("generate voice"):
+        with Timer("generate voice", False):
             for i_text, text in enumerate(texts):
                 # 途中終了チェック（１）
                 if self.force_stop_flag is True:
                     break
-                phones2, bert2, norm_text2 = self.phone_extractor.get_phones_and_bert(text, text_language, version)
+                phones2, bert2, norm_text2, _phone_symbols_2 = self.phone_extractor.get_phones_and_bert(text, text_language, version, is_reference_voice=False)
+                if phone_symbols is not None:
+                    # only not for zh (bertはゼロ配列で返る)
+                    phones2, bert2 = self.phone_extractor.phone_symbols_to_sequence_and_bert(phone_symbols, version)
                 # print("実際に入力された目標テキスト（文ごと）", text)
                 # print("フロントエンド処理後のテキスト（文ごと）:", norm_text2)
 

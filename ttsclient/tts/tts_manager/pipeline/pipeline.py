@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from ttsclient.const import CutMethod
+from ttsclient.tts.data_types.tts_manager_data_types import GetPhonesParam
 
 
 class Pipeline(ABC):
@@ -9,6 +10,10 @@ class Pipeline(ABC):
 
     @abstractmethod
     def force_stop(self):
+        pass
+
+    @abstractmethod
+    def get_phones(self, text: str, language: str):
         pass
 
     @abstractmethod
@@ -36,5 +41,6 @@ class Pipeline(ABC):
         repetition_penalty: float = 1.35,
         # v3追加オプション
         sample_steps: int = 8,
+        phone_symbols: list[str] | None = None,
     ):
         pass
