@@ -204,14 +204,15 @@ class TTSManager:
             with open(os.devnull, "w") as devnull:
                 # モジュールの標準出力を一時的に無効化。内部でprintしても表示されない(エラーになる)ので注意。
                 # エラーが出たときはモジュール内でprintが使われていないか確認。使われていたら、出力抑制の方法を再検討。
-                stdout_fd = os.dup(1)
-                os.dup2(devnull.fileno(), 1)
+                # stdout_fd = os.dup(1)
+                # os.dup2(devnull.fileno(), 1)
                 try:
                     pyopenjtalk.mecab_dict_index(str(user_dict_merged_csv_path), str(user_dict_path))
                     pyopenjtalk.update_global_jtalk_with_user_dict(str(user_dict_path))
                 finally:
-                    os.dup2(stdout_fd, 1)
-                    os.close(stdout_fd)
+                    # os.dup2(stdout_fd, 1)
+                    # os.close(stdout_fd)
+                    pass
 
             # 旧ファイル削除
             for p in voice_character_slot_dir.glob(f"{OPENJTALK_USER_DICT_FILE}_*"):
