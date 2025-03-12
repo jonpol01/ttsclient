@@ -239,8 +239,8 @@ class TTSManager:
                 if p != user_dict_path:
                     p.unlink()
 
-            # if user_dict_merged_csv_path.exists():
-            #     user_dict_merged_csv_path.unlink()
+            if user_dict_merged_csv_path.exists():
+                user_dict_merged_csv_path.unlink()
 
     def run(self, generarte_voice_param: GenerateVoiceParam):
         conf = ConfigurationManager.get_instance().get_tts_configuration()
