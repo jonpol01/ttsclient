@@ -24,6 +24,10 @@ Planeamos soportar varios tipos de IA. (Actualmente solo GPT-SoVITS v2, v3)
 
 ## ¡Novedades!
 
+* v.1.0.20
+  * nueva característica:
+    * Se agregó la capacidad de ajustar la entonación en GPT-SoVITS.
+
 * v.1.0.13
   * nueva característica:
     * Compatible con GPT-SoVITS v3. También es compatible con modelos afinados con lora.

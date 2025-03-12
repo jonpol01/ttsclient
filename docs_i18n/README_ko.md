@@ -24,6 +24,10 @@ Text To Speech(TTS)의 클라이언트 소프트웨어입니다.
 
 ## What's New!
 
+* v.1.0.20
+  * new feature:
+    * GPT-SoVITS의 억양 조절 기능이 추가되었습니다.
+
 * v.1.0.13
   * 새로운 기능:
     * GPT-SoVITS v3에 대응. lora에 의한 미세 조정된 모델에도 대응하고 있습니다.
