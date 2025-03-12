@@ -24,6 +24,10 @@ Es ist geplant, verschiedene AIs zu unterstützen. (Derzeit nur GPT-SoVITS v2, v
 
 ## Was ist neu!
 
+* v.1.0.20
+  * neues Feature:
+    * Die Möglichkeit zur Anpassung der Intonation in GPT-SoVITS wurde hinzugefügt.
+
 * v.1.0.13
   * neues Feature:
     * Unterstützung für GPT-SoVITS v3. Auch Modelle, die mit lora feinabgestimmt wurden, werden unterstützt.

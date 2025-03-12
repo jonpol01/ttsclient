@@ -24,6 +24,10 @@ Pianificato per supportare vari AI. (Attualmente solo GPT-SoVITS v2, v3)
 
 ## Novità!
 
+* v.1.0.20
+  * nuova funzionalità:
+    * Aggiunta la possibilità di regolare l'intonazione in GPT-SoVITS.
+
 * v.1.0.13
   * nuova funzionalità:
     * Supporto per GPT-SoVITS v3. Supporta anche modelli finetuning tramite lora.

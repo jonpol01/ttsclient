@@ -24,6 +24,10 @@ Consilium est ut variis AI accommodetur. (In hoc tempore solum GPT-SoVITS v2, v3
 
 ## Quid Novum!
 
+* v.1.0.20
+  * nova functio:
+    * Facultas tonorum in GPT-SoVITS moderandi addita est.
+
 * v.1.0.13
   * nova functio:
     * GPT-SoVITS v3 accommodatum. Etiam accommodatum ad exempla finetuning per lora.

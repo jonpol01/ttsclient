@@ -24,6 +24,10 @@ Rancangan untuk menyokong pelbagai AI. (Pada masa ini hanya GPT-SoVITS v2, v3)
 
 ## Apa yang Baru!
 
+* v.1.0.20
+  * ciri baru:
+    * Menambah keupayaan untuk melaraskan intonasi dalam GPT-SoVITS.
+
 * v.1.0.13
   * ciri baru:
     * Menyokong GPT-SoVITS v3. Juga menyokong model yang disesuaikan dengan lora.

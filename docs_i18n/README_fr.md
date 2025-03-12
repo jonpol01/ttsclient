@@ -24,6 +24,10 @@ Nous prévoyons de prendre en charge divers types d'IA. (Actuellement, uniquemen
 
 ## Quoi de neuf !
 
+* v.1.0.20
+  * nouvelle fonctionnalité :
+    * Ajout de la possibilité d'ajuster l'intonation dans GPT-SoVITS.
+
 * v.1.0.13
   * nouvelle fonctionnalité :
     * Prise en charge de GPT-SoVITS v3. Prend également en charge les modèles ajustés par lora.
