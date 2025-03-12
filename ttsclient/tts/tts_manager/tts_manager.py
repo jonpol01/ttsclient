@@ -198,29 +198,49 @@ class TTSManager:
                     with open(user_dict_tmp_csv_path, "r", encoding="utf8") as f2:
                         f.write(f2.read())
 
+            # user_dict_merged_csv_pathに空業があったら削除
+            with open(user_dict_merged_csv_path, "r", encoding="utf8") as f:
+                lines = f.readlines()
+            with open(user_dict_merged_csv_path, "w", encoding="utf8") as f:
+                for line in lines:
+                    if line.strip() != "":
+                        f.write(line)
+
             # ユーザ辞書の登録
             user_dict_path = voice_character_slot_dir / f"{OPENJTALK_USER_DICT_FILE}_{timestamp}"
+
+            import builtins
+
+            original_print = builtins.print
+
+            def custom_print(*args, **kwargs):
+                logging.getLogger(LOGGER_NAME).debug(" ".join(map(str, args)))
+                # text = "[module] " + " ".join(map(str, args))
+                # original_print(color_text(text, format="FAINT"), **kwargs)
+
+            builtins.print = custom_print
 
             with open(os.devnull, "w") as devnull:
                 # モジュールの標準出力を一時的に無効化。内部でprintしても表示されない(エラーになる)ので注意。
                 # エラーが出たときはモジュール内でprintが使われていないか確認。使われていたら、出力抑制の方法を再検討。
-                # stdout_fd = os.dup(1)
-                # os.dup2(devnull.fileno(), 1)
+                stdout_fd = os.dup(1)
+                os.dup2(devnull.fileno(), 1)
                 try:
                     pyopenjtalk.mecab_dict_index(str(user_dict_merged_csv_path), str(user_dict_path))
                     pyopenjtalk.update_global_jtalk_with_user_dict(str(user_dict_path))
                 finally:
-                    # os.dup2(stdout_fd, 1)
-                    # os.close(stdout_fd)
+                    os.dup2(stdout_fd, 1)
+                    os.close(stdout_fd)
                     pass
 
+            builtins.print = original_print
             # 旧ファイル削除
             for p in voice_character_slot_dir.glob(f"{OPENJTALK_USER_DICT_FILE}_*"):
                 if p != user_dict_path:
                     p.unlink()
 
-            if user_dict_merged_csv_path.exists():
-                user_dict_merged_csv_path.unlink()
+            # if user_dict_merged_csv_path.exists():
+            #     user_dict_merged_csv_path.unlink()
 
     def run(self, generarte_voice_param: GenerateVoiceParam):
         conf = ConfigurationManager.get_instance().get_tts_configuration()
