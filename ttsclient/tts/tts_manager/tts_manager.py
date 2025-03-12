@@ -3,7 +3,7 @@ import os
 import datetime
 from pathlib import Path
 import pyopenjtalk
-from ttsclient.const import LOGGER_NAME, OPENJTALK_USER_DICT_CSV_FILE, OPENJTALK_USER_DICT_FILE, OPENJTALK_USER_DICT_TEMP_CSV_FILE, ModelDir, VoiceCharacterDir
+from ttsclient.const import GPT_SOVITS_USER_DICT_PATH, LOGGER_NAME, OPENJTALK_USER_DICT_CSV_FILE, OPENJTALK_USER_DICT_FILE, OPENJTALK_USER_DICT_TEMP_CSV_FILE, ModelDir, VoiceCharacterDir
 from ttsclient.tts.configuration_manager.configuration_manager import (
     ConfigurationManager,
 )
@@ -181,14 +181,14 @@ class TTSManager:
             timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
             # GPT-SoVITSのユーザ辞書と、VoiceCharacterのユーザ辞書と、テンポラリのユーザ辞書をマージ
             user_dict_merged_csv_path = voice_character_slot_dir / f"{OPENJTALK_USER_DICT_CSV_FILE}_{timestamp}"
-            gpt_sovits_user_dict_path = Path("third_party/GPT-SoVITS/GPT_SoVITS/text/ja_userdic/userdict.csv")
+            gpt_sovits_user_dict_path = Path(GPT_SOVITS_USER_DICT_PATH)
 
             with open(user_dict_merged_csv_path, "w", encoding="utf8") as f:
                 if gpt_sovits_user_dict_path.exists():
                     with open(gpt_sovits_user_dict_path, "r", encoding="utf8") as f2:
                         f.write(f2.read())
                 else:
-                    print("gpt_sovits_user_dict_path not found")
+                    print("gpt_sovits_user_dict_path not found", GPT_SOVITS_USER_DICT_PATH)
                 if user_dict_cvs_path.exists():
                     with open(user_dict_cvs_path, "r", encoding="utf8") as f2:
                         f.write(f2.read())

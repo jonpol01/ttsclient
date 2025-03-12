@@ -14,6 +14,7 @@ cd client\typescript-demo
 call ncu.CMD -u
 @REM  installだとエラーが出る。operation not permitted, unlink hogehoge.. 意味わからん。
 @REM call pnpm install --force
+@REM 下の処理がとまるときには手動でnode_packageを削除したのちにpnpm installを実行する。(多分ファイルロック周り？？？)
 call pnpm update
 call pnpm run build:prod
 cd ..\..

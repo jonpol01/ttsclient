@@ -91,6 +91,7 @@ ModelDir = Path("./models")
 ModelDir.mkdir(parents=True, exist_ok=True)
 MAX_SLOT_INDEX = 20
 SLOT_PARAM_FILE = "params.json"
+GPT_SOVITS_USER_DICT_PATH = Path(sys._MEIPASS, "third_party", "GPT-SoVITS", "GPT_SoVITS", "text", "ja_userdic", "userdict.csv") if hasattr(sys, "_MEIPASS") else Path("third_party", "GPT-SoVITS", "GPT_SoVITS", "text", "ja_userdic", "userdict.csv")
 OPENJTALK_USER_DICT_CSV_FILE = "user_dict.csv"
 OPENJTALK_USER_DICT_TEMP_CSV_FILE = "user_dict_tmp.csv"
 OPENJTALK_USER_DICT_FILE = "user_dict.dict"
