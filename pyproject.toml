@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ttsclient"
-version = "1.0.17"
+version = "1.0.18"
 description = ""
 authors = ["wok <test@test.com>"]
 readme = "README.md"
