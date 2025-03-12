@@ -189,6 +189,8 @@ class TTSManager:
                         f.write(f2.read())
                 else:
                     print("gpt_sovits_user_dict_path not found", GPT_SOVITS_USER_DICT_PATH)
+                # 改行を挿入
+                f.write("\n")
                 if user_dict_cvs_path.exists():
                     with open(user_dict_cvs_path, "r", encoding="utf8") as f2:
                         f.write(f2.read())
