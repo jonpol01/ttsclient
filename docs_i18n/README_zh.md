@@ -24,6 +24,10 @@
 
 ## 最新动态！
 
+* v.1.0.21
+  * 新功能：
+    * 现在可以从样本中下载 zundamon-speech-webui 的 [Zundamon](https://github.com/zunzun999/zundamon-speech-webui)。
+
 * v.1.0.20
   * 新功能：
     * 添加了调整 GPT-SoVITS 语音语调的功能。

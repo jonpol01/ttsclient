@@ -24,6 +24,10 @@ Rancangan untuk menyokong pelbagai AI. (Pada masa ini hanya GPT-SoVITS v2, v3)
 
 ## Apa yang Baru!
 
+* v.1.0.21
+  * ciri baru:
+    * [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) dari zundamon-speech-webui kini boleh dimuat turun dari sampel.
+
 * v.1.0.20
   * ciri baru:
     * Menambah keupayaan untuk melaraskan intonasi dalam GPT-SoVITS.

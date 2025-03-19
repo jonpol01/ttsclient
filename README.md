@@ -39,6 +39,10 @@ https://github.com/user-attachments/assets/e02e7df3-89bf-485a-9aed-b654eed4ff2a
 https://youtu.be/Fy7qifNB5T0
 
 ## What's New!
+- v.1.0.21
+  - new feature:
+    - zundamon-speech-webuiの[ずんだもん](https://github.com/zunzun999/zundamon-speech-webui)をサンプルからダウンロードできるようになりました。
+
 - v.1.0.20
   - new feature:
     - GPT-SoVITSのイントネーション調整ができるようになりました。

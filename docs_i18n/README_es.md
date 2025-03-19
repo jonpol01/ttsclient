@@ -24,6 +24,10 @@ Planeamos soportar varios tipos de IA. (Actualmente solo GPT-SoVITS v2, v3)
 
 ## ¡Novedades!
 
+* v.1.0.21
+  * nueva característica:
+    * Ahora se puede descargar [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) de zundamon-speech-webui desde las muestras.
+
 * v.1.0.20
   * nueva característica:
     * Se agregó la capacidad de ajustar la entonación en GPT-SoVITS.

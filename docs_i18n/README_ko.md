@@ -24,6 +24,10 @@ Text To Speech(TTS)의 클라이언트 소프트웨어입니다.
 
 ## What's New!
 
+* v.1.0.21
+  * new feature:
+    * zundamon-speech-webui의 [준다몬](https://github.com/zunzun999/zundamon-speech-webui)을 샘플에서 다운로드할 수 있게 되었습니다.
+
 * v.1.0.20
   * new feature:
     * GPT-SoVITS의 억양 조절 기능이 추가되었습니다.
