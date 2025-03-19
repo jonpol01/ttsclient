@@ -24,6 +24,10 @@
 
 ## Что нового!
 
+* v.1.0.21
+  * новая функция:
+    * Теперь можно скачать [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) из zundamon-speech-webui из примеров.
+
 * v.1.0.20
   * новая функция:
     * Добавлена возможность настройки интонации в GPT-SoVITS.

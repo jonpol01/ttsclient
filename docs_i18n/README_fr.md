@@ -24,6 +24,10 @@ Nous prévoyons de prendre en charge divers types d'IA. (Actuellement, uniquemen
 
 ## Quoi de neuf !
 
+* v.1.0.21
+  * nouvelle fonctionnalité :
+    * [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) de zundamon-speech-webui peut maintenant être téléchargé depuis les exemples.
+
 * v.1.0.20
   * nouvelle fonctionnalité :
     * Ajout de la possibilité d'ajuster l'intonation dans GPT-SoVITS.

@@ -24,6 +24,10 @@ Consilium est ut variis AI accommodetur. (In hoc tempore solum GPT-SoVITS v2, v3
 
 ## Quid Novum!
 
+* v.1.0.21
+  * nova functio:
+    * [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) ex zundamon-speech-webui nunc ex exemplis download potest.
+
 * v.1.0.20
   * nova functio:
     * Facultas tonorum in GPT-SoVITS moderandi addita est.

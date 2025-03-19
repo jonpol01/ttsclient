@@ -24,6 +24,10 @@
 
 ## ما الجديد!
 
+* v.1.0.21
+  * ميزة جديدة:
+    * يمكن الآن تنزيل [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) من zundamon-speech-webui من العينات.
+
 * v.1.0.20
   * ميزة جديدة:
     * تمت إضافة القدرة على ضبط نبرة الصوت في GPT-SoVITS.
