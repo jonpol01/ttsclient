@@ -81,7 +81,37 @@ export type ModuleStatus = {
     valid: boolean;
 };
 
-export const TTSTypes = ["GPT-SoVITS"] as const;
+
+export type SampleInfo = {
+    id: string;
+    tts_type: TTSType;
+    lang: string;
+    tag: string[];
+    name: string;
+    terms_of_use_url: string;
+    icon_url: string;
+    credit: string;
+    description: string;
+};
+
+export type GPTSoVITSSampleInfo = SampleInfo & {
+    semantic_predictor_model_url: string
+    synthesizer_model_url: string
+    version: string
+    model_version: string
+    lora_v3: boolean
+};
+
+export type VoiceCharacterSampleInfo = SampleInfo & {
+    zip_url: string
+}
+
+export const TTSTypes = [
+    "GPT-SoVITS",
+    "RESERVED_FOR_SAMPLE",
+    "BROKEN",
+    "VoiceCharacter",
+] as const;
 export type TTSType = (typeof TTSTypes)[number];
 export const GPTSoVITSVersions = ["v1", "v2"] as const;
 export type GPTSoVITSVersion = (typeof GPTSoVITSVersions)[number];
@@ -104,8 +134,8 @@ export type GPTSoVITSSlotInfo = SlotInfo & {
     model_version: GPTSoVITSModelVersion;
     if_lora_v3: boolean;
     enable_faster: boolean
-    semantic_predictor_model: string;
-    synthesizer_path: string;
+    semantic_predictor_model_path: string;
+    synthesizer_model_path: string;
     top_k: number;
     top_p: number;
     temperature: number;
@@ -131,6 +161,10 @@ export type GPTSoVITSSlotInfo = SlotInfo & {
     repetition_penalty: number   // only for faster
 
 };
+export type ReservedForSampleSlotInfo = SlotInfo & {
+    progress: number;
+};
+
 
 export type ModelImportParamMember = ModelImportParam | GPTSoVITSModelImportParam;
 
@@ -143,8 +177,8 @@ export type ModelImportParam = {
 
 export type GPTSoVITSModelImportParam = ModelImportParam & {
     tts_type: "GPT-SoVITS";
-    semantic_predictor_model: string | null;
-    synthesizer_path?: string | null;
+    semantic_predictor_model_path: string | null;
+    synthesizer_model_path?: string | null;
 };
 
 export type MoveModelParam = {
@@ -163,8 +197,8 @@ export type DownloadParam = {
 };
 
 
-export const BasicVoiceType = ["anger", "disgust", "fear", "happy", "sad", "surprise", "other"] as const;
-export type BasicVoiceType = (typeof BasicVoiceType)[number];
+// export const BasicVoiceType = ["anger", "disgust", "fear", "happy", "sad", "surprise", "other"] as const;
+// export type BasicVoiceType = (typeof BasicVoiceType)[number];
 
 export const LanguageType = [
     "all_zh",  // 全部按中文识别
@@ -197,13 +231,19 @@ export type BackendMode = (typeof BackendMode)[number]
 
 export type ReferenceVoice = {
     slot_index: number
-    voice_type: BasicVoiceType | string
+    // voice_type: BasicVoiceType | string
+    voice_type: string
     wav_file: string
     text: string
     language: LanguageType
     icon_file: string | null
     speed: number
 }
+export type EmotionType = {
+    name: string
+    color: string
+}
+
 
 export type VoiceCharacter = {
     slot_index: number;
@@ -214,6 +254,8 @@ export type VoiceCharacter = {
     terms_of_use_url: string;
     icon_file: string | null;
     reference_voices: ReferenceVoice[];
+    emotion_types: EmotionType[]
+    progress: number
 };
 
 export type VoiceCharacterImportParam = {
@@ -226,7 +268,8 @@ export type VoiceCharacterImportParam = {
 }
 
 export type ReferenceVoiceImportParam = {
-    voice_type: BasicVoiceType | string
+    // voice_type: BasicVoiceType | string
+    voice_type: string
     wav_file: string
     voice_character_slot_index: number
     slot_index: number | null

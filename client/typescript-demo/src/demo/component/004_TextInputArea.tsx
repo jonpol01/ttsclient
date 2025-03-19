@@ -18,7 +18,7 @@ import { TextInputAreaDiffusionSettingArea } from "./004-5_TextInputArea_diffusi
 export const TextInputArea = () => {
     const { t } = useTranslation();
     const { triggerToast, serverConfigState, generateGetPathFunc } = useAppRoot();
-    const { inferenceLanguage, speed, cutMethod, curretVoiceCharacterSlotIndex, currentReferenceVoiceIndexes, setGeneratedVoice, setElapsedTime, sampleSteps, elapsedTime } = useAppState();
+    const { inferenceLanguage, speed, cutMethod, currentVoiceCharacterSlotIndex, currentReferenceVoiceIndexes, setGeneratedVoice, setElapsedTime, sampleSteps, elapsedTime } = useAppState();
 
     const { setDialog2Name, setDialog2Props } = useGuiState()
 
@@ -51,10 +51,10 @@ export const TextInputArea = () => {
         const runClicked = async () => {
             const text = (document.getElementById("text-input-area-textarea") as HTMLTextAreaElement).value;
 
-            if (curretVoiceCharacterSlotIndex == null) {
+            if (currentVoiceCharacterSlotIndex == null) {
                 return
             }
-            const voices = currentReferenceVoiceIndexes[curretVoiceCharacterSlotIndex]
+            const voices = currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex]
             if (!voices || voices.length != 1) {
                 triggerToast("error", `multi voice not implemented: ${voices}, ${voices.length}`)
                 return
@@ -64,7 +64,7 @@ export const TextInputArea = () => {
 
             const start = performance.now();
             const param: GenerateVoiceParam = {
-                voice_character_slot_index: curretVoiceCharacterSlotIndex,
+                voice_character_slot_index: currentVoiceCharacterSlotIndex,
                 reference_voice_slot_index: voice,
                 text: text,
                 language: inferenceLanguage,
@@ -126,13 +126,13 @@ export const TextInputArea = () => {
 
                             <button onClick={
                                 async () => {
-                                    if (curretVoiceCharacterSlotIndex == null) {
+                                    if (currentVoiceCharacterSlotIndex == null) {
                                         return
                                     }
                                     const text = (document.getElementById("text-input-area-textarea") as HTMLTextAreaElement).value;
                                     const param_dict: GetJpTextToUserDictRecordsParam = {
                                         text: text,
-                                        voice_character_slot_index: curretVoiceCharacterSlotIndex,
+                                        voice_character_slot_index: currentVoiceCharacterSlotIndex,
                                     }
                                     try {
                                         const records = await serverConfigState.getJpTextToUserDictRecords(param_dict)
@@ -226,7 +226,7 @@ export const TextInputArea = () => {
                                                 <td style={{ border: "1px solid #ccc", padding: "4px", textAlign: "center" }}>
                                                     <button
                                                         onClick={() => {
-                                                            if (curretVoiceCharacterSlotIndex == null) {
+                                                            if (currentVoiceCharacterSlotIndex == null) {
                                                                 return
                                                             }
                                                             // Save this specific word record
@@ -240,7 +240,7 @@ export const TextInputArea = () => {
                                                             }
 
                                                             // 保存処理
-                                                            serverConfigState.addUserDictRecord(curretVoiceCharacterSlotIndex, recordToSave);
+                                                            serverConfigState.addUserDictRecord(currentVoiceCharacterSlotIndex, recordToSave);
 
 
 
@@ -275,7 +275,7 @@ export const TextInputArea = () => {
 
                         <button onClick={
                             async () => {
-                                if (curretVoiceCharacterSlotIndex == null) {
+                                if (currentVoiceCharacterSlotIndex == null) {
                                     return
                                 }
                                 // ウェイトダイアログ表示
@@ -303,7 +303,7 @@ export const TextInputArea = () => {
                                 const param: GetPhonesParam = {
                                     text: text,
                                     language: inferenceLanguage,
-                                    voice_character_slot_index: curretVoiceCharacterSlotIndex,
+                                    voice_character_slot_index: currentVoiceCharacterSlotIndex,
                                     user_dict_records: jpDictRecords,
                                 }
                                 try {
@@ -396,7 +396,7 @@ export const TextInputArea = () => {
     }, [inferenceLanguage,
         speed,
         cutMethod,
-        curretVoiceCharacterSlotIndex,
+        currentVoiceCharacterSlotIndex,
         currentReferenceVoiceIndexes,
         serverConfigState.serverSlotInfos,
         serverConfigState.serverConfiguration,

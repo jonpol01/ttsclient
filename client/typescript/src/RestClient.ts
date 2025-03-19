@@ -24,7 +24,7 @@ import {
     VoiceCharacter,
     VoiceCharacterImportParam,
     ReferenceVoiceImportParam,
-    BasicVoiceType,
+    // BasicVoiceType,
     MoveReferenceVoiceParam,
     ReferenceVoice,
     TTSType,
@@ -33,6 +33,8 @@ import {
     GetPhonesResponse,
     OpenJTalkUserDictRecord,
     GetJpTextToUserDictRecordsParam,
+    SampleInfo,
+    DownloadParam,
 } from "./const";
 
 abstract class RestResult<T> {
@@ -280,7 +282,6 @@ export class TTSRestClient {
 
     getServerSlotInfos = async (): Promise<SlotInfoMember[]> => {
         const path = this.generatePath(`/api/slot-manager/slots`);
-        console.log("getServerSlotInfos path", path)
         const infos = await this.restClient.getRequest<SlotInfoMember[]>(path);
         return infos;
     };
@@ -328,8 +329,8 @@ export class TTSRestClient {
             slot_index: slot_index ?? null,
             tts_type: "GPT-SoVITS",
             name: synthesizerModelFile ? synthesizerModelFile.name : "GPT-SoVITS",
-            semantic_predictor_model: semanticPredictorModelFile?.name ?? null,
-            synthesizer_path: synthesizerModelFile?.name ?? null,
+            semantic_predictor_model_path: semanticPredictorModelFile?.name ?? null,
+            synthesizer_model_path: synthesizerModelFile?.name ?? null,
         };
         await this.restClient.postRequest<null>(path, rvcImportParam);
         return;
@@ -436,7 +437,8 @@ export class TTSRestClient {
         await this.restClient.postRequest<null>(path, param);
     };
 
-    addReferenceVoice = async (slotIndex: number, voice_index: number | null, voiceType: BasicVoiceType | string, wavFile: File, onprogress: (progress: number, end: boolean) => void) => {
+    // addReferenceVoice = async (slotIndex: number, voice_index: number | null, voiceType: BasicVoiceType | string, wavFile: File, onprogress: (progress: number, end: boolean) => void) => {
+    addReferenceVoice = async (slotIndex: number, voice_index: number | null, voiceType: string, wavFile: File, onprogress: (progress: number, end: boolean) => void) => {
         await this.uploadFile("", wavFile, (progress: number, _end: boolean) => {
             onprogress(progress, false);
         });
@@ -504,6 +506,19 @@ export class TTSRestClient {
         await this.restClient.postRequest<null>(path, param);
     }
 
+    getSamples = async (): Promise<SampleInfo[]> => {
+        const path = this.generatePath(`/api/sample-manager/samples`);
+        const info = await this.restClient.getRequest<SampleInfo[]>(path);
+        return info;
+    };
+    downloadSample = async (slotIndex: number, sampleId: string) => {
+        const path = this.generatePath(`/api/sample-manager/samples/operation/download`);
+        const param: DownloadParam = {
+            slot_index: slotIndex,
+            sample_id: sampleId,
+        };
+        await this.restClient.postRequest<null>(path, param);
+    };
     // startRecording = async () => {
     //     const path = this.generatePath(`/ api / voice - changer / operation / start_recording`);
     //     await this.restClient.postRequest<null>(path, null);

@@ -66,7 +66,6 @@
     "voice_character_slot_move_confirm_dialog_title": "移動語音角色",
     "voice_character_slot_move_confirm_dialog_instruction": "請輸入目標插槽編號。如果目標位置已註冊，將會被覆蓋。",
     "voice_character_slot_manager_fileupload_title": "檔案上傳器",
-    "voice_character_slot_manager_fileupload_instruction": "請註冊語音角色名稱。你亦可以上傳Zip檔案。",
     "voice_character_slot_manager_fileupload_file_select": "選擇",
     "voice_character_slot_manager_fileupload_file_selecting": "選擇中",
     "voice_character_slot_manager_fileupload_name_input_label": "名稱",
@@ -167,5 +166,14 @@
     "text_input_area_phoneme_data_label": "請調整音素同韻律數據。（超高級）",
     "text_input_area_error_non_katakana": "\"{{0}}\"嘅發音中包含非片假名字符",
     "text_input_area_success_save_settings": "已儲存\"{{0}}\"嘅設定",
+    "--- emotion color dialog ---": "",
+    "emotion_color_dialog_title": "情感色彩設定",
+    "emotion_color_dialog_instruction": "設定每種情感類型嘅顏色。呢啲顏色將會用嚟喺應用程式入面視覺化表達情感。",
+    "emotion_color_edit_button": "編輯顏色",
+    "emotion_color_updated_success": "情感顏色已成功更新",
+    "emotion_color_select_color_instruction": "請為{{0}}選擇對應嘅顏色。",
+    "emotion_color_new_emotion_title": "新情感",
+    "emotion_color_new_emotion_instruction": "請輸入新情感。",
+    "emotion_color_new_emotion_button": "新情感",
     "--- fin ---": ""
 }

@@ -4,14 +4,22 @@ import shutil
 from typing import cast
 
 from ttsclient.const import LOGGER_NAME, VOICE_CHARACTER_SLOT_PARAM_FILE
-from ttsclient.tts.data_types.slot_manager_data_types import VoiceCharacter, VoiceCharacterImportParam
+from ttsclient.tts.data_types.slot_manager_data_types import ReservedForSampleModelImportParam, ReservedForSampleSlotInfo, SlotInfoMember, VoiceCharacter, VoiceCharacterImportParam
 
 
 def import_voice_character(vc_dir: Path, voice_character_import_param: VoiceCharacterImportParam, remove_src: bool = False):
     slot_dir = vc_dir / f"{voice_character_import_param.slot_index}"
     slot_dir.mkdir(parents=True, exist_ok=True)
     try:
-        if voice_character_import_param.tts_type == "GPT-SoVITS":
+        if voice_character_import_param.tts_type == "RESERVED_FOR_SAMPLE":
+            assert isinstance(voice_character_import_param, ReservedForSampleModelImportParam)
+            assert voice_character_import_param.slot_index is not None
+            slot_info: SlotInfoMember = ReservedForSampleSlotInfo(
+                slot_index=voice_character_import_param.slot_index,
+                progress=voice_character_import_param.progress,
+            )
+            pass  # 何もしない。
+        elif voice_character_import_param.tts_type == "GPT-SoVITS" or voice_character_import_param.tts_type == "VoiceCharacter":
             for src in cast(list[Path | None], [voice_character_import_param.icon_file, voice_character_import_param.zip_file]):
                 if src is not None:
                     dst = slot_dir / src.name
@@ -26,9 +34,9 @@ def import_voice_character(vc_dir: Path, voice_character_import_param: VoiceChar
 
             if voice_character_import_param.zip_file is not None:
                 # unzip
-                zipfile = str(slot_dir / voice_character_import_param.zip_file.name)
+                zipfile = slot_dir / voice_character_import_param.zip_file.name
                 shutil.unpack_archive(str(zipfile), str(slot_dir))
-                voice_character_import_param.zip_file.unlink
+                zipfile.unlink()
                 # paramはすでにあるので、読み込む。
                 slot_info = VoiceCharacter.model_validate_json(open(slot_dir / VOICE_CHARACTER_SLOT_PARAM_FILE, encoding="utf-8").read())
                 slot_info.slot_index = voice_character_import_param.slot_index

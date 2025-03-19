@@ -4,20 +4,30 @@ import shutil
 from typing import cast
 
 from ttsclient.const import LOGGER_NAME, SLOT_PARAM_FILE
-from ttsclient.tts.data_types.slot_manager_data_types import GPTSoVITSModelImportParam, GPTSoVITSSlotInfo, ModelImportParamMember
+from ttsclient.tts.data_types.slot_manager_data_types import GPTSoVITSModelImportParam, GPTSoVITSSlotInfo, ModelImportParamMember, ReservedForSampleModelImportParam, ReservedForSampleSlotInfo, SlotInfoMember
 from ttsclient.tts.tts_manager.models.synthesizer_v3.utils.process_ckpt import get_sovits_version_from_path_fast
+
+# from ttsclient.tts.data_types.slot_manager_data_types import GPTSoVITSSlotInfo, ModelImportParamMember, MoveModelParam, , SetIconParam, SlotInfo, SlotInfoMember
 
 
 def import_model(model_dir: Path, model_importer_param: ModelImportParamMember, remove_src: bool = False):
     slot_dir = model_dir / f"{model_importer_param.slot_index}"
     slot_dir.mkdir(parents=True, exist_ok=True)
     try:
-        if model_importer_param.tts_type == "GPT-SoVITS":
+        if model_importer_param.tts_type == "RESERVED_FOR_SAMPLE":
+            assert isinstance(model_importer_param, ReservedForSampleModelImportParam)
+            assert model_importer_param.slot_index is not None
+            slot_info: SlotInfoMember = ReservedForSampleSlotInfo(
+                slot_index=model_importer_param.slot_index,
+                progress=model_importer_param.progress,
+            )
+            pass  # 何もしない。
+        elif model_importer_param.tts_type == "GPT-SoVITS":
             assert isinstance(model_importer_param, GPTSoVITSModelImportParam)
-            version, model_version, if_lora_v3 = get_sovits_version_from_path_fast(model_importer_param.synthesizer_path)
+            version, model_version, if_lora_v3 = get_sovits_version_from_path_fast(model_importer_param.synthesizer_model_path)
             print(f"version: {version}, model_version: {model_version}, if_lora_v3: {if_lora_v3}")
 
-            for src in cast(list[Path | None], [model_importer_param.icon_file, model_importer_param.semantic_predictor_model, model_importer_param.synthesizer_path]):
+            for src in cast(list[Path | None], [model_importer_param.icon_file, model_importer_param.semantic_predictor_model_path, model_importer_param.synthesizer_model_path]):
                 if src is not None:
                     dst = slot_dir / src.name
                     if len(str(src)) > 80 or len(str(dst)) > 80:
@@ -36,11 +46,8 @@ def import_model(model_dir: Path, model_importer_param: ModelImportParamMember, 
                 slot_index=model_importer_param.slot_index,
                 name=model_importer_param.name,
                 icon_file=Path(model_importer_param.icon_file.name) if model_importer_param.icon_file is not None else None,
-                semantic_predictor_model=Path(model_importer_param.semantic_predictor_model.name) if model_importer_param.semantic_predictor_model is not None else None,
-                synthesizer_path=Path(model_importer_param.synthesizer_path.name) if model_importer_param.synthesizer_path is not None else None,
-                # icon_file=Path(slot_dir / model_importer_param.icon_file.name) if model_importer_param.icon_file is not None else None,
-                # semantic_predictor_model=Path(slot_dir / model_importer_param.semantic_predictor_model.name) if model_importer_param.semantic_predictor_model is not None else None,
-                # synthesizer_path=Path(slot_dir / model_importer_param.synthesizer_path.name) if model_importer_param.synthesizer_path is not None else None,
+                semantic_predictor_model_path=Path(model_importer_param.semantic_predictor_model_path.name) if model_importer_param.semantic_predictor_model_path is not None else None,
+                synthesizer_model_path=Path(model_importer_param.synthesizer_model_path.name) if model_importer_param.synthesizer_model_path is not None else None,
             )
             slot_info.terms_of_use_url = model_importer_param.terms_of_use_url
 

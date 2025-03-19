@@ -9,13 +9,13 @@ import { BasicLabel } from "../../styles/style-components/labels/01_basic-label.
 export const CharacterAreaControlName = () => {
     const { serverConfigState } = useAppRoot();
     const { t } = useTranslation();
-    const { curretVoiceCharacterSlotIndex } = useAppState();
+    const { currentVoiceCharacterSlotIndex } = useAppState();
 
     const nameArea = useMemo(() => {
-        if (curretVoiceCharacterSlotIndex == null) {
+        if (currentVoiceCharacterSlotIndex == null) {
             return <></>;
         }
-        const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[curretVoiceCharacterSlotIndex];
+        const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[currentVoiceCharacterSlotIndex];
         if (voiceCharacter == null) {
             return <></>;
         }
@@ -28,7 +28,7 @@ export const CharacterAreaControlName = () => {
                 </div>
             </div>
         );
-    }, [serverConfigState.voiceCharacterSlotInfos, curretVoiceCharacterSlotIndex]);
+    }, [serverConfigState.voiceCharacterSlotInfos, currentVoiceCharacterSlotIndex]);
 
     return nameArea;
 };

@@ -17,12 +17,12 @@ export const AudioRecorder = () => {
     // const [audioInput, setAudioInput] = useState<string>("default")
     const [audioInputMediaStream, setAudioInputMediaStream] = useState<MediaStream | null>(null)
     const inputRecordingBuffer = useRef<Float32Array[]>([])
-    const { currentReferenceVoiceIndexes, curretVoiceCharacterSlotIndex, audioRecorderState, audioOutput, referenceRecorderAudioInput, setReferenceRecorderAudioInput } = useAppState();
+    const { currentReferenceVoiceIndexes, currentVoiceCharacterSlotIndex, audioRecorderState, audioOutput, referenceRecorderAudioInput, setReferenceRecorderAudioInput } = useAppState();
 
 
 
     const onUploadClicked = () => {
-        if (curretVoiceCharacterSlotIndex == null) {
+        if (currentVoiceCharacterSlotIndex == null) {
             return <></>;
         }
 
@@ -57,12 +57,12 @@ export const AudioRecorder = () => {
         const file = new File([b], "audio.wav", { type: b.type });
 
         // ファイルオブジェクトをサーバーにアップロード
-        const voiceIndex = currentReferenceVoiceIndexes[curretVoiceCharacterSlotIndex]
+        const voiceIndex = currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex]
         if (!voiceIndex || voiceIndex.length != 1) {
             console.warn("voiceIndex is invalid", voiceIndex)
             return
         }
-        serverConfigState.addReferenceVoice(curretVoiceCharacterSlotIndex, voiceIndex[0], "misc", file, (progress: number, end: boolean) => {
+        serverConfigState.addReferenceVoice(currentVoiceCharacterSlotIndex, voiceIndex[0], "misc", file, (progress: number, end: boolean) => {
             console.log("progress", progress, end)
         })
     }

@@ -66,7 +66,6 @@
     "voice_character_slot_move_confirm_dialog_title": "음성 캐릭터 이동",
     "voice_character_slot_move_confirm_dialog_instruction": "이동할 슬롯 번호를 입력해 주세요. 이미 등록된 슬롯이면 덮어쓰게 됩니다.",
     "voice_character_slot_manager_fileupload_title": "파일 업로더",
-    "voice_character_slot_manager_fileupload_instruction": "음성 캐릭터 이름을 등록해 주세요. Zip 파일을 업로드할 수도 있습니다.",
     "voice_character_slot_manager_fileupload_file_select": "선택",
     "voice_character_slot_manager_fileupload_file_selecting": "선택 중",
     "voice_character_slot_manager_fileupload_name_input_label": "이름",
@@ -167,5 +166,14 @@
     "text_input_area_phoneme_data_label": "음소, 운율 데이터를 조정해 주세요. (초고급)",
     "text_input_area_error_non_katakana": "\"{{0}}\"의 발음에 가타카나가 아닌 문자가 포함되어 있습니다",
     "text_input_area_success_save_settings": "\"{{0}}\"의 설정이 저장되었습니다",
+    "--- emotion color dialog ---": "",
+    "emotion_color_dialog_title": "감정 색상 설정",
+    "emotion_color_dialog_instruction": "각 감정 유형의 색상을 설정합니다. 이 색상들은 애플리케이션에서 감정을 시각적으로 표현하는 데 사용됩니다.",
+    "emotion_color_edit_button": "색상 편집",
+    "emotion_color_updated_success": "감정 색상이 성공적으로 업데이트되었습니다",
+    "emotion_color_select_color_instruction": "{{0}}에 대한 색상을 선택해 주세요.",
+    "emotion_color_new_emotion_title": "새 감정",
+    "emotion_color_new_emotion_instruction": "새 감정을 입력해 주세요.",
+    "emotion_color_new_emotion_button": "새 감정",
     "--- fin ---": ""
 }

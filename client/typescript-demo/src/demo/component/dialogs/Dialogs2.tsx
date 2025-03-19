@@ -5,6 +5,8 @@ import { TextInputDialog } from "./Dialogs2_TextInputDialog";
 import { ConfirmDialog } from "./Dialogs2_ConfirmDialog";
 import { WaitDialog } from "./Dialogs2_WaitDialog";
 import { SelectInputDialog } from "./Dialogs2_SelectInputDialog";
+import { ColorSelectDialog } from "./Dialogs2_ColorSelectDialog"
+import { ProgressDialog } from "./Dialogs2_ProgressDialog";
 
 export const Dialogs2 = () => {
     const guiState = useGuiState();
@@ -20,6 +22,10 @@ export const Dialogs2 = () => {
             return <WaitDialog></WaitDialog>;
         } else if (guiState.dialog2Name === "selectInputDialog") {
             return <SelectInputDialog></SelectInputDialog>;
+        } else if (guiState.dialog2Name === "colorSelectDialog") {
+            return <ColorSelectDialog></ColorSelectDialog>;
+        } else if (guiState.dialog2Name === "progressDialog") {
+            return <ProgressDialog></ProgressDialog>;
         } else {
             <>unknown dialog {guiState.dialog2Name}</>;
         }

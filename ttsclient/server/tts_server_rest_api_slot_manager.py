@@ -73,10 +73,10 @@ class RestAPISlotManager:
             slot_manager = SlotManager.get_instance()
             if import_param.tts_type == "GPT-SoVITS":
                 assert isinstance(import_param, GPTSoVITSModelImportParam)
-                if import_param.semantic_predictor_model is not None:
-                    import_param.semantic_predictor_model = UPLOAD_DIR / import_param.semantic_predictor_model
-                if import_param.synthesizer_path is not None:
-                    import_param.synthesizer_path = UPLOAD_DIR / import_param.synthesizer_path
+                if import_param.semantic_predictor_model_path is not None:
+                    import_param.semantic_predictor_model_path = UPLOAD_DIR / import_param.semantic_predictor_model_path
+                if import_param.synthesizer_model_path is not None:
+                    import_param.synthesizer_model_path = UPLOAD_DIR / import_param.synthesizer_model_path
             slot_manager.set_new_slot(import_param, remove_src=True)
         except Exception as e:
             logging.getLogger(LOGGER_NAME).error(f"Failed to set_new_slot: {e}")

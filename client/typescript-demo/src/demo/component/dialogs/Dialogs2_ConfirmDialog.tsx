@@ -15,7 +15,6 @@ const ButtonsRow = (props: ButtonsRowProps) => {
             <div
                 className={closeButton}
                 onClick={() => {
-                    const textInput = document.getElementById("text-input-dialog-text") as HTMLInputElement;
                     props.resolve(true);
                     setDialog2Name("none");
                     setDialog2Props(null);

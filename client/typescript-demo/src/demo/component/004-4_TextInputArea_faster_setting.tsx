@@ -8,7 +8,7 @@ import { BasicInput } from "../../styles/style-components/inputs/01_basic-input.
 export const TextInputAreaFasterSetting = () => {
     const { t } = useTranslation();
     const { serverConfigState, } = useAppRoot();
-    const { curretVoiceCharacterSlotIndex, currentReferenceVoiceIndexes, } = useAppState();
+    const { currentVoiceCharacterSlotIndex, currentReferenceVoiceIndexes, } = useAppState();
 
 
     const area = useMemo(() => {
@@ -90,7 +90,7 @@ export const TextInputAreaFasterSetting = () => {
 
         return fastControl
     }, [
-        curretVoiceCharacterSlotIndex,
+        currentVoiceCharacterSlotIndex,
         currentReferenceVoiceIndexes,
         serverConfigState.serverSlotInfos,
         serverConfigState.serverConfiguration,

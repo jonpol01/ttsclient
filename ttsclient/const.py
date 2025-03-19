@@ -40,10 +40,12 @@ NATIVE_CLIENT_FILE_MAC = Path(
 
 
 # TTS モジュール
-TTSType: TypeAlias = Literal["GPT-SoVITS", "BROKEN"]
+TTSType: TypeAlias = Literal["GPT-SoVITS", "BROKEN", "RESERVED_FOR_SAMPLE", "VoiceCharacter"]
 TTSTypes: list[TTSType] = [
     "GPT-SoVITS",
     "BROKEN",
+    "RESERVED_FOR_SAMPLE",
+    "VoiceCharacter",
 ]
 
 GPTSoVITSVersion: TypeAlias = Literal["v1", "v2"]
@@ -104,15 +106,15 @@ MAX_VOICE_CHARACTER_SLOT_INDEX = 200
 VOICE_CHARACTER_SLOT_PARAM_FILE = "params.json"
 MAX_REFERENCE_VOICE_SLOT_INDEX = 100
 
-BasicVoiceType: TypeAlias = Literal["anger", "disgust", "fear", "happy", "sad", "surprise"]
-BasicVoiceTypes: list[BasicVoiceType] = [
-    "anger",
-    "disgust",
-    "fear",
-    "happy",
-    "sad",
-    "surprise",
-]
+# BasicVoiceType: TypeAlias = Literal["anger", "disgust", "fear", "happy", "sad", "surprise"]
+# BasicVoiceTypes: list[BasicVoiceType] = [
+#     "anger",
+#     "disgust",
+#     "fear",
+#     "happy",
+#     "sad",
+#     "surprise",
+# ]
 
 LanguageType: TypeAlias = Literal[
     "all_zh",  # 全部按中文识别

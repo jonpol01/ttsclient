@@ -1,7 +1,7 @@
 from pathlib import Path
 from pydantic import BaseModel
 
-from ttsclient.const import BackendMode, BasicVoiceType, GPTSoVITSModelVersion, GPTSoVITSVersion, LanguageType, TTSType
+from ttsclient.const import BackendMode, GPTSoVITSModelVersion, GPTSoVITSVersion, LanguageType, TTSType
 
 
 class ModelImportParam(BaseModel):
@@ -13,11 +13,17 @@ class ModelImportParam(BaseModel):
 
 
 class GPTSoVITSModelImportParam(ModelImportParam):
-    semantic_predictor_model: Path | None = None
-    synthesizer_path: Path | None = None
+    tts_type: TTSType = "GPT-SoVITS"
+    semantic_predictor_model_path: Path | None = None
+    synthesizer_model_path: Path | None = None
 
 
-ModelImportParamMember = ModelImportParam | GPTSoVITSModelImportParam
+class ReservedForSampleModelImportParam(ModelImportParam):
+    tts_type: TTSType = "RESERVED_FOR_SAMPLE"
+    progress: float
+
+
+ModelImportParamMember = ModelImportParam | GPTSoVITSModelImportParam | ReservedForSampleModelImportParam
 
 
 class SlotInfo(BaseModel):
@@ -36,8 +42,8 @@ class GPTSoVITSSlotInfo(SlotInfo):
     model_version: GPTSoVITSModelVersion = "v2"
     if_lora_v3: bool = False
     enable_faster: bool | None = False
-    semantic_predictor_model: Path | None = None
-    synthesizer_path: Path | None = None
+    semantic_predictor_model_path: Path | None = None
+    synthesizer_model_path: Path | None = None
     top_k: int = 20
     top_p: float = 1
     temperature: float = 1
@@ -61,11 +67,17 @@ class GPTSoVITSSlotInfo(SlotInfo):
     repetition_penalty: float = 1.35  # only for faster
 
 
-SlotInfoMember = SlotInfo | GPTSoVITSSlotInfo
+class ReservedForSampleSlotInfo(SlotInfo):
+    tts_type: TTSType = "RESERVED_FOR_SAMPLE"
+    progress: float
+
+
+SlotInfoMember = SlotInfo | GPTSoVITSSlotInfo | ReservedForSampleSlotInfo
 
 
 class ReferenceVoiceImportParam(BaseModel):
-    voice_type: BasicVoiceType | str
+    # voice_type: BasicVoiceType | str
+    voice_type: str
     wav_file: Path
     slot_index: int | None = None
     icon_file: Path | None = None
@@ -73,7 +85,8 @@ class ReferenceVoiceImportParam(BaseModel):
 
 
 class ReferenceVoice(BaseModel):
-    voice_type: BasicVoiceType | str
+    # voice_type: BasicVoiceType | str
+    voice_type: str
     slot_index: int = -1
     wav_file: Path
     text: str
@@ -90,6 +103,11 @@ class VoiceCharacterImportParam(BaseModel):
     zip_file: Path | None = None
 
 
+class EmotionType(BaseModel):
+    name: str
+    color: str
+
+
 class VoiceCharacter(BaseModel):
     tts_type: TTSType | None = None
     slot_index: int = -1
@@ -99,6 +117,8 @@ class VoiceCharacter(BaseModel):
     terms_of_use_url: str = ""
     icon_file: Path | None = None
     reference_voices: list[ReferenceVoice] = []
+    emotion_types: list[EmotionType] = []
+    progress: float = 0
 
 
 class MoveModelParam(BaseModel):

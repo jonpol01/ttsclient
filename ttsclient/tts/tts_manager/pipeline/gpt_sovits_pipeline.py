@@ -31,11 +31,11 @@ class GPTSoVITSPipeline(Pipeline):
         logging.getLogger(LOGGER_NAME).info(f"construct new pipelinepitch: slot_index:{self.slot_index}, gpu_device_id:{self.gpu_device_id}")
 
         module_manager = ModuleManager.get_instance()
-        if self.slot_info.semantic_predictor_model is None:
+        if self.slot_info.semantic_predictor_model_path is None:
             logging.getLogger(LOGGER_NAME).info("use default sematic predictor")
             gpt_model = module_manager.get_module_filepath("gpt_model")
         else:
-            gpt_model = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.semantic_predictor_model
+            gpt_model = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.semantic_predictor_model_path
             logging.getLogger(LOGGER_NAME).info(f"use custom sematic predictor {gpt_model}")
         self.t2s_model = SemanticPredictorManager.get_semantic_predictor(
             "GPTSemanticPredictor",
@@ -44,10 +44,10 @@ class GPTSoVITSPipeline(Pipeline):
             self.slot_info.backend_mode == "all_onnx" or self.slot_info.backend_mode == "semantic_onnx",
         )
 
-        if self.slot_info.synthesizer_path is None:
+        if self.slot_info.synthesizer_model_path is None:
             sovit_model = module_manager.get_module_filepath("sovits_model")
         else:
-            sovit_model = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.synthesizer_path
+            sovit_model = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.synthesizer_model_path
             logging.getLogger(LOGGER_NAME).info(f"use custom sematic predictor {sovit_model}")
         self.vq_model = SynthesizerManager.get_synthesizer(
             "SovitsSynthesizer",

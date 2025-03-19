@@ -22,16 +22,16 @@ import { BasicButton } from "../../styles/style-components/buttons/01_basic-butt
 
 export const CharacterAreaPortrait = () => {
     const { serverConfigState } = useAppRoot();
-    const { currentReferenceVoiceIndexes, curretVoiceCharacterSlotIndex, referenceVoiceMode } = useAppState();
+    const { currentReferenceVoiceIndexes, currentVoiceCharacterSlotIndex, referenceVoiceMode } = useAppState();
     const { setDialogName } = useGuiState();
     const { t } = useTranslation();
     const [isPortraitContainerFocused, setIsPortraitContainerFocused] = React.useState(false);
 
     const selectedTermOfUseUrlLink = useMemo(() => {
-        if (curretVoiceCharacterSlotIndex == null) {
+        if (currentVoiceCharacterSlotIndex == null) {
             return <></>;
         }
-        const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[curretVoiceCharacterSlotIndex];
+        const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[currentVoiceCharacterSlotIndex];
         if (voiceCharacter == null) {
             return <></>;
         }
@@ -47,13 +47,13 @@ export const CharacterAreaPortrait = () => {
                 </a>
             </div>
         );
-    }, [serverConfigState.voiceCharacterSlotInfos, currentReferenceVoiceIndexes, curretVoiceCharacterSlotIndex]);
+    }, [serverConfigState.voiceCharacterSlotInfos, currentReferenceVoiceIndexes, currentVoiceCharacterSlotIndex]);
 
     const aboutModelAndVoice = useMemo(() => {
-        if (curretVoiceCharacterSlotIndex == null) {
+        if (currentVoiceCharacterSlotIndex == null) {
             return <></>;
         }
-        const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[curretVoiceCharacterSlotIndex];
+        const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[currentVoiceCharacterSlotIndex];
         if (!voiceCharacter == null) {
             return <></>;
         }
@@ -72,7 +72,7 @@ export const CharacterAreaPortrait = () => {
                 </div>
             </div>
         );
-    }, [serverConfigState.voiceCharacterSlotInfos, currentReferenceVoiceIndexes, curretVoiceCharacterSlotIndex]);
+    }, [serverConfigState.voiceCharacterSlotInfos, currentReferenceVoiceIndexes, currentVoiceCharacterSlotIndex]);
 
 
     const portraitClicked = () => {
@@ -80,14 +80,14 @@ export const CharacterAreaPortrait = () => {
         if (referenceVoiceMode == "view") {
             return
         }
-        if (curretVoiceCharacterSlotIndex == null) {
+        if (currentVoiceCharacterSlotIndex == null) {
             return
         }
-        const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[curretVoiceCharacterSlotIndex];
+        const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[currentVoiceCharacterSlotIndex];
         if (voiceCharacter == null) {
             return
         }
-        const selectedReferenceVoiceIndexes = currentReferenceVoiceIndexes[curretVoiceCharacterSlotIndex]
+        const selectedReferenceVoiceIndexes = currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex]
         if (selectedReferenceVoiceIndexes.length != 1) {
             return
         }
@@ -107,7 +107,7 @@ export const CharacterAreaPortrait = () => {
             }
             const file = fileInput.files[0];
             if (file) {
-                serverConfigState.updateReferenceVoiceIconFile(curretVoiceCharacterSlotIndex, selectedReferenceVoiceIndexes[0], file, () => { });
+                serverConfigState.updateReferenceVoiceIconFile(currentVoiceCharacterSlotIndex, selectedReferenceVoiceIndexes[0], file, () => { });
             }
 
             // ファイル選択後にinput要素を削除
@@ -115,20 +115,20 @@ export const CharacterAreaPortrait = () => {
         }
     }
     const uplodaFile = (f: File) => {
-        if (curretVoiceCharacterSlotIndex == null) {
+        if (currentVoiceCharacterSlotIndex == null) {
             return
         }
-        const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[curretVoiceCharacterSlotIndex];
+        const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[currentVoiceCharacterSlotIndex];
         if (voiceCharacter == null) {
             return
         }
-        const selectedReferenceVoiceIndexes = currentReferenceVoiceIndexes[curretVoiceCharacterSlotIndex]
+        const selectedReferenceVoiceIndexes = currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex]
         if (selectedReferenceVoiceIndexes.length != 1) {
             return
         }
 
 
-        serverConfigState.updateReferenceVoiceIconFile(curretVoiceCharacterSlotIndex, selectedReferenceVoiceIndexes[0], f, () => { });
+        serverConfigState.updateReferenceVoiceIconFile(currentVoiceCharacterSlotIndex, selectedReferenceVoiceIndexes[0], f, () => { });
     }
 
     const component = useMemo(() => {
@@ -145,7 +145,9 @@ export const CharacterAreaPortrait = () => {
                     >
                         <div className={portraitContainerImagePasteDiv}
                             hidden={referenceVoiceMode == "view"}
-                            onClick={() => { console.log("click") }}
+                            onClick={() => {
+                                // noop
+                            }}
                             onFocus={() => {
                                 setIsPortraitContainerFocused(true)
                             }}
@@ -172,6 +174,29 @@ export const CharacterAreaPortrait = () => {
                                 console.log("itemsinput");
 
                             }}
+                            onDragOver={(e) => {
+                                e.preventDefault();
+                            }}
+                            onDragEnter={(e) => {
+                                e.preventDefault();
+                            }}
+                            onDragLeave={(e) => {
+                                e.preventDefault();
+                            }}
+                            onDrop={(e) => {
+                                e.preventDefault();
+                                e.currentTarget.innerHTML = '';
+
+                                // Handle dropped files
+                                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                                    const file = e.dataTransfer.files[0];
+                                    if (file.type.indexOf("image") !== -1) {
+                                        uplodaFile(file);
+                                    }
+                                }
+
+                                setIsPortraitContainerFocused(false);
+                            }}
                             contentEditable={true}
                         ></div>
                         <VoiceCharacterPortrait></VoiceCharacterPortrait>
@@ -182,7 +207,9 @@ export const CharacterAreaPortrait = () => {
                 <div className={portraitContainerButton}>
                     <button
                         hidden={!showUploadButtonFlag}
-                        onClick={() => { portraitClicked() }}
+                        onClick={() => {
+                            // portraitClicked()
+                        }}
                         className={`${BasicButton({ width: "large" })} ${normalButtonThema} `}
                     >{t("character_area_portrait_upload_file_button_label")}</button>
                 </div>

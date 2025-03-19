@@ -66,7 +66,6 @@
     "voice_character_slot_move_confirm_dialog_title": "移动语音角色",
     "voice_character_slot_move_confirm_dialog_instruction": "请输入目标插槽编号。如果目标位置已注册，将会被覆盖。",
     "voice_character_slot_manager_fileupload_title": "文件上传器",
-    "voice_character_slot_manager_fileupload_instruction": "请注册语音角色名称。您也可以上传Zip文件。",
     "voice_character_slot_manager_fileupload_file_select": "选择",
     "voice_character_slot_manager_fileupload_file_selecting": "选择中",
     "voice_character_slot_manager_fileupload_name_input_label": "名称",
@@ -167,5 +166,14 @@
     "text_input_area_phoneme_data_label": "请调整音素和韵律数据。（超高级）",
     "text_input_area_error_non_katakana": "\"{{0}}\"的发音中包含非片假名字符",
     "text_input_area_success_save_settings": "已保存\"{{0}}\"的设置",
+    "--- emotion color dialog ---": "",
+    "emotion_color_dialog_title": "情感色彩设置",
+    "emotion_color_dialog_instruction": "设置每种情感类型的颜色。这些颜色将用于在应用程序中视觉化表达情感。",
+    "emotion_color_edit_button": "编辑颜色",
+    "emotion_color_updated_success": "情感颜色已成功更新",
+    "emotion_color_select_color_instruction": "请为{{0}}选择对应的颜色。",
+    "emotion_color_new_emotion_title": "新情感",
+    "emotion_color_new_emotion_instruction": "请输入新情感。",
+    "emotion_color_new_emotion_button": "新情感",
     "--- fin ---": ""
 }

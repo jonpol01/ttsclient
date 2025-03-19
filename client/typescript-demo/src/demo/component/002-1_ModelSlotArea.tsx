@@ -62,7 +62,6 @@ export const ModelSlotArea = (_props: ModelSlotAreaProps) => {
                 // const icon = x.icon_file != null ? x.icon_file : "./assets/icons/human.png";
                 let icon = x.icon_file != null ? "models" + "/" + x.slot_index + "/" + x.icon_file.split(/[\/\\]/).pop() : "./assets/icons/human.png";
                 icon = generateGetPathFunc(icon)
-                console.log("icon url", icon);
 
                 const iconElem =
                     x.icon_file != null ? (

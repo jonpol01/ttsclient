@@ -66,7 +66,7 @@
   "voice_character_slot_move_confirm_dialog_title": "move voice character",
   "voice_character_slot_move_confirm_dialog_instruction": "Select the destination slot index to move the voice character. If you select the used slot, the slot will be overwritten.",
   "voice_character_slot_manager_fileupload_title": "File Uploader",
-  "voice_character_slot_manager_fileupload_instruction": "Please register the name of the voice character. You can also upload a zip file.",
+  "voice_character_slot_manager_fileupload_instruction": "Please upload a zip file.",
   "voice_character_slot_manager_fileupload_file_select": "select",
   "voice_character_slot_manager_fileupload_file_selecting": "selecting",
   "voice_character_slot_manager_fileupload_name_input_label": "name",
@@ -167,5 +167,14 @@
   "text_input_area_phoneme_data_label": "Phoneme and prosodic data. (Super advanced)",
   "text_input_area_error_non_katakana": "Non-katakana characters are included in the pronunciation of \"{{0}}\"",
   "text_input_area_success_save_settings": "Settings for \"{{0}}\" have been saved",
+  "--- emotion color dialog ---": "",
+  "emotion_color_dialog_title": "Emotion Color Settings",
+  "emotion_color_dialog_instruction": "Set colors for each emotion type. The colors will be used to visually represent emotions in the application.",
+  "emotion_color_edit_button": "Edit Colors",
+  "emotion_color_updated_success": "Emotion colors have been updated successfully",
+  "emotion_color_select_color_instruction": "Select a color for {{0}}.",
+  "emotion_color_new_emotion_title": "New Emotion",
+  "emotion_color_new_emotion_instruction": "Please enter a new emotion.",
+  "emotion_color_new_emotion_button": "New Emotion",
   "--- fin ---": ""
 }

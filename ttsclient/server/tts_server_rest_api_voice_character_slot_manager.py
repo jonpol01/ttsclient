@@ -93,14 +93,12 @@ class RestAPIVoiceCharacterSlotManager:
     def post_zip_and_download(self, index: int):
         slot_manager = VoiceCharacterSlotManager.get_instance()
         name, buffer = slot_manager.zip_and_download(index)
-        # print("zip returing..")
-
         # ストリームで返す方が遅い。なぜだ？？？
         # return StreamingResponse(buffer, media_type="application/zip", headers={"Content-Disposition": f"attachment; filename={name}.zip"})
 
         # バッファの内容を全て読み込んでファイルとして返す。
         file_content = buffer.read()
-        headers = {"Content-Disposition": f"attachment; filename={name}.zip"}
+        headers = {"Content-Disposition": f"attachment; filename=vc.zip"}
         return Response(content=file_content, media_type="application/zip", headers=headers)
 
     def post_voice(self, index: int, reference_voice_import_params: ReferenceVoiceImportParam):

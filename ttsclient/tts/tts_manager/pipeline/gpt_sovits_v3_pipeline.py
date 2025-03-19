@@ -34,11 +34,11 @@ class GPTSoVITSV3Pipeline(Pipeline):
         logging.getLogger(LOGGER_NAME).info(f"construct new pipelinepitch: slot_index:{self.slot_index}, gpu_device_id:{self.gpu_device_id}")
 
         module_manager = ModuleManager.get_instance()
-        if self.slot_info.semantic_predictor_model is None:
+        if self.slot_info.semantic_predictor_model_path is None:
             logging.getLogger(LOGGER_NAME).info("use default sematic predictor")
             gpt_model = module_manager.get_module_filepath("gpt_model_v3")
         else:
-            gpt_model = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.semantic_predictor_model
+            gpt_model = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.semantic_predictor_model_path
             logging.getLogger(LOGGER_NAME).info(f"use custom sematic predictor {gpt_model}")
         self.t2s_model = SemanticPredictorManager.get_semantic_predictor(
             "GPTSemanticPredictor",
@@ -47,10 +47,10 @@ class GPTSoVITSV3Pipeline(Pipeline):
             self.slot_info.backend_mode == "all_onnx" or self.slot_info.backend_mode == "semantic_onnx",
         )
 
-        if self.slot_info.synthesizer_path is None:
+        if self.slot_info.synthesizer_model_path is None:
             sovit_model = module_manager.get_module_filepath("sovits_model_v3")
         else:
-            sovit_model = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.synthesizer_path
+            sovit_model = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.synthesizer_model_path
             logging.getLogger(LOGGER_NAME).info(f"use custom sematic predictor {sovit_model}")
 
         if slot_info.if_lora_v3:
@@ -397,7 +397,7 @@ class GPTSoVITSV3Pipeline(Pipeline):
 
                 max_audio = np.abs(audio).max()  # 简单防止16bit爆音
                 if max_audio > 1:
-                    audio /= max_audio
+                    audio = audio / max_audio  # https://github.com/w-okada/GPT-SoVITS/commit/271db6a4de432726b288942edd7e73ac44decb66 in-placeに伴うバグ回避。
                 audio_opt.append(audio)
                 audio_opt.append(self.zero_wav)
 

@@ -73,8 +73,8 @@ def download_initial_models() -> None:
         name="pretrained_v3",
         terms_of_use_url="https://huggingface.co/wok000/gpt-sovits-models/raw/main/pretrained/term_of_use.txt",
         icon_file=gpt_sovits_icon_v3,
-        semantic_predictor_model=module_manager.get_module_filepath("gpt_model_v3"),
-        synthesizer_path=module_manager.get_module_filepath("sovits_model_v3"),
+        semantic_predictor_model_path=module_manager.get_module_filepath("gpt_model_v3"),
+        synthesizer_model_path=module_manager.get_module_filepath("sovits_model_v3"),
     )
     slot_manager.set_new_slot(model_import_param, remove_src=False)
 
@@ -97,8 +97,8 @@ def download_initial_models() -> None:
         name="JVNV_FT_F1",
         terms_of_use_url="https://huggingface.co/wok000/gpt-sovits-models/raw/main/fine-tune-by-JVNV-F1/term_of_use.txt",
         icon_file=ft_icon,
-        semantic_predictor_model=ft_semantic,
-        synthesizer_path=ft_synthesizer,
+        semantic_predictor_model_path=ft_semantic,
+        synthesizer_model_path=ft_synthesizer,
     )
     slot_manager.set_new_slot(model_import_param, remove_src=True)
 
@@ -184,7 +184,7 @@ def start_cui(
         urls = [
             ["Application", base_url],
             ["Log(rich)", f"{base_url}/?app_mode=LogViewer"],
-            ["Log(text)", f"{base_url}/vcclient.log"],
+            ["Log(text)", f"{base_url}/ttsclient.log"],
             ["API", f"{base_url}/docs"],
             ["License(js)", f"{base_url}/licenses-js.json"],
             ["License(py)", f"{base_url}/licenses-py.json"],
