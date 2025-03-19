@@ -31,7 +31,7 @@
       "licenseURL": ""
     },
     {
-      "name": "@eslint-community/eslint-utils@4.5.0",
+      "name": "@eslint-community/eslint-utils@4.5.1",
       "repository": "https://github.com/eslint-community/eslint-utils",
       "licenseURL": ""
     },
@@ -71,7 +71,7 @@
       "licenseURL": ""
     },
     {
-      "name": "@types/react@19.0.10",
+      "name": "@types/react@19.0.12",
       "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
       "licenseURL": ""
     },
@@ -201,7 +201,7 @@
       "licenseURL": ""
     },
     {
-      "name": "i18next@24.2.2",
+      "name": "i18next@24.2.3",
       "repository": "https://github.com/i18next/i18next",
       "licenseURL": ""
     },
@@ -344,7 +344,7 @@
       "licenseURL": ""
     },
     {
-      "name": "tts-client-typescript-client-lib@1.0.41",
+      "name": "tts-client-typescript-client-lib@1.0.42",
       "repository": "",
       "licenseURL": ""
     },
