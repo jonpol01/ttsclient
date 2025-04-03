@@ -103,6 +103,7 @@ GPT-SoVITSでは、モデルと参照音声と参照テキストを選択して�
 ```
 $ git clone https://github.com/w-okada/ttsclient.git
 $ cd ttsclient/
+$ git submodule update --init --recursive
 $ poetry install
 $ poetry run main cui
 ---
@@ -115,9 +116,9 @@ $ poetry run main cui --https true
 ### cudaを使用する場合
 モジュールを入れ替えてください。
 ```
-$ poetry add onnxruntime-gpu==1.19.2
+$ poetry add onnxruntime-gpu==1.20.1
 $ poetry remove torch
-$ poetry add torch==2.3.1 --source torch_cuda12
+$ poetry add torch==2.4.1 torchaudio==2.4.1 --source torch_cuda12
 ```
 
 ### directmlを使用する場合
@@ -125,6 +126,7 @@ $ poetry add torch==2.3.1 --source torch_cuda12
 ```
 $ poetry add onnxruntime-directml==1.19.2
 ```
+
 
 
 ## Acknowledgements

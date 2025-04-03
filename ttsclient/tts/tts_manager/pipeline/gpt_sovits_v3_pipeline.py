@@ -20,6 +20,7 @@ from ttsclient.tts.tts_manager.phone_extractor.phone_extractor_manager import Ph
 from ttsclient.tts.tts_manager.pipeline.pipeline import Pipeline
 from ttsclient.tts.tts_manager.semantic_predictor.semantic_predictor_manager import SemanticPredictorManager
 from ttsclient.tts.tts_manager.synthesizer.synthesizer_manager import SynthesizerManager
+from GPT_SoVITS.BigVGAN.bigvgan import BigVGAN
 
 
 class GPTSoVITSV3Pipeline(Pipeline):
@@ -101,10 +102,8 @@ class GPTSoVITSV3Pipeline(Pipeline):
         self.mel_fn = lambda x: mel_spectrogram_torch(x, **mel_fn_args)
         self.resample_transform_dict = {}
 
-        import bigvgan
-
         bigvgan_dir = module_manager.get_module_filepath("bigvgan_v2_24khz_100band_256x_bigvgan_generator_pt").parent
-        self.bigvgan = bigvgan.BigVGAN.from_pretrained(bigvgan_dir, use_cuda_kernel=False)  # if True, RuntimeError: Ninja is required to load C++ extensions
+        self.bigvgan = BigVGAN.from_pretrained(bigvgan_dir, use_cuda_kernel=False)  # if True, RuntimeError: Ninja is required to load C++ extensions
 
         self.bigvgan.remove_weight_norm()
         self.bigvgan = self.bigvgan.eval()

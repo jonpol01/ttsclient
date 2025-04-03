@@ -4,10 +4,16 @@ import signal
 import fire
 import time
 import sys
+import os
 
+#
 sys.path.append("./third_party/GPT-SoVITS/GPT_SoVITS")
 sys.path.append("./third_party/GPT-SoVITS")
-sys.path.append("./third_party/GPT-SoVITS/GPT_SoVITS/BigVGAN")
+# BigVGANモジュールをインポート
+from GPT_SoVITS.BigVGAN.bigvgan import BigVGAN
+from GPT_SoVITS.BigVGAN.env import AttrDict
+
+__all__ = ["BigVGAN", "AttrDict"]
 
 from ttsclient.client_launcher.client_launcher import ClientLauncher
 from ttsclient.tts.tts_manager.tts_manager import TTSManager

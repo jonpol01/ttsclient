@@ -14,7 +14,6 @@ pytorch-lightning = "2.4.0"
 matplotlib = "3.9.1.post1"
 requests = "2.32.3"
 einops = "0.8.0"
-langsegment = "0.3.3"
 transformers = "4.44.0"
 cn2an = "0.5.22"
 pypinyin = "0.52.0"
@@ -45,16 +44,17 @@ onnx = "1.16.2"
 torchmetrics = "1.4.2"
 onnxsim = "^0.4.36"
 x-transformers = "^2.1.2"
-torchaudio = "2.3.1"
+torchaudio = {version = "2.4.1", source = "torch_cuda12"}
 jieba = "^0.42.1"
 split-lang = "^2.1.0"
 nltk = "3.8.1"
 faster-whisper = "^1.1.1"
 onnxruntime = "1.20.1"
 peft = "^0.14.0"
-torch = {version = "2.3.1", source = "torch_cuda12"}
 fast-langdetect = "^0.3.1"
 tojyutping = "^3.2.0"
+onnxruntime-gpu = "1.20.1"
+torch = {version = "2.4.1", source = "torch_cuda12"}
 
 
 [tool.poetry.group.dev.dependencies]
