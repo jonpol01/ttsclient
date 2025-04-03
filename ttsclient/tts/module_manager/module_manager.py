@@ -69,7 +69,7 @@ REGISTERD_MODULES: list[ModuleInfo] = [
     ModuleInfo(
         id="chinese-roberta-wwm-ext-large_G2PWModel_1.1.zip",
         display_name="G2PWModel_1.1.zip",
-        url="https://paddlespeech.bj.bcebos.com/Parakeet/released_models/g2p/G2PWModel_1.1.zip",
+        url="https://www.modelscope.cn/models/kamiorinn/g2pw/resolve/master/G2PWModel_1.1.zip",
         save_to="GPT_SoVITS/text/G2PWModel_1.1.zip",
         hash="b116f6930a7ee55eef6576a8d8e14bf40c1106583439e8ae924b901512379c64",
     ),
