@@ -1,122 +1,140 @@
-[Japanisch](/README.md) /
-[Englisch](/docs_i18n/README_en.md) /
-[Koreanisch](/docs_i18n/README_ko.md)/
-[Chinesisch](/docs_i18n/README_zh.md)/
+[日本語](/README.md) /
+[English](/docs_i18n/README_en.md) /
+[한국어](/docs_i18n/README_ko.md)/
+[中文](/docs_i18n/README_zh.md)/
 [Deutsch](/docs_i18n/README_de.md)/
-[Arabisch](/docs_i18n/README_ar.md)/
-[Griechisch](/docs_i18n/README_el.md)/
-[Spanisch](/docs_i18n/README_es.md)/
-[Französisch](/docs_i18n/README_fr.md)/
-[Italienisch](/docs_i18n/README_it.md)/
-[Latein](/docs_i18n/README_la.md)/
-[Malaiisch](/docs_i18n/README_ms.md)/
-[Russisch](/docs_i18n/README_ru.md)
-*Außer Japanisch sind alle Übersetzungen maschinell erstellt.
+[العربية](/docs_i18n/README_ar.md)/
+[Ελληνικά](/docs_i18n/README_el.md)/
+[Español](/docs_i18n/README_es.md)/
+[Français](/docs_i18n/README_fr.md)/
+[Italiano](/docs_i18n/README_it.md)/
+[Latina](/docs_i18n/README_la.md)/
+[Bahasa Melayu](/docs_i18n/README_ms.md)/
+[Русский](/docs_i18n/README_ru.md) 
+  *Andere Sprachen sind maschinell übersetzt.
 
-## TTSClient
+TTSClient
+---
 
-Dies ist eine Client-Software für Text To Speech (TTS).
-Es ist geplant, verschiedene AIs zu unterstützen. (Derzeit nur GPT-SoVITS v2, v3)
+Eine Text-zu-Sprache (TTS) Client-Software. Es ist geplant, verschiedene KI-Modelle zu unterstützen (derzeit nur GPT-SoVITS v2, v3).
 
-* Unterstützte AI
-  * [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
-  * Demnächst...
+- Unterstützte KI
+  - [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
+  - Kommt bald...
+
+# Beispiele
+
+## Weibliche Stimme
+
+https://github.com/user-attachments/assets/d6b94c39-b2d3-478a-bc79-29d00f85e1a0
+
+## Mehrsprachig
+
+https://github.com/user-attachments/assets/e02e7df3-89bf-485a-9aed-b654eed4ff2a
+
+## Details
+
+https://youtu.be/Fy7qifNB5T0
 
 ## Was ist neu!
+- v.1.0.21
+  - Neue Funktion:
+    - Unterstützung für den Download von [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) aus zundamon-speech-webui Beispielen.
 
-* v.1.0.21
-  * neues Feature:
-    * [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) von zundamon-speech-webui kann jetzt aus den Beispielen heruntergeladen werden.
+- v.1.0.20
+  - Neue Funktion:
+    - Unterstützung für GPT-SoVITS Intonationsanpassung.
 
-* v.1.0.20
-  * neues Feature:
-    * Die Möglichkeit zur Anpassung der Intonation in GPT-SoVITS wurde hinzugefügt.
-
-* v.1.0.13
-  * neues Feature:
-    * Unterstützung für GPT-SoVITS v3. Auch Modelle, die mit lora feinabgestimmt wurden, werden unterstützt.
-    * Verbesserung der Registrierung von Referenzstimmen. Es ist jetzt möglich, direkt über das Mikrofon oder den PC-Ton aufzunehmen. Außerdem wird automatisch eine Transkription des Textes erstellt.
-
-https://github.com/user-attachments/assets/cdf33212-3077-4ff0-9fa2-8635ee5417f4
+- v.1.0.13
+  - Neue Funktion:
+    - Unterstützung für GPT-SoVITS v3, einschließlich mit LoRA feinabgestimmter Modelle.
+    - Verbesserte Referenzsprachregistrierung. Sie können jetzt direkt von Mikrofon oder PC-Audio aufnehmen, und automatische Texttranskription wird ebenfalls durchgeführt.
 
 ## Verwandte Software
-
-* [Echtzeit-Voice-Changer VCClient](https://github.com/w-okada/voice-changer)
+- [Echtzeit-Stimmwandler VCClient](https://github.com/w-okada/voice-changer)
 
 ## Download
+Bitte laden Sie von der [Hugging Face Repository](https://huggingface.co/wok000/ttsclient000/tree/main) herunter.
 
-[Hugging Face Repository](https://huggingface.co/wok000/ttsclient000/tree/main)Bitte von dort herunterladen.
-
-* win_std Edition: Eine Edition, die auf der CPU für Windows läuft. Sie ist langsamer im Vergleich zur CUDA-Version, funktioniert aber auf einer einigermaßen aktuellen CPU.
-* win_cuda Edition: Eine Edition, die auf der NVIDIA GPU für Windows läuft. Sie läuft dank Hardwarebeschleunigung der GPU schnell.
-* mac Edition: Eine Edition für Mac (Apple Silicon (M1, M2, M3, etc)).
+- win_std Edition: Windows Edition, die auf CPU läuft. Langsamer als die CUDA-Version, aber funktioniert auf aktuellen CPUs mit anständiger Spezifikation.
+- win_cuda Edition: Windows Edition, die auf NVIDIA GPU läuft. Läuft schneller mit GPU-Hardwarebeschleunigung.
+- mac Edition: Edition für Mac (Apple silicon (M1, M2, M3, etc)).
 
 ## Verwendung
+- Nach dem Entpacken der zip-Datei, führen Sie `start_http.bat` aus. Greifen Sie auf die angezeigte URL in Ihrem Browser zu.
+- Mit `start_https.bat` können Sie von entfernten Standorten aus zugreifen.
+- (Fortgeschritten) Mit `start_http_with_ngrok.bat` können Sie über ngrok-Tunneling zugreifen.
 
-* Nach dem Entpacken der ZIP-Datei,`start_http.bat`führen Sie es aus. Greifen Sie mit einem Browser auf die angezeigte URL zu.
-* `start_https.bat`Mit dieser Option können Sie auch aus der Ferne zugreifen.
-* (Für Fortgeschrittene)`start_http_with_ngrok.bat`Mit dieser Option können Sie mit Ngrok Tunneling verwenden, um zuzugreifen.
-
-Hinweis: Bei der mac Edition bitte .bat durch .command ersetzen.
+Hinweis: Für mac Edition ersetzen Sie .bat durch .command.
 
 ### GPT-SoVITS
 
-Für Details zum Modell,[GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)siehe das offizielle Repository.
+Für Modelldetails, siehe die offizielle [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS) Repository.
 
-Bei GPT-SoVITS wählen Sie ein Modell, eine Referenzstimme und einen Referenztext aus, bevor Sie die Sprachsynthese durchführen. Im TTSClient gibt es das Konzept des Referenzsprechers, der mehrere Referenzstimmen und Referenztexte haben kann.
+In GPT-SoVITS wählen Sie ein Modell, Referenzstimme und Referenztext, bevor Sie Sprache generieren. TTSClient hat ein Konzept von Referenzsprechern, wo ein Referenzsprecher mehrere Referenzstimmen und Referenztexte haben kann.
 
 ![image](https://github.com/user-attachments/assets/032a65ed-b9d5-4f8a-8efe-73bd10b66593)
 
-#### Sprachsynthese
+#### Sprachgenerierung
 
-1. Wählen Sie ein Modell und einen Referenzsprecher aus ((1), (2)).
-2. Wählen Sie die registrierte Referenzstimme und den Referenztext des Referenzsprechers aus (3).
-3. Geben Sie den Text ein, den Sie generieren möchten, und erzeugen Sie die Sprache (4).
+1. Wählen Sie das Modell und den Referenzsprecher ((1), (2)).
+2. Wählen Sie die für den Referenzsprecher registrierte Referenzstimme und den Referenztext (3).
+3. Geben Sie den zu generierenden Text ein und erstellen Sie die Stimme (4).
 
 #### Modellregistrierung
 
-Bitte registrieren Sie es über die Bearbeitungsschaltfläche im Modell-Auswahlbereich.
+Registrieren Sie sich über die Bearbeiten-Schaltfläche im Modellauswahlbereich.
 
-#### Registrierung des Referenzsprechers
+#### Referenzsprecherregistrierung
 
-Bitte registrieren Sie es über die Bearbeitungsschaltfläche im Referenzsprecher-Registrierungsbereich.
+Registrieren Sie sich über die Bearbeiten-Schaltfläche im Referenzsprecherregistrierungsbereich.
 
-#### Registrierung von Referenzstimmen und -texten
+#### Referenzstimme und Textregistrierung
 
-Bitte wählen Sie einen nicht registrierten Slot im Referenzstimmen-Auswahlbereich aus und registrieren Sie ihn.
+Wählen Sie einen nicht registrierten Slot im Referenzstimmenauswahlbereich zur Registrierung.
 
-## Starten aus dem Repository (Erweitert)
+## Starten vom Repository (Fortgeschritten)
+
+### Ubuntu
+
+* Anforderungen
+  
+  cmake
 
 ```
 $ git clone https://github.com/w-okada/ttsclient.git
 $ cd ttsclient/
+$ git submodule update --init --recursive
+$ sed -i '/pyopenjtalk/d' pyproject.toml
 $ poetry install
+
+$ wget "https://files.pythonhosted.org/packages/source/p/pyopenjtalk/pyopenjtalk-0.4.0.tar.gz"
+$ tar xzf pyopenjtalk-0.4.0.tar.gz
+$ sed -i -E 's/cmake_minimum_required\(VERSION[^\)]*\)/cmake_minimum_required(VERSION 3.5...3.31)/' pyopenjtalk-0.4.0/lib/open_jtalk/src/CMakeLists.txt
+$ rm pyopenjtalk-0.4.0.tar.gz
+$ tar czf pyopenjtalk-0.4.0.tar.gz pyopenjtalk-0.4.0/
+$ poetry run pip install pyopenjtalk-0.4.0.tar.gz
+
 $ poetry run main cui
 ---
-
-リモートからアクセスする場合は`--https true`を付与してください。
+Für Remote-Zugriff fügen Sie `--https true` hinzu.
 ---
 $ poetry run main cui --https true
 ```
 
-### Wenn Sie CUDA verwenden
-
-Bitte tauschen Sie die Module aus.
-
+## CUDA verwenden
+Ersetzen Sie die Module wie folgt:
 ```
-$ poetry add onnxruntime-gpu==1.19.2
+$ poetry add onnxruntime-gpu==1.20.1
 $ poetry remove torch
-$ poetry add torch==2.3.1 --source torch_cuda12
+$ poetry add torch==2.4.1 torchaudio==2.4.1 --source torch_cuda12
 ```
 
-### Wenn Sie DirectML verwenden
-
-Bitte tauschen Sie die Module aus.
-
+## DirectML verwenden
+Ersetzen Sie die Module wie folgt:
 ```
 $ poetry add onnxruntime-directml==1.19.2
 ```
 
 ## Danksagungen
-
-* [JVNV-Korpus](https://sites.google.com/site/shinnosuketakamichi/research-topics/jvnv_corpus)
+- [JVNV Korpus](https://sites.google.com/site/shinnosuketakamichi/research-topics/jvnv_corpus)

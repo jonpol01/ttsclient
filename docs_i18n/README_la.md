@@ -1,122 +1,140 @@
-[Lingua Iaponica](/README.md) /
-[Lingua Anglica](/docs_i18n/README_en.md) /
-[Lingua Coreana](/docs_i18n/README_ko.md)/
-[Lingua Sinica](/docs_i18n/README_zh.md)/
-[Lingua Theodisca](/docs_i18n/README_de.md)/
-[Lingua Arabica](/docs_i18n/README_ar.md)/
-[Lingua Graeca](/docs_i18n/README_el.md)/
-[Lingua Hispanica](/docs_i18n/README_es.md)/
-[Lingua Gallica](/docs_i18n/README_fr.md)/
-[Lingua Italica](/docs_i18n/README_it.md)/
-[Lingua Latina](/docs_i18n/README_la.md)/
-[Lingua Malaica](/docs_i18n/README_ms.md)/
-[Lingua Russica](/docs_i18n/README_ru.md)
-*Praeter linguam Iaponicam, omnes linguae machinaliter translatae sunt.
+[日本語](/README.md) /
+[English](/docs_i18n/README_en.md) /
+[한국어](/docs_i18n/README_ko.md)/
+[中文](/docs_i18n/README_zh.md)/
+[Deutsch](/docs_i18n/README_de.md)/
+[العربية](/docs_i18n/README_ar.md)/
+[Ελληνικά](/docs_i18n/README_el.md)/
+[Español](/docs_i18n/README_es.md)/
+[Français](/docs_i18n/README_fr.md)/
+[Italiano](/docs_i18n/README_it.md)/
+[Latina](/docs_i18n/README_la.md)/
+[Bahasa Melayu](/docs_i18n/README_ms.md)/
+[Русский](/docs_i18n/README_ru.md) 
+  *Aliae linguae machina translatae sunt.
 
-## TTSClient
+TTSClient
+---
 
-Software clientis pro Text To Speech (TTS).
-Consilium est ut variis AI accommodetur. (In hoc tempore solum GPT-SoVITS v2, v3)
+Client programmatio Textus ad Vocem (TTS). Plures AI exemplaria sustinere destinatur (nunc solum GPT-SoVITS v2, v3).
 
-* AI accommodatio
-  * [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
-  * mox veniet...
+- AI Sustentata
+  - [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
+  - mox...
 
-## Quid Novum!
+# Exempla
 
-* v.1.0.21
-  * nova functio:
-    * [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) ex zundamon-speech-webui nunc ex exemplis download potest.
+## Vox Feminea
 
-* v.1.0.20
-  * nova functio:
-    * Facultas tonorum in GPT-SoVITS moderandi addita est.
+https://github.com/user-attachments/assets/d6b94c39-b2d3-478a-bc79-29d00f85e1a0
 
-* v.1.0.13
-  * nova functio:
-    * GPT-SoVITS v3 accommodatum. Etiam accommodatum ad exempla finetuning per lora.
-    * Fortificatio registrationis vocis referentis. Nunc directe ex microphono vel sono PC recordari potest. Etiam, transscriptio textus automatice fit.
+## Multilingua
 
-https://github.com/user-attachments/assets/cdf33212-3077-4ff0-9fa2-8635ee5417f4
+https://github.com/user-attachments/assets/e02e7df3-89bf-485a-9aed-b654eed4ff2a
 
-## Software relatum
+## Particularia
 
-* [Mutator vocis in tempore reali VCClient](https://github.com/w-okada/voice-changer)
+https://youtu.be/Fy7qifNB5T0
+
+## Nova!
+- v.1.0.21
+  - nova functio:
+    - Additum est auxilium ad [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) ex exemplis zundamon-speech-webui.
+
+- v.1.0.20
+  - nova functio:
+    - Additum est auxilium ad modulationem intonationis in GPT-SoVITS.
+
+- v.1.0.13
+  - nova functio:
+    - Additum est auxilium ad GPT-SoVITS v3, inclusis exemplaribus LoRA optimizatis.
+    - Meliorata est vox referentiae recordatio. Nunc potes recordari directe per microphonum vel audio PC, et transcriptio textus automatice fit.
+
+## Programmatio Coniuncta
+- [VCClient Mutator Vocis in Tempore Reali](https://github.com/w-okada/voice-changer)
 
 ## Download
+Rogo te ut download facias ex [repositorio Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main).
 
-[Ex repositorio Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main)placet download.
+- editio win_std: Editio Windows quae in CPU operatur. Tardior quam editio CUDA, sed in CPU recentibus cum bonis specificationibus operatur.
+- editio win_cuda: Editio Windows quae in GPU NVIDIA operatur. Celerius operatur cum acceleratione hardware GPU.
+- editio mac: Editio pro Mac (Apple silicon (M1, M2, M3, etc)).
 
-* editio win_std: Editio quae in CPU pro Fenestra operatur. Cum comparatur ad versionem cuda, tardior est, sed operatur si CPU recentioris speciei est.
-* editio win_cuda: Editio quae in NVIDIA GPU pro Fenestra operatur. Per accelerationem hardware GPU celeriter operatur.
-* editio mac: Editio pro Mac (Apple silicon (M1, M2, M3, etc)).
+## Usus
+- Post extractionem file zip, exequere `start_http.bat`. Accede ad URL in navigatore tuo visum.
+- Usando `start_https.bat` potes accedere ex locis remotis.
+- (Proficientibus) Usando `start_http_with_ngrok.bat` potes accedere per tunnel ngrok.
 
-## Usus Methodus
-
-* Post extractionem fasciculi zip,`start_http.bat`exsequi placet. Accedite ad URL in navigatro quod ostenditur.
-* `start_https.bat`Si uti, etiam a remoto accedere potes.
-* (Pro peritis)`start_http_with_ngrok.bat`Si uti, potes accedere per tunneling cum ngrok.
-
-nota: editio mac .bat cum .command reponi debet.
+Nota: Pro editione mac, substitue .bat cum .command.
 
 ### GPT-SoVITS
 
-Pro singularibus de exemplis[GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)vide officialem repositorium.
+Pro particularibus exemplaris, consule repositorium officiale [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS).
 
-In GPT-SoVITS, postquam exemplar, vocem referentem, et textum referentem eligis, vox generatur. In TTSClient, conceptus referentis oratoris est, qui plures voces et textus referentes habere potest.
+In GPT-SoVITS, selige exemplar, vocem referentiae et textum referentiae antequam vocem generes. TTSClient habet conceptum loquentium referentiae, ubi loquens referentiae potest habere plures voces et textus referentiae.
 
 ![image](https://github.com/user-attachments/assets/032a65ed-b9d5-4f8a-8efe-73bd10b66593)
 
-#### Generatio vocis
+#### Generatio Vocis
 
-1. Exemplar et oratorem referentem elige ((1), (2)).
-2. Elige vocem et textum referentem in oratore referenti registratos (3).
-3. Textum quem generare vis inserens, vocem generas (4).
+1. Selige exemplar et loquentem referentiae ((1), (2)).
+2. Selige vocem referentiae et textum referentiae recordatos pro loquente referentiae (3).
+3. Insere textum quem vis generare et crea vocem (4).
 
-#### Registratio exemplaris
+#### Recordatio Exemplaris
 
-Ex area selectionis exemplaris per puga edendi registra.
+Recordare ex button modificationis in area selectionis exemplaris.
 
-#### Registratio oratoris referentis
+#### Recordatio Loquentis Referentiae
 
-Ex area registrationis oratoris referentis per puga edendi registra.
+Recordare ex button modificationis in area recordationis loquentis referentiae.
 
-#### Registratio vocis, textus referentis
+#### Recordatio Vocis et Textus Referentiae
 
-Ex area selectionis vocis referentis, slot non registratum elige et registra.
+Selige slot non recordatum in area selectionis vocis referentiae ad recordandum.
 
-## Ex repositorio initium (Advanced)
+## Inceptio ex Repositorio (Proficientibus)
+
+### Ubuntu
+
+* Requisita
+  
+  cmake
 
 ```
 $ git clone https://github.com/w-okada/ttsclient.git
 $ cd ttsclient/
+$ git submodule update --init --recursive
+$ sed -i '/pyopenjtalk/d' pyproject.toml
 $ poetry install
+
+$ wget "https://files.pythonhosted.org/packages/source/p/pyopenjtalk/pyopenjtalk-0.4.0.tar.gz"
+$ tar xzf pyopenjtalk-0.4.0.tar.gz
+$ sed -i -E 's/cmake_minimum_required\(VERSION[^\)]*\)/cmake_minimum_required(VERSION 3.5...3.31)/' pyopenjtalk-0.4.0/lib/open_jtalk/src/CMakeLists.txt
+$ rm pyopenjtalk-0.4.0.tar.gz
+$ tar czf pyopenjtalk-0.4.0.tar.gz pyopenjtalk-0.4.0/
+$ poetry run pip install pyopenjtalk-0.4.0.tar.gz
+
 $ poetry run main cui
 ---
-
-リモートからアクセスする場合は`--https true`を付与してください。
+Pro accessu remoto, adde `--https true`.
 ---
 $ poetry run main cui --https true
 ```
 
-### Si cuda uti
-
-Modulos commuta.
-
+## Usus CUDA
+Substitue modulos sic:
 ```
-$ poetry add onnxruntime-gpu==1.19.2
+$ poetry add onnxruntime-gpu==1.20.1
 $ poetry remove torch
-$ poetry add torch==2.3.1 --source torch_cuda12
+$ poetry add torch==2.4.1 torchaudio==2.4.1 --source torch_cuda12
 ```
 
-### Si directml uti
-
-Modulos commuta.
-
+## Usus DirectML
+Substitue modulos sic:
 ```
 $ poetry add onnxruntime-directml==1.19.2
 ```
 
-## Gratias
-
-* [Corpus JVNV](https://sites.google.com/site/shinnosuketakamichi/research-topics/jvnv_corpus)
+## Gratiarum Actio
+- [Corpus JVNV](https://sites.google.com/site/shinnosuketakamichi/research-topics/jvnv_corpus) 

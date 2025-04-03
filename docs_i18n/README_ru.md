@@ -1,122 +1,140 @@
-[японский](/README.md) /
-[английский](/docs_i18n/README_en.md) /
-[корейский](/docs_i18n/README_ko.md)/
-[китайский](/docs_i18n/README_zh.md)/
-[немецкий](/docs_i18n/README_de.md)/
-[арабский](/docs_i18n/README_ar.md)/
-[греческий](/docs_i18n/README_el.md)/
-[испанский](/docs_i18n/README_es.md)/
-[французский](/docs_i18n/README_fr.md)/
-[итальянский](/docs_i18n/README_it.md)/
-[латинский](/docs_i18n/README_la.md)/
-[малайский](/docs_i18n/README_ms.md)/
-[русский](/docs_i18n/README_ru.md)
-*Кроме японского, все переводы выполнены машиной.
+[日本語](/README.md) /
+[English](/docs_i18n/README_en.md) /
+[한국어](/docs_i18n/README_ko.md)/
+[中文](/docs_i18n/README_zh.md)/
+[Deutsch](/docs_i18n/README_de.md)/
+[العربية](/docs_i18n/README_ar.md)/
+[Ελληνικά](/docs_i18n/README_el.md)/
+[Español](/docs_i18n/README_es.md)/
+[Français](/docs_i18n/README_fr.md)/
+[Italiano](/docs_i18n/README_it.md)/
+[Latina](/docs_i18n/README_la.md)/
+[Bahasa Melayu](/docs_i18n/README_ms.md)/
+[Русский](/docs_i18n/README_ru.md) 
+  *Другие языки переведены машинным переводом.
 
-## TTSClient
+TTSClient
+---
 
-Клиентское программное обеспечение для преобразования текста в речь (TTS).
-Планируется поддержка различных AI. (На данный момент поддерживается только GPT-SoVITS v2, v3)
+Клиентское программное обеспечение для преобразования текста в речь (TTS). Предполагается поддержка различных моделей ИИ (в настоящее время только GPT-SoVITS v2, v3).
 
-* Поддерживаемый AI
-  * [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
-  * скоро будет...
+- Поддерживаемые ИИ
+  - [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
+  - скоро...
 
-## Что нового!
+# Примеры
 
-* v.1.0.21
-  * новая функция:
-    * Теперь можно скачать [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) из zundamon-speech-webui из примеров.
+## Женский голос
 
-* v.1.0.20
-  * новая функция:
-    * Добавлена возможность настройки интонации в GPT-SoVITS.
+https://github.com/user-attachments/assets/d6b94c39-b2d3-478a-bc79-29d00f85e1a0
 
-* v.1.0.13
-  * новая функция:
-    * Поддержка GPT-SoVITS v3. Также поддерживаются модели, настроенные с помощью lora.
-    * Улучшена регистрация эталонного звука. Теперь можно записывать звук напрямую с микрофона или ПК. Также автоматически выполняется транскрипция текста.
+## Многоязычный
 
-https://github.com/user-attachments/assets/cdf33212-3077-4ff0-9fa2-8635ee5417f4
+https://github.com/user-attachments/assets/e02e7df3-89bf-485a-9aed-b654eed4ff2a
+
+## Подробности
+
+https://youtu.be/Fy7qifNB5T0
+
+## Новое!
+- v.1.0.21
+  - новая функция:
+    - Добавлена поддержка загрузки [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) из примеров zundamon-speech-webui.
+
+- v.1.0.20
+  - новая функция:
+    - Добавлена поддержка настройки интонации в GPT-SoVITS.
+
+- v.1.0.13
+  - новая функция:
+    - Поддержка GPT-SoVITS v3, включая модели, оптимизированные с помощью LoRA.
+    - Улучшена запись эталонного голоса. Теперь вы можете записывать напрямую с микрофона или аудио ПК, и транскрипция текста выполняется автоматически.
 
 ## Связанное программное обеспечение
+- [VCClient Преобразователь голоса в реальном времени](https://github.com/w-okada/voice-changer)
 
-* [Клиент для изменения голоса в реальном времени VCClient](https://github.com/w-okada/voice-changer)
+## Загрузка
+Пожалуйста, загрузите с [репозитория Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main).
 
-## Скачать
+- издание win_std: Издание Windows, работающее на CPU. Медленнее, чем издание CUDA, но работает на современных CPU с хорошими характеристиками.
+- издание win_cuda: Издание Windows, работающее на GPU NVIDIA. Работает быстрее с аппаратным ускорением GPU.
+- издание mac: Издание для Mac (Apple silicon (M1, M2, M3, etc)).
 
-[Репозиторий на Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main)пожалуйста, скачайте отсюда.
+## Использование
+- После распаковки zip-файла запустите `start_http.bat`. Откройте URL, отображаемый в вашем браузере.
+- Используя `start_https.bat`, вы можете получить доступ из удаленных мест.
+- (Для продвинутых) Используя `start_http_with_ngrok.bat`, вы можете получить доступ через туннель ngrok.
 
-* win_std издание: издание для Windows, работающее на CPU. Медленнее по сравнению с версией cuda, но работает на современных CPU с достаточной производительностью.
-* win_cuda издание: издание для Windows, работающее на GPU от NVIDIA. Работает быстрее благодаря аппаратному ускорению GPU.
-* mac издание: издание для Mac (Apple silicon (M1, M2, M3 и т.д.)).
-
-## Как использовать
-
-* После распаковки zip-файла,`start_http.bat`запустите. Перейдите по указанному URL в браузере.
-* `start_https.bat`используйте для доступа удаленно.
-* (для опытных пользователей)`start_http_with_ngrok.bat`используйте для доступа через туннелирование с помощью ngrok.
-
-замечание: для mac издания замените .bat на .command.
+Примечание: Для издания mac замените .bat на .command.
 
 ### GPT-SoVITS
 
-Подробности о модели[GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)смотрите в официальном репозитории.
+Для подробностей о модели обратитесь к официальному репозиторию [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS).
 
-В GPT-SoVITS выберите модель, эталонный голос и текст, затем выполните генерацию речи. В TTSClient есть концепция эталонного говорящего, который может иметь несколько эталонных голосов и текстов.
+В GPT-SoVITS вы выбираете модель, эталонный голос и эталонный текст перед генерацией голоса. TTSClient имеет концепцию эталонных дикторов, где эталонный диктор может иметь несколько эталонных голосов и текстов.
 
 ![image](https://github.com/user-attachments/assets/032a65ed-b9d5-4f8a-8efe-73bd10b66593)
 
-#### Генерация речи
+#### Генерация голоса
 
-1. Выберите модель и эталонного говорящего ((1), (2)).
-2. Выберите эталонный голос и текст, зарегистрированные для эталонного говорящего (3).
-3. Введите текст, который хотите сгенерировать, и выполните генерацию речи (4).
+1. Выберите модель и эталонного диктора ((1), (2)).
+2. Выберите записанные эталонный голос и эталонный текст для эталонного диктора (3).
+3. Введите текст, который вы хотите сгенерировать, и создайте голос (4).
 
 #### Регистрация модели
 
-Зарегистрируйте через кнопку редактирования в области выбора модели.
+Зарегистрируйтесь с помощью кнопки редактирования в области выбора модели.
 
-#### Регистрация эталонного говорящего
+#### Регистрация эталонного диктора
 
-Зарегистрируйте через кнопку редактирования в области регистрации эталонного говорящего.
+Зарегистрируйтесь с помощью кнопки редактирования в области регистрации эталонного диктора.
 
 #### Регистрация эталонного голоса и текста
 
-Выберите незарегистрированный слот в области выбора эталонного голоса и зарегистрируйте.
+Выберите незарегистрированный слот в области выбора эталонного голоса для регистрации.
 
-## Запуск из репозитория (Advanced)
+## Запуск из репозитория (Для продвинутых)
+
+### Ubuntu
+
+* Требования
+  
+  cmake
 
 ```
 $ git clone https://github.com/w-okada/ttsclient.git
 $ cd ttsclient/
+$ git submodule update --init --recursive
+$ sed -i '/pyopenjtalk/d' pyproject.toml
 $ poetry install
+
+$ wget "https://files.pythonhosted.org/packages/source/p/pyopenjtalk/pyopenjtalk-0.4.0.tar.gz"
+$ tar xzf pyopenjtalk-0.4.0.tar.gz
+$ sed -i -E 's/cmake_minimum_required\(VERSION[^\)]*\)/cmake_minimum_required(VERSION 3.5...3.31)/' pyopenjtalk-0.4.0/lib/open_jtalk/src/CMakeLists.txt
+$ rm pyopenjtalk-0.4.0.tar.gz
+$ tar czf pyopenjtalk-0.4.0.tar.gz pyopenjtalk-0.4.0/
+$ poetry run pip install pyopenjtalk-0.4.0.tar.gz
+
 $ poetry run main cui
 ---
-
-リモートからアクセスする場合は`--https true`を付与してください。
+Для удаленного доступа добавьте `--https true`.
 ---
 $ poetry run main cui --https true
 ```
 
-### Если используется cuda
-
-замените модули.
-
+## Использование CUDA
+Замените модули следующим образом:
 ```
-$ poetry add onnxruntime-gpu==1.19.2
+$ poetry add onnxruntime-gpu==1.20.1
 $ poetry remove torch
-$ poetry add torch==2.3.1 --source torch_cuda12
+$ poetry add torch==2.4.1 torchaudio==2.4.1 --source torch_cuda12
 ```
 
-### Если используется directml
-
-замените модули.
-
+## Использование DirectML
+Замените модули следующим образом:
 ```
 $ poetry add onnxruntime-directml==1.19.2
 ```
 
 ## Благодарности
-
-* [JVNV корпус](https://sites.google.com/site/shinnosuketakamichi/research-topics/jvnv_corpus)
+- [Корпус JVNV](https://sites.google.com/site/shinnosuketakamichi/research-topics/jvnv_corpus) 

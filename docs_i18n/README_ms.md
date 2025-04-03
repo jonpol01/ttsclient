@@ -1,122 +1,140 @@
-[Bahasa Jepun](/README.md) /
-[Bahasa Inggeris](/docs_i18n/README_en.md) /
-[Bahasa Korea](/docs_i18n/README_ko.md)/
-[Bahasa Cina](/docs_i18n/README_zh.md)/
-[Bahasa Jerman](/docs_i18n/README_de.md)/
-[Bahasa Arab](/docs_i18n/README_ar.md)/
-[Bahasa Greek](/docs_i18n/README_el.md)/
-[Bahasa Sepanyol](/docs_i18n/README_es.md)/
-[Bahasa Perancis](/docs_i18n/README_fr.md)/
-[Bahasa Itali](/docs_i18n/README_it.md)/
-[Bahasa Latin](/docs_i18n/README_la.md)/
+[日本語](/README.md) /
+[English](/docs_i18n/README_en.md) /
+[한국어](/docs_i18n/README_ko.md)/
+[中文](/docs_i18n/README_zh.md)/
+[Deutsch](/docs_i18n/README_de.md)/
+[العربية](/docs_i18n/README_ar.md)/
+[Ελληνικά](/docs_i18n/README_el.md)/
+[Español](/docs_i18n/README_es.md)/
+[Français](/docs_i18n/README_fr.md)/
+[Italiano](/docs_i18n/README_it.md)/
+[Latina](/docs_i18n/README_la.md)/
 [Bahasa Melayu](/docs_i18n/README_ms.md)/
-[Bahasa Rusia](/docs_i18n/README_ru.md)
-*Selain bahasa Jepun, terjemahan adalah terjemahan mesin.
+[Русский](/docs_i18n/README_ru.md) 
+  *Bahasa lain diterjemahkan oleh mesin.
 
-## TTSClient
+TTSClient
+---
 
-Perisian klien untuk Teks ke Ucapan (TTS).
-Rancangan untuk menyokong pelbagai AI. (Pada masa ini hanya GPT-SoVITS v2, v3)
+Perisian klien Teks ke Pertuturan (TTS). Dijangka menyokong pelbagai model AI (kini hanya GPT-SoVITS v2, v3).
 
-* AI yang disokong
-  * [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
-  * Akan datang...
+- AI Disokong
+  - [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
+  - akan datang...
 
-## Apa yang Baru!
+# Contoh
 
-* v.1.0.21
-  * ciri baru:
-    * [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) dari zundamon-speech-webui kini boleh dimuat turun dari sampel.
+## Suara Wanita
 
-* v.1.0.20
-  * ciri baru:
-    * Menambah keupayaan untuk melaraskan intonasi dalam GPT-SoVITS.
+https://github.com/user-attachments/assets/d6b94c39-b2d3-478a-bc79-29d00f85e1a0
 
-* v.1.0.13
-  * ciri baru:
-    * Menyokong GPT-SoVITS v3. Juga menyokong model yang disesuaikan dengan lora.
-    * Peningkatan pendaftaran suara rujukan. Kini boleh merakam suara dari mikrofon atau PC secara langsung. Selain itu, transkripsi teks juga dilakukan secara automatik.
+## Pelbagai Bahasa
 
-https://github.com/user-attachments/assets/cdf33212-3077-4ff0-9fa2-8635ee5417f4
+https://github.com/user-attachments/assets/e02e7df3-89bf-485a-9aed-b654eed4ff2a
 
-## Perisian berkaitan
+## Butiran
 
-* [Penukar Suara Masa Nyata VCClient](https://github.com/w-okada/voice-changer)
+https://youtu.be/Fy7qifNB5T0
 
-## Muat turun
+## Terkini!
+- v.1.0.21
+  - ciri baru:
+    - Ditambah sokongan untuk memuat turun [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) dari contoh zundamon-speech-webui.
 
-[Repositori Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main)sila muat turun dari.
+- v.1.0.20
+  - ciri baru:
+    - Ditambah sokongan untuk pelarasan intonasi dalam GPT-SoVITS.
 
-* Edisi win_std: Edisi yang berfungsi pada CPU untuk Windows. Lebih perlahan berbanding versi cuda, tetapi berfungsi pada CPU dengan spesifikasi yang agak baik.
-* Edisi win_cuda: Edisi yang berfungsi pada GPU NVIDIA untuk Windows. Berfungsi dengan pantas dengan pecutan perkakasan GPU.
-* Edisi mac: Edisi untuk Mac (Apple silicon (M1, M2, M3, dll)).
+- v.1.0.13
+  - ciri baru:
+    - Sokongan untuk GPT-SoVITS v3, termasuk model yang dioptimumkan dengan LoRA.
+    - Penambahbaikan rakaman suara rujukan. Kini anda boleh merakam terus dari mikrofon atau audio PC, dan transkripsi teks dilakukan secara automatik.
 
-## Cara Penggunaan
+## Perisian Berkaitan
+- [VCClient Penukar Suara Masa Nyata](https://github.com/w-okada/voice-changer)
 
-* Selepas mengekstrak fail zip,`start_http.bat`sila jalankan. Akses URL yang dipaparkan melalui pelayar.
-* `start_https.bat`Dengan menggunakan ini, anda boleh mengakses dari jauh.
-* (Untuk pengguna berpengalaman)`start_http_with_ngrok.bat`Dengan menggunakan ini, anda boleh mengakses menggunakan terowong ngrok.
+## Muat Turun
+Sila muat turun dari [repositori Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main).
 
-nota: Untuk edisi mac, gantikan .bat dengan .command.
+- edisi win_std: Edisi Windows yang berfungsi pada CPU. Lebih perlahan daripada edisi CUDA, tetapi berfungsi pada CPU terkini dengan spesifikasi yang baik.
+- edisi win_cuda: Edisi Windows yang berfungsi pada GPU NVIDIA. Berfungsi lebih pantas dengan pecutan perkakasan GPU.
+- edisi mac: Edisi untuk Mac (Apple silicon (M1, M2, M3, etc)).
+
+## Penggunaan
+- Selepas mengekstrak fail zip, jalankan `start_http.bat`. Akses URL yang dipaparkan dalam pelayar anda.
+- Menggunakan `start_https.bat` anda boleh mengakses dari lokasi jauh.
+- (Lanjutan) Menggunakan `start_http_with_ngrok.bat` anda boleh mengakses melalui terowong ngrok.
+
+Nota: Untuk edisi mac, gantikan .bat dengan .command.
 
 ### GPT-SoVITS
 
-Untuk butiran model, sila rujuk[GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)repositori rasmi.
+Untuk butiran model, rujuk repositori rasmi [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS).
 
-Dalam GPT-SoVITS, anda memilih model, suara rujukan, dan teks rujukan sebelum menjana suara. Dalam TTSClient, terdapat konsep penceramah rujukan, yang boleh mempunyai pelbagai suara rujukan dan teks rujukan.
+Dalam GPT-SoVITS, anda memilih model, suara rujukan dan teks rujukan sebelum menjana suara. TTSClient mempunyai konsep penutur rujukan, di mana penutur rujukan boleh mempunyai pelbagai suara dan teks rujukan.
 
 ![image](https://github.com/user-attachments/assets/032a65ed-b9d5-4f8a-8efe-73bd10b66593)
 
 #### Penjanaan Suara
 
-1. Pilih model dan penceramah rujukan ((1), (2)).
-2. Pilih suara rujukan dan teks rujukan yang didaftarkan kepada penceramah rujukan (3).
-3. Masukkan teks yang ingin dijana dan hasilkan suara (4).
+1. Pilih model dan penutur rujukan ((1), (2)).
+2. Pilih suara rujukan dan teks rujukan yang telah direkodkan untuk penutur rujukan (3).
+3. Masukkan teks yang anda ingin jana dan cipta suara (4).
 
 #### Pendaftaran Model
 
-Sila daftar dari butang edit di kawasan pemilihan model.
+Daftar dari butang edit dalam kawasan pemilihan model.
 
-#### Pendaftaran Penceramah Rujukan
+#### Pendaftaran Penutur Rujukan
 
-Sila daftar dari butang edit di kawasan pendaftaran penceramah rujukan.
+Daftar dari butang edit dalam kawasan pendaftaran penutur rujukan.
 
-#### Pendaftaran Suara Rujukan, Teks
+#### Pendaftaran Suara dan Teks Rujukan
 
-Sila pilih slot yang tidak didaftarkan di kawasan pemilihan suara rujukan dan daftar.
+Pilih slot yang belum didaftarkan dalam kawasan pemilihan suara rujukan untuk mendaftar.
 
-## Pelancaran dari repositori (Advanced)
+## Bermula dari Repositori (Lanjutan)
+
+### Ubuntu
+
+* Keperluan
+  
+  cmake
 
 ```
 $ git clone https://github.com/w-okada/ttsclient.git
 $ cd ttsclient/
+$ git submodule update --init --recursive
+$ sed -i '/pyopenjtalk/d' pyproject.toml
 $ poetry install
+
+$ wget "https://files.pythonhosted.org/packages/source/p/pyopenjtalk/pyopenjtalk-0.4.0.tar.gz"
+$ tar xzf pyopenjtalk-0.4.0.tar.gz
+$ sed -i -E 's/cmake_minimum_required\(VERSION[^\)]*\)/cmake_minimum_required(VERSION 3.5...3.31)/' pyopenjtalk-0.4.0/lib/open_jtalk/src/CMakeLists.txt
+$ rm pyopenjtalk-0.4.0.tar.gz
+$ tar czf pyopenjtalk-0.4.0.tar.gz pyopenjtalk-0.4.0/
+$ poetry run pip install pyopenjtalk-0.4.0.tar.gz
+
 $ poetry run main cui
 ---
-
-リモートからアクセスする場合は`--https true`を付与してください。
+Untuk akses jauh, tambah `--https true`.
 ---
 $ poetry run main cui --https true
 ```
 
-### Apabila menggunakan cuda
-
-Sila tukar modul.
-
+## Penggunaan CUDA
+Gantikan modul seperti berikut:
 ```
-$ poetry add onnxruntime-gpu==1.19.2
+$ poetry add onnxruntime-gpu==1.20.1
 $ poetry remove torch
-$ poetry add torch==2.3.1 --source torch_cuda12
+$ poetry add torch==2.4.1 torchaudio==2.4.1 --source torch_cuda12
 ```
 
-### Apabila menggunakan directml
-
-Sila tukar modul.
-
+## Penggunaan DirectML
+Gantikan modul seperti berikut:
 ```
 $ poetry add onnxruntime-directml==1.19.2
 ```
 
 ## Penghargaan
-
-* [Korpus JVNV](https://sites.google.com/site/shinnosuketakamichi/research-topics/jvnv_corpus)
+- [Korpus JVNV](https://sites.google.com/site/shinnosuketakamichi/research-topics/jvnv_corpus) 

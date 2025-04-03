@@ -1,16 +1,16 @@
 [日本語](/README.md) /
-[英語](/docs_i18n/README_en.md) /
-[韓国語](/docs_i18n/README_ko.md)/
-[中国語](/docs_i18n/README_zh.md)/
-[ドイツ語](/docs_i18n/README_de.md)/
-[アラビア語](/docs_i18n/README_ar.md)/
-[ギリシャ語](/docs_i18n/README_el.md)/
-[スペイン語](/docs_i18n/README_es.md)/
-[フランス語](/docs_i18n/README_fr.md)/
-[イタリア語](/docs_i18n/README_it.md)/
-[ラテン語](/docs_i18n/README_la.md)/
-[マレー語](/docs_i18n/README_ms.md)/
-[ロシア語](/docs_i18n/README_ru.md) 
+[English](/docs_i18n/README_en.md) /
+[한국어](/docs_i18n/README_ko.md)/
+[中文](/docs_i18n/README_zh.md)/
+[Deutsch](/docs_i18n/README_de.md)/
+[العربية](/docs_i18n/README_ar.md)/
+[Ελληνικά](/docs_i18n/README_el.md)/
+[Español](/docs_i18n/README_es.md)/
+[Français](/docs_i18n/README_fr.md)/
+[Italiano](/docs_i18n/README_it.md)/
+[Latina](/docs_i18n/README_la.md)/
+[Bahasa Melayu](/docs_i18n/README_ms.md)/
+[Русский](/docs_i18n/README_ru.md) 
   *日本語以外は機械翻訳です。
 
 TTSClient
@@ -100,11 +100,27 @@ GPT-SoVITSでは、モデルと参照音声と参照テキストを選択して�
 
 ## リポジトリからの起動(Advanced)
 
+### Ubuntu
+
+* Requirements
+  
+  cmake
+
+
 ```
 $ git clone https://github.com/w-okada/ttsclient.git
 $ cd ttsclient/
 $ git submodule update --init --recursive
+$ sed -i '/pyopenjtalk/d' pyproject.toml
 $ poetry install
+
+$ wget "https://files.pythonhosted.org/packages/source/p/pyopenjtalk/pyopenjtalk-0.4.0.tar.gz"
+$ tar xzf pyopenjtalk-0.4.0.tar.gz
+$ sed -i -E 's/cmake_minimum_required\(VERSION[^\)]*\)/cmake_minimum_required(VERSION 3.5...3.31)/' pyopenjtalk-0.4.0/lib/open_jtalk/src/CMakeLists.txt
+$ rm pyopenjtalk-0.4.0.tar.gz
+$ tar czf pyopenjtalk-0.4.0.tar.gz pyopenjtalk-0.4.0/
+$ poetry run pip install pyopenjtalk-0.4.0.tar.gz
+
 $ poetry run main cui
 ---
 
@@ -113,7 +129,7 @@ $ poetry run main cui
 $ poetry run main cui --https true
 ```
 
-### cudaを使用する場合
+## cudaを使用する場合
 モジュールを入れ替えてください。
 ```
 $ poetry add onnxruntime-gpu==1.20.1
@@ -121,7 +137,7 @@ $ poetry remove torch
 $ poetry add torch==2.4.1 torchaudio==2.4.1 --source torch_cuda12
 ```
 
-### directmlを使用する場合
+## directmlを使用する場合
 モジュールを入れ替えてください。
 ```
 $ poetry add onnxruntime-directml==1.19.2

@@ -1,122 +1,140 @@
-[Giapponese](/README.md) /
-[Inglese](/docs_i18n/README_en.md) /
-[Coreano](/docs_i18n/README_ko.md)/
-[Cinese](/docs_i18n/README_zh.md)/
-[Tedesco](/docs_i18n/README_de.md)/
-[Arabo](/docs_i18n/README_ar.md)/
-[Greco](/docs_i18n/README_el.md)/
-[Spagnolo](/docs_i18n/README_es.md)/
-[Francese](/docs_i18n/README_fr.md)/
+[日本語](/README.md) /
+[English](/docs_i18n/README_en.md) /
+[한국어](/docs_i18n/README_ko.md)/
+[中文](/docs_i18n/README_zh.md)/
+[Deutsch](/docs_i18n/README_de.md)/
+[العربية](/docs_i18n/README_ar.md)/
+[Ελληνικά](/docs_i18n/README_el.md)/
+[Español](/docs_i18n/README_es.md)/
+[Français](/docs_i18n/README_fr.md)/
 [Italiano](/docs_i18n/README_it.md)/
-[Latino](/docs_i18n/README_la.md)/
-[Malese](/docs_i18n/README_ms.md)/
-[Russo](/docs_i18n/README_ru.md)
-*Le lingue diverse dal giapponese sono tradotte automaticamente.
+[Latina](/docs_i18n/README_la.md)/
+[Bahasa Melayu](/docs_i18n/README_ms.md)/
+[Русский](/docs_i18n/README_ru.md) 
+  *Le altre lingue sono tradotte automaticamente.
 
-## TTSClient
+TTSClient
+---
 
-Software client per Text To Speech (TTS).
-Pianificato per supportare vari AI. (Attualmente solo GPT-SoVITS v2, v3)
+Software client di Sintesi Vocale (TTS). È previsto il supporto per vari modelli di IA (attualmente solo GPT-SoVITS v2, v3).
 
-* AI supportati
-  * [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
-  * prossimamente...
+- IA Supportata
+  - [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
+  - prossimamente...
+
+# Esempi
+
+## Voce femminile
+
+https://github.com/user-attachments/assets/d6b94c39-b2d3-478a-bc79-29d00f85e1a0
+
+## Multilingue
+
+https://github.com/user-attachments/assets/e02e7df3-89bf-485a-9aed-b654eed4ff2a
+
+## Dettagli
+
+https://youtu.be/Fy7qifNB5T0
 
 ## Novità!
+- v.1.0.21
+  - nuova funzionalità:
+    - Aggiunto supporto per scaricare [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) dagli esempi di zundamon-speech-webui.
 
-* v.1.0.21
-  * nuova funzionalità:
-    * Ora è possibile scaricare [Zundamon](https://github.com/zunzun999/zundamon-speech-webui) di zundamon-speech-webui dagli esempi.
+- v.1.0.20
+  - nuova funzionalità:
+    - Aggiunto supporto per la regolazione dell'intonazione in GPT-SoVITS.
 
-* v.1.0.20
-  * nuova funzionalità:
-    * Aggiunta la possibilità di regolare l'intonazione in GPT-SoVITS.
+- v.1.0.13
+  - nuova funzionalità:
+    - Supporto per GPT-SoVITS v3, inclusi i modelli ottimizzati con LoRA.
+    - Miglioramento della registrazione della voce di riferimento. Ora puoi registrare direttamente dal microfono o dall'audio del PC, e la trascrizione del testo viene eseguita automaticamente.
 
-* v.1.0.13
-  * nuova funzionalità:
-    * Supporto per GPT-SoVITS v3. Supporta anche modelli finetuning tramite lora.
-    * Miglioramento della registrazione della voce di riferimento. Ora è possibile registrare direttamente tramite microfono o audio del PC. Inoltre, la trascrizione del testo viene eseguita automaticamente.
+## Software Correlato
+- [Cambiatore di Voce in Tempo Reale VCClient](https://github.com/w-okada/voice-changer)
 
-https://github.com/user-attachments/assets/cdf33212-3077-4ff0-9fa2-8635ee5417f4
+## Download
+Si prega di scaricare dal [repository Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main).
 
-## Software correlato
+- edizione win_std: Edizione Windows che funziona su CPU. Più lenta rispetto all'edizione CUDA, ma funziona su CPU recenti con buone specifiche.
+- edizione win_cuda: Edizione Windows che funziona su GPU NVIDIA. Funziona più velocemente con l'accelerazione hardware della GPU.
+- edizione mac: Edizione per Mac (Apple silicon (M1, M2, M3, etc)).
 
-* [Cambiavoce in tempo reale VCClient](https://github.com/w-okada/voice-changer)
+## Utilizzo
+- Dopo aver decompresso il file zip, esegui `start_http.bat`. Accedi all'URL visualizzato nel tuo browser.
+- Utilizzando `start_https.bat` puoi accedere da posizioni remote.
+- (Avanzato) Utilizzando `start_http_with_ngrok.bat` puoi accedere tramite tunnel ngrok.
 
-## Scarica
-
-[Repository di Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main)per favore scarica da qui.
-
-* Edizione win_std: edizione che funziona su CPU per Windows. È più lenta rispetto alla versione cuda, ma funziona su CPU di recente con specifiche adeguate.
-* Edizione win_cuda: edizione che funziona su GPU NVIDIA per Windows. Funziona rapidamente grazie all'accelerazione hardware della GPU.
-* Edizione mac: edizione per Mac (Apple silicon (M1, M2, M3, ecc)).
-
-## Modalità d'uso
-
-* Dopo aver estratto il file zip,`start_http.bat`esegui. Accedi all'URL visualizzato tramite il browser.
-* `start_https.bat`Utilizzando, è possibile accedere anche da remoto.
-* (Per utenti avanzati)`start_http_with_ngrok.bat`Utilizzando, è possibile accedere utilizzando il tunneling tramite ngrok.
-
-nota: per l'edizione mac, sostituire .bat con .command.
+Nota: Per l'edizione mac, sostituisci .bat con .command.
 
 ### GPT-SoVITS
 
-Per i dettagli del modello, fare riferimento a[GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)il repository ufficiale.
+Per i dettagli del modello, consulta il repository ufficiale di [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS).
 
-In GPT-SoVITS, si selezionano il modello, la voce di riferimento e il testo di riferimento prima di generare la voce. In TTSClient esiste il concetto di parlante di riferimento, che può avere più voci di riferimento e testi di riferimento.
+In GPT-SoVITS, selezioni un modello, una voce di riferimento e un testo di riferimento prima di generare la voce. TTSClient ha un concetto di parlanti di riferimento, dove un parlante di riferimento può avere più voci e testi di riferimento.
 
 ![image](https://github.com/user-attachments/assets/032a65ed-b9d5-4f8a-8efe-73bd10b66593)
 
-#### Generazione vocale
+#### Generazione della Voce
 
 1. Seleziona il modello e il parlante di riferimento ((1), (2)).
 2. Seleziona la voce di riferimento e il testo di riferimento registrati per il parlante di riferimento (3).
-3. Inserisci il testo che desideri generare e genera la voce (4).
+3. Inserisci il testo che desideri generare e crea la voce (4).
 
-#### Registrazione del modello
+#### Registrazione del Modello
 
 Registrati dal pulsante di modifica nell'area di selezione del modello.
 
-#### Registrazione del parlante di riferimento
+#### Registrazione del Parlante di Riferimento
 
 Registrati dal pulsante di modifica nell'area di registrazione del parlante di riferimento.
 
-#### Registrazione della voce di riferimento e del testo
+#### Registrazione della Voce e del Testo di Riferimento
 
-Seleziona uno slot non registrato nell'area di selezione della voce di riferimento e registrati.
+Seleziona uno slot non registrato nell'area di selezione della voce di riferimento per registrarti.
 
-## Avvio dal repository (Avanzato)
+## Avvio dal Repository (Avanzato)
+
+### Ubuntu
+
+* Requisiti
+  
+  cmake
 
 ```
 $ git clone https://github.com/w-okada/ttsclient.git
 $ cd ttsclient/
+$ git submodule update --init --recursive
+$ sed -i '/pyopenjtalk/d' pyproject.toml
 $ poetry install
+
+$ wget "https://files.pythonhosted.org/packages/source/p/pyopenjtalk/pyopenjtalk-0.4.0.tar.gz"
+$ tar xzf pyopenjtalk-0.4.0.tar.gz
+$ sed -i -E 's/cmake_minimum_required\(VERSION[^\)]*\)/cmake_minimum_required(VERSION 3.5...3.31)/' pyopenjtalk-0.4.0/lib/open_jtalk/src/CMakeLists.txt
+$ rm pyopenjtalk-0.4.0.tar.gz
+$ tar czf pyopenjtalk-0.4.0.tar.gz pyopenjtalk-0.4.0/
+$ poetry run pip install pyopenjtalk-0.4.0.tar.gz
+
 $ poetry run main cui
 ---
-
-リモートからアクセスする場合は`--https true`を付与してください。
+Per l'accesso remoto, aggiungi `--https true`.
 ---
 $ poetry run main cui --https true
 ```
 
-### Se si utilizza cuda
-
-Sostituisci i moduli.
-
+## Utilizzo di CUDA
+Sostituisci i moduli come segue:
 ```
-$ poetry add onnxruntime-gpu==1.19.2
+$ poetry add onnxruntime-gpu==1.20.1
 $ poetry remove torch
-$ poetry add torch==2.3.1 --source torch_cuda12
+$ poetry add torch==2.4.1 torchaudio==2.4.1 --source torch_cuda12
 ```
 
-### Se si utilizza directml
-
-Sostituisci i moduli.
-
+## Utilizzo di DirectML
+Sostituisci i moduli come segue:
 ```
 $ poetry add onnxruntime-directml==1.19.2
 ```
 
 ## Ringraziamenti
-
-* [Corpus JVNV](https://sites.google.com/site/shinnosuketakamichi/research-topics/jvnv_corpus)
+- [Corpus JVNV](https://sites.google.com/site/shinnosuketakamichi/research-topics/jvnv_corpus)

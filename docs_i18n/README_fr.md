@@ -1,17 +1,17 @@
-[Japonais](/README.md) /
-[Anglais](/docs_i18n/README_en.md) /
-[Coréen](/docs_i18n/README_ko.md)/
-[Chinois](/docs_i18n/README_zh.md)/
-[Allemand](/docs_i18n/README_de.md)/
-[Arabe](/docs_i18n/README_ar.md)/
-[Grec](/docs_i18n/README_el.md)/
-[Espagnol](/docs_i18n/README_es.md)/
+[日本語](/README.md) /
+[English](/docs_i18n/README_en.md) /
+[한국어](/docs_i18n/README_ko.md)/
+[中文](/docs_i18n/README_zh.md)/
+[Deutsch](/docs_i18n/README_de.md)/
+[العربية](/docs_i18n/README_ar.md)/
+[Ελληνικά](/docs_i18n/README_el.md)/
+[Español](/docs_i18n/README_es.md)/
 [Français](/docs_i18n/README_fr.md)/
-[Italien](/docs_i18n/README_it.md)/
-[Latin](/docs_i18n/README_la.md)/
-[Malais](/docs_i18n/README_ms.md)/
-[Russe](/docs_i18n/README_ru.md)
-*Les langues autres que le japonais sont traduites automatiquement.
+[Italiano](/docs_i18n/README_it.md)/
+[Latina](/docs_i18n/README_la.md)/
+[Bahasa Melayu](/docs_i18n/README_ms.md)/
+[Русский](/docs_i18n/README_ru.md)
+*Les autres langues sont traduites par machine.
 
 ## TTSClient
 
@@ -88,35 +88,3 @@ Veuillez sélectionner un emplacement non enregistré dans la zone de sélection
 ## Démarrage à partir du dépôt (Avancé)
 
 ```
-$ git clone https://github.com/w-okada/ttsclient.git
-$ cd ttsclient/
-$ poetry install
-$ poetry run main cui
----
-
-リモートからアクセスする場合は`--https true`を付与してください。
----
-$ poetry run main cui --https true
-```
-
-### Lors de l'utilisation de cuda
-
-Veuillez remplacer les modules.
-
-```
-$ poetry add onnxruntime-gpu==1.19.2
-$ poetry remove torch
-$ poetry add torch==2.3.1 --source torch_cuda12
-```
-
-### Lors de l'utilisation de directml
-
-Veuillez remplacer les modules.
-
-```
-$ poetry add onnxruntime-directml==1.19.2
-```
-
-## Remerciements
-
-* [Corpus JVNV](https://sites.google.com/site/shinnosuketakamichi/research-topics/jvnv_corpus)

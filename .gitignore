@@ -20,3 +20,6 @@ poetry.lock
 native_client
 /weight.json
 /GPT_SoVITS
+
+.cursor
+
