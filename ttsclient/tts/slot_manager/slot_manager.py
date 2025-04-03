@@ -2,8 +2,8 @@ import logging
 import os
 from pathlib import Path
 import shutil
-from ttsclient.const import LOGGER_NAME, MAX_SLOT_INDEX, SLOT_PARAM_FILE, ModelDir
-from ttsclient.tts.data_types.slot_manager_data_types import GPTSoVITSSlotInfo, ModelImportParamMember, MoveModelParam, SetIconParam, SlotInfo, SlotInfoMember
+from ttsclient.const import LOGGER_NAME, MAX_SLOT_INDEX, OPENJTALK_USER_DICT_FILE, SLOT_PARAM_FILE, ModelDir
+from ttsclient.tts.data_types.slot_manager_data_types import GPTSoVITSSlotInfo, ModelImportParamMember, MoveModelParam, ReservedForSampleModelImportParam, ReservedForSampleSlotInfo, SetIconParam, SlotInfo, SlotInfoMember
 from ttsclient.tts.slot_manager.model_importer.model_importer import import_model
 from ttsclient.tts.tts_manager.semantic_predictor.gpt_semantic_predictor import GPTSemanticPredictor
 from ttsclient.tts.tts_manager.synthesizer.sovits_synthesizer import SovitsSynthesizer
@@ -22,12 +22,19 @@ def load_slot_info(model_dir: Path, slot_index: int) -> SlotInfoMember:
     try:
         tmp_slot_info = SlotInfo.model_validate_json(open(json_file, encoding="utf-8").read())
         logging.getLogger(LOGGER_NAME).debug(tmp_slot_info)
-        if tmp_slot_info.tts_type == "GPT-SoVITS":
+        if tmp_slot_info.tts_type == "RESERVED_FOR_SAMPLE":
+            slot_info: SlotInfoMember = ReservedForSampleSlotInfo.model_validate_json(open(json_file, encoding="utf-8").read())
+
+        elif tmp_slot_info.tts_type == "GPT-SoVITS":
             slot_info: SlotInfoMember = GPTSoVITSSlotInfo.model_validate_json(open(json_file, encoding="utf-8").read())
 
         return slot_info
     except Exception as e:
         logging.getLogger(LOGGER_NAME).error(f"Error in loading slot info: {e}")
+        import traceback
+
+        traceback.print_exc()
+
         broken = SlotInfo()
         broken.tts_type = "BROKEN"
         broken.slot_index = slot_index
@@ -89,6 +96,38 @@ class SlotManager:
         logging.getLogger(LOGGER_NAME).info(f"set new slot: {model_import_param}")
         import_model(ModelDir, model_import_param, remove_src)
         self.reload()
+
+    def reserve_slot_for_sample(self, slot_index: int, progress: float = 0.0):
+        """
+        サンプル用にスロットを確保する。
+        サンプルのインポートは次の流れを想定している。
+        (1)リザーブ -> (2)ダウンロード -> (3)解放 -> (4)インポートの流れで処理を行う
+        厳密には(3)から(4)にかけてをアトミックにする必要があるが、厳密にはやらない。
+        隙間に入り込まれたら処理が壊れるが、その場合はスロットをデリートすることで対応してもらう。
+
+        ※別の観点で、同じファイル名のサンプルが同時にダウンロードされると、uploadフォルダ内で上書きされてしまうが、それもまずは見てみないふりをする。
+        """
+        assert self.get_slot_info(slot_index).tts_type is None, f"slot_index:{slot_index} is already exists."
+        import_param = ReservedForSampleModelImportParam(
+            voice_changer_type="RESERVED_FOR_SAMPLE",
+            name="RESERVED_FOR_SAMPLE",
+            slot_index=slot_index,
+            progress=progress,
+        )
+        import_model(ModelDir, import_param)
+        self.reload()
+
+    def update_slot_for_sample(self, slot_index: int, progress: float):
+        slot_info = self.get_slot_info(slot_index)
+        assert slot_info.tts_type == "RESERVED_FOR_SAMPLE", f"slot_index:{slot_index} is not reserved for sample."
+        slot_info.progress = progress
+
+    def release_slot_from_reseved_for_sample(self, slot_index: int):
+        """
+        サンプル用に確保していたスロットを解放する。
+        reserve_new_slot_as_sampleを参照。
+        """
+        self.delete_slot(slot_index)
 
     def delete_slot(self, slot_index: int):
         slot_dir = ModelDir / str(slot_index)
@@ -155,16 +194,16 @@ class SlotManager:
         if slot_info.tts_type == "GPT-SoVITS":
             print(f"generating sysnthesizer onnx: slot:{slot_info.slot_index}")
             assert isinstance(slot_info, GPTSoVITSSlotInfo)
-            assert slot_info.synthesizer_path is not None
-            synthesizer_path = ModelDir / f"{slot_info.slot_index}" / slot_info.synthesizer_path
-            (onnx_vq_model_path, onnx_spec_path, onnx_latent_path) = SovitsSynthesizer.generate_onnx(synthesizer_path)
+            assert slot_info.synthesizer_model_path is not None
+            synthesizer_model_path = ModelDir / f"{slot_info.slot_index}" / slot_info.synthesizer_model_path
+            (onnx_vq_model_path, onnx_spec_path, onnx_latent_path) = SovitsSynthesizer.generate_onnx(synthesizer_model_path)
             print(f"onnx_vq_model_path: {onnx_vq_model_path}")
             print(f"onnx_spec_path: {onnx_spec_path}")
             print(f"onnx_latent_path: {onnx_latent_path}")
 
-            assert slot_info.semantic_predictor_model is not None
-            semantic_predictor_model = ModelDir / f"{slot_info.slot_index}" / slot_info.semantic_predictor_model
-            (onnx_encoder_path, onnx_fsdec_path, onnx_ssdec_path) = GPTSemanticPredictor.generate_onnx(semantic_predictor_model)
+            assert slot_info.semantic_predictor_model_path is not None
+            semantic_predictor_model_path = ModelDir / f"{slot_info.slot_index}" / slot_info.semantic_predictor_model_path
+            (onnx_encoder_path, onnx_fsdec_path, onnx_ssdec_path) = GPTSemanticPredictor.generate_onnx(semantic_predictor_model_path)
             print(f"onnx_encoder_path: {onnx_encoder_path}")
             print(f"onnx_fsdec_path: {onnx_fsdec_path}")
             print(f"onnx_ssdec_path: {onnx_ssdec_path}")

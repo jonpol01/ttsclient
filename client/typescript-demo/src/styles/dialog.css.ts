@@ -150,7 +150,6 @@ export const modelSlotContainer = style({
 export const sampleSlotContainer = modelSlotContainer;
 
 export const modelSlot = style({
-    height: "5rem",
     display: "flex",
     flexDirection: "row",
 });
@@ -177,6 +176,11 @@ export const modelSlotDetailArea = style({
     },
 });
 export const modelSampleDetailArea = modelSlotDetailArea;
+
+export const modelSlotIconContainer = style({
+    border: "2px solid transparent",
+
+})
 
 export const modelSlotIconPointable = style({
     width: "5rem",
@@ -301,11 +305,27 @@ export const textInputAreaInput = style({});
 export const selectInputArea = style({
     display: "flex",
     flexDirection: "row",
+    gap: "10px",
     alignItems: "center",
     padding: "2px 0px 20px 0px",
 });
 export const selectInputAreaLabel = style({});
 export const selectInputAreaInput = style({});
+
+export const radioInputArea = style({
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    padding: "2px 0px 20px 0px",
+});
+export const radioInputAreaLabel = style({});
+export const radioInputAreaInput = style({});
+export const radioButton = style({
+    padding: "0px 10px 0px 10px",
+    gap: "5px",
+});
+
+
 export const uploadStatusArea = style({
     height: "1rem",
     textAlign: "center",
@@ -486,4 +506,43 @@ export const aboutModelModelDescription = style({
 export const aboutModelModelDescriptionPre = style({
     whiteSpace: "pre-wrap",
     userSelect: "text",
+});
+
+// Progress bar styles
+export const progressBarContainer = style({
+    width: "90%",
+    height: "20px",
+    backgroundColor: "rgba(200, 200, 200, 0.3)",
+    borderRadius: "10px",
+    margin: "10px 0 20px 0",
+    overflow: "hidden",
+    border: "1px solid rgba(0, 0, 0, 0.1)",
+    boxShadow: "inset 0 1px 3px rgba(0, 0, 0, 0.1)",
+});
+
+export const progressBar = style({
+    height: "100%",
+    backgroundColor: globaVars.color.companyColor1,
+    borderRadius: "8px",
+    transition: "width 0.3s ease-in-out",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+});
+
+export const progressText = style({
+    fontSize: "0.8rem",
+    fontWeight: "bold",
+    color: "#fff",
+    // textShadow: "0 1px 1px rgba(0, 0, 0, 0.3)",
+    // mixBlendMode: "difference",
+});
+
+export const progressInfo = style({
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: "0.9rem",
+    color: globaVars.color.companyColor2,
+    marginBottom: "10px",
 });

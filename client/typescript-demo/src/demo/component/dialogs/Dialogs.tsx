@@ -8,6 +8,10 @@ import { VoiceCharacterSlotManagerMainDialog } from "./Dialogs_VoiceCharacterSlo
 import { VoiceCharacterSlotManagerFileUploadDialog } from "./Dialogs_VoiceCharacterSlotManagerFileUploadDialog";
 import { AboutVoiceDialog } from "./Dialogs_AboutVoiceDialog";
 import { AboutModelDialog } from "./Dialogs_AboutModelDialog";
+import { AdvancedSettingDialog } from "./Dialogs_AdvancedSettingDialog";
+import { EmotionColorDialog } from "./Dialogs_EmotionColorDialog";
+import { ModelSlotManagerSamplesDialog } from "./Dialogs_ModelSlotManagerSamplesDialog";
+import { VoiceCharacterSlotManagerSamplesDialog } from "./Dialogs_VoiceCharacterSlotManagerSamplesDialog";
 
 export const Dialogs = () => {
     const guiState = useGuiState();
@@ -24,6 +28,10 @@ export const Dialogs = () => {
         setTargetSlotIndex(targetSlotIndex);
         guiState.setDialogName("voiceCharacterManagerFileUploaderDialog");
     }
+    const openVoiceCharacterSampleDialog = (targetSlotIndex: number) => {
+        setTargetSlotIndex(targetSlotIndex);
+        guiState.setDialogName("voiceCharacterManagerSamplesDialog");
+    };
 
     const currentDialog = useMemo(() => {
         if (guiState.dialogName === "none") {
@@ -34,17 +42,25 @@ export const Dialogs = () => {
             return <ModelSlotManagerMainDialog openFileUploadDialog={openFileUploadDialog} openSampleDialog={openSampleDialog}></ModelSlotManagerMainDialog>;
         } else if (guiState.dialogName === "modelSlotManagerFileUploaderDialog") {
             return <ModelSlotManagerFileUploadDialog slotIndex={targetSlotIndex}></ModelSlotManagerFileUploadDialog>;
+        } else if (guiState.dialogName === "modelSlotManagerSamplesDialog") {
+            return <ModelSlotManagerSamplesDialog slotIndex={targetSlotIndex}></ModelSlotManagerSamplesDialog>;
         } else if (guiState.dialogName === "voiceCharacterManagerMainDialog") {
-            return <VoiceCharacterSlotManagerMainDialog openFileUploadDialog={openVoiceCharacterFileUploadDialog}></VoiceCharacterSlotManagerMainDialog>;
+            return <VoiceCharacterSlotManagerMainDialog
+                openFileUploadDialog={openVoiceCharacterFileUploadDialog}
+                openVoiceCharacterSampleDialog={openVoiceCharacterSampleDialog}
+            ></VoiceCharacterSlotManagerMainDialog>;
+        } else if (guiState.dialogName === "voiceCharacterManagerSamplesDialog") {
+            return <VoiceCharacterSlotManagerSamplesDialog slotIndex={targetSlotIndex}></VoiceCharacterSlotManagerSamplesDialog>
         } else if (guiState.dialogName === "voiceCharacterManagerFileUploaderDialog") {
             return <VoiceCharacterSlotManagerFileUploadDialog slotIndex={targetSlotIndex}></VoiceCharacterSlotManagerFileUploadDialog>;
-
-            // } else if (guiState.dialogName === "advancedSettingDialog") {
-            //     return <AdvancedSettingDialog></AdvancedSettingDialog>;
+        } else if (guiState.dialogName === "advancedSettingDialog") {
+            return <AdvancedSettingDialog></AdvancedSettingDialog>;
         } else if (guiState.dialogName === "aboutModelDialog") {
             return <AboutModelDialog></AboutModelDialog>;
         } else if (guiState.dialogName === "aboutVoiceDialog") {
             return <AboutVoiceDialog></AboutVoiceDialog>;
+        } else if (guiState.dialogName === "emotionColorDialog") {
+            return <EmotionColorDialog ></EmotionColorDialog>;
         } else {
             return <></>;
         }

@@ -32,7 +32,7 @@ export type SortTypes = (typeof SortTypes)[keyof typeof SortTypes];
 
 export const VoiceCharacterSlotArea = (_props: VoiceCharacterSlotAreaProps) => {
     const { serverConfigState, triggerToast, generateGetPathFunc } = useAppRoot();
-    const { curretVoiceCharacterSlotIndex, setCurretVoiceCharacterSlotIndex, referenceVoiceMode } = useAppState()
+    const { currentVoiceCharacterSlotIndex, setCurrentVoiceCharacterSlotIndex, referenceVoiceMode } = useAppState()
     const guiState = useGuiState();
     const { t } = useTranslation();
     const [sortType, setSortType] = useState<SortTypes>("slot");
@@ -56,7 +56,7 @@ export const VoiceCharacterSlotArea = (_props: VoiceCharacterSlotAreaProps) => {
                     return null;
                 }
                 const tileContainerClass =
-                    x.slot_index == curretVoiceCharacterSlotIndex
+                    x.slot_index == currentVoiceCharacterSlotIndex
                         ? `${modelSlotTileContainer} ${modelSlotTileContainerSelected}`
                         : modelSlotTileContainer;
                 const name = x.name.length > 8 ? x.name.substring(0, 7) + "..." : x.name;
@@ -81,7 +81,7 @@ export const VoiceCharacterSlotArea = (_props: VoiceCharacterSlotAreaProps) => {
                         triggerToast("error", t("reference_voice_area_select_voice_error_in_edit_mode"))
                         return
                     }
-                    setCurretVoiceCharacterSlotIndex(x.slot_index)
+                    setCurrentVoiceCharacterSlotIndex(x.slot_index)
                 };
 
                 return (
@@ -92,7 +92,7 @@ export const VoiceCharacterSlotArea = (_props: VoiceCharacterSlotAreaProps) => {
                 );
             })
             .filter((x) => x != null);
-    }, [serverConfigState.voiceCharacterSlotInfos, curretVoiceCharacterSlotIndex, sortType, referenceVoiceMode]);
+    }, [serverConfigState.voiceCharacterSlotInfos, currentVoiceCharacterSlotIndex, sortType, referenceVoiceMode]);
 
     const voiceCharacterlSlot = useMemo(() => {
         const onModelSlotEditClicked = () => {

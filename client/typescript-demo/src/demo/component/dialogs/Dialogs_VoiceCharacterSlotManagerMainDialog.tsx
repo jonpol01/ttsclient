@@ -16,6 +16,7 @@ import {
     modelSlotDetailRowValuePointable,
     modelSlotDetailRowValueSmall,
     modelSlotIcon,
+    modelSlotIconContainer,
     modelSlotIconPointable,
 } from "../../../styles/dialog.css";
 import { useGuiState } from "../../GuiStateProvider";
@@ -26,6 +27,7 @@ import { trimfileName } from "../../../util/trimfileName";
 import { tooltip, tooltipText, tooltipTextLower, tooltipTextThin } from "../../../styles";
 import { Logger } from "../../../util/logger";
 import { fileSelector, MAX_VOICE_CHARACTER_SLOT_INDEX, VoiceCharacter } from "tts-client-typescript-client-lib";
+import { VoiceCharacterUploadFile } from "../../../const";
 
 type IconAreaProps = {
     slotIndex: number;
@@ -62,7 +64,39 @@ const IconArea = (props: IconAreaProps) => {
     const iconDivClass = props.tooltip ? tooltip : "";
     const iconClass = props.tooltip ? modelSlotIconPointable : modelSlotIcon;
     return (
-        <div className={iconDivClass}>
+        <div className={`${iconDivClass} ${modelSlotIconContainer}`}
+            onDragOver={(e) => {
+                e.preventDefault();
+                e.currentTarget.style.border = "2px solid #d6b8da";
+            }}
+            onDragEnter={(e) => {
+                e.preventDefault();
+                e.currentTarget.style.border = "2px solid #d6b8da";
+            }}
+            onDragLeave={(e) => {
+                e.preventDefault();
+                e.currentTarget.style.border = "";
+            }}
+
+            onDrop={async (e) => {
+                e.preventDefault();
+                e.currentTarget.style.border = "";
+                // ファイルをアップロード
+                const file = e.dataTransfer.files[0];
+                if (checkExtention(file.name, ["png", "jpg", "jpeg", "gif"]) == false) {
+                    triggerToast("error", t("model_slot_manager_main_change_icon_ext_error"));
+                    return;
+                }
+                if (checkExtention(file.name, ["png", "jpg", "jpeg", "gif"]) == false) {
+                    triggerToast("error", t("model_slot_manager_main_change_icon_ext_error"));
+                    return;
+                }
+                await serverConfigState.uploadVoiceCharacterIconFile(props.slotIndex, file, (progress: number, end: boolean) => { });
+
+            }}
+
+
+        >
             <img
                 src={iconUrl}
                 className={iconClass}
@@ -253,6 +287,7 @@ const CloseButtonRow = () => {
 };
 type VoiceCharacterSlotManagerDialogMainProps = {
     openFileUploadDialog: (targetSlotIndex: number) => void;
+    openVoiceCharacterSampleDialog: (targetSlotIndex: number) => void
 };
 
 export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotManagerDialogMainProps) => {
@@ -263,6 +298,39 @@ export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotMan
     const screen = useMemo(() => {
         if (!serverConfigState.voiceCharacterSlotInfos) {
             return <></>;
+        }
+
+        const onNewClicked = async (slotIndex: number) => {
+            const p = new Promise<string | null>((resolve) => {
+                setDialog2Props({
+                    title: t("voice_character_slot_manager_main_new_title"),
+                    instruction: t("voice_character_slot_manager_main_new_instruction"),
+                    defaultValue: "",
+                    resolve: resolve,
+                    options: null,
+                });
+                setDialog2Name("textInputDialog");
+            });
+            const newName = await p;
+            // Send to Server
+            if (!newName) {
+                return
+            }
+            if (!newName || newName.length == 0) {
+                triggerToast("error", t("voice_character_slot_manager_main_new_error"));
+                return;
+            }
+            Logger.getLogger().info("New Voice Character:", newName);
+
+            try {
+                const files: VoiceCharacterUploadFile[] = []; // newの時はzipファイルは要求しない。
+                await serverConfigState.uploadVoiceCharacterFile(slotIndex, "GPT-SoVITS", newName, files, (progress, end) => {
+                    Logger.getLogger().info("progress", progress, end);
+                });
+            } catch (e) {
+                triggerToast("error", `upload failed: ${e.detail || ""}`);
+                Logger.getLogger().error(`upload failed: ${e.detail || ""}`);
+            }
         }
         const onDeleteClicked = async (slotIndex: number) => {
             const p = new Promise<boolean>((resolve) => {
@@ -317,12 +385,28 @@ export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotMan
             .map((x, index) => {
                 // モデルの詳細作成
                 let slotDetail = <></>;
-                if (x.tts_type == "GPT-SoVITS") {
+                if (x.tts_type == "GPT-SoVITS" || x.tts_type == "VoiceCharacter") {
                     slotDetail = <GPTSoVITSDetailArea voiceCharacter={x}></GPTSoVITSDetailArea>;
                 } else if (x.tts_type == "BROKEN") {
                     slotDetail = <BrokenDetailArea voiceCharacter={x}></BrokenDetailArea>;
                 } else {
                     slotDetail = <BlankDetailArea voiceCharacter={x}></BlankDetailArea>;
+                }
+
+                // 新規作成
+                let newSlotButton = <></>;
+                if (x.tts_type == null) {
+                    newSlotButton = (
+                        <div
+                            className={modelSlotButton}
+                            onClick={() => {
+                                onNewClicked(x.slot_index);
+
+                            }}
+                        >
+                            {t("voice_character_slot_manager_main_new")}
+                        </div>
+                    );
                 }
 
                 // upload button
@@ -382,6 +466,50 @@ export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotMan
                         </div>
                     );
                 }
+                // ダウンロードボタン
+                let downloadButton = <></>;
+                if (x.tts_type != null) {
+                    downloadButton = (
+                        <div
+                            className={modelSlotButton}
+                            onClick={async () => {
+
+                                const blob = await serverConfigState.downloadVoiceCharacter(x.slot_index)
+                                if (!blob) {
+                                    triggerToast("error", t("reference_voice_area_download_error"))
+                                    return
+                                }
+                                const a = document.createElement('a');
+                                const url = URL.createObjectURL(blob);
+                                a.href = url;
+                                a.download = `voice_character_${x.name}.zip`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+
+
+                            }}
+                        >
+                            {t("voice_character_slot_manager_main_download")}
+                        </div >
+                    );
+                }
+                // sample button
+                let sampleButton = <></>;
+                if (x.tts_type == null) {
+                    sampleButton = (
+                        <div
+                            className={modelSlotButton}
+                            onClick={() => {
+                                props.openVoiceCharacterSampleDialog(x.slot_index);
+                            }}
+                        >
+                            {t("voice_character_slot_manager_main_sample")}
+                        </div>
+                    );
+                }
+
 
                 // スロット作成
                 return (
@@ -394,10 +522,13 @@ export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotMan
                         ></IconArea>
                         {slotDetail}
                         <div className={modelSlotButtonsArea}>
+                            {newSlotButton}
                             {uploadButton}
                             {deleteButton}
-                            {editButton}
+                            {/* {editButton} */}
                             {moveButton}
+                            {downloadButton}
+                            {sampleButton}
                         </div>
                     </div>
                 );

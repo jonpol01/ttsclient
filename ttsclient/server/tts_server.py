@@ -85,18 +85,18 @@ class TTSServer:
     def start_server(self):
         if os.name == "nt":
             asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        logging.getLogger(LOGGER_NAME).info(f"Starting VCServer on port {self.port}")
+        logging.getLogger(LOGGER_NAME).info(f"Starting TTSServer on port {self.port}")
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
 
         try:
             self.loop.run_until_complete(self.server.serve())
         except Exception as e:
-            logging.getLogger(LOGGER_NAME).error(f"VCServer stopped.{e}")
-            print(f"VCServer stopped.{e}")
+            logging.getLogger(LOGGER_NAME).error(f"TTSServer stopped.{e}")
+            print(f"TTSServer stopped.{e}")
         except asyncio.CancelledError as err:
-            logging.getLogger(LOGGER_NAME).error(f"VCServer stopped.{err}")
-            print(f"VCServer stopped.{err}")
+            logging.getLogger(LOGGER_NAME).error(f"TTSServer stopped.{err}")
+            print(f"TTSServer stopped.{err}")
 
         # これを呼び出すとpendingエラーが表示される。行儀良くないが、今は呼ばない。
         # self.loop.close()

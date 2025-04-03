@@ -2,13 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { ReactNode } from "react";
 import { CutMethod, LanguageType } from "tts-client-typescript-client-lib";
 import { useAppRoot } from "../001_AppRootProvider";
+import { AudioRecorderStateAndMethod, useAudioRecorder } from "./hooks/001_useAudioRecorder";
 type Props = {
     children: ReactNode;
 };
 
 type AppStateValue = {
     setDisplayColorMode: (mode: DisplayColorMode) => void
-    setCurretVoiceCharacterSlotIndex: (index: number) => void
+    setCurrentVoiceCharacterSlotIndex: (index: number) => void
     setCurrentReferenceVoiceIndexes: (indexes: { [key: number]: number[] }) => void
     setReferenceVoiceMode: (mode: ReferenceVoiceMode) => void
     setInferenceLanguage: (language: LanguageType) => void
@@ -19,8 +20,10 @@ type AppStateValue = {
     setAudioMonitor: (audioMonitor: string) => void
     setGeneratedVoice: (generatedVoice: Blob | null) => void
     setElapsedTime: (elapsedTime: number) => void
+    setSampleSteps: (sampleSteps: number) => void
+    setReferenceRecorderAudioInput: (audioInput: string) => void
     displayColorMode: DisplayColorMode
-    curretVoiceCharacterSlotIndex: number | null
+    currentVoiceCharacterSlotIndex: number | null
     currentReferenceVoiceIndexes: { [key: number]: number[] }
     referenceVoiceMode: ReferenceVoiceMode
     inferenceLanguage: LanguageType
@@ -31,6 +34,11 @@ type AppStateValue = {
     audioMonitor: string
     generatedVoice: Blob | null
     elapsedTime: number
+    sampleSteps: number
+
+    referenceRecorderAudioInput: string
+
+    audioRecorderState: AudioRecorderStateAndMethod
 };
 
 const AppStateContext = React.createContext<AppStateValue | null>(null);
@@ -51,18 +59,34 @@ export type DisplayColorMode = typeof DisplayColorMode[number];
 export const AppStateProvider = ({ children }: Props) => {
     const [displayColorMode, setDisplayColorMode] = useState<DisplayColorMode>("light");
     const { serverConfigState } = useAppRoot()
-    const [curretVoiceCharacterSlotIndex, setCurretVoiceCharacterSlotIndex] = useState<number | null>(null);
+    const [currentVoiceCharacterSlotIndex, setCurrentVoiceCharacterSlotIndex] = useState<number | null>(null);
     const [currentReferenceVoiceIndexes, setCurrentReferenceVoiceIndexes] = useState<{ [key: number]: number[] }>({});
     const [referenceVoiceMode, setReferenceVoiceMode] = useState<ReferenceVoiceMode>("view");
     const [inferenceLanguage, setInferenceLanguage] = useState<LanguageType>("all_ja");
     const [cutMethod, setCutMethod] = useState<CutMethod>("Slice by every punct")
     const [speed, setSpeed] = useState<number>(1.0)
+    const [sampleSteps, setSampleSteps] = useState<number>(20)
 
     const [audioInput, setAudioInput] = useState<MediaStream | string>("default");
     const [audioOutput, setAudioOutput] = useState<string>("default");
     const [audioMonitor, setAudioMonitor] = useState<string>("default");
     const [generatedVoice, setGeneratedVoice] = useState<Blob | null>(null);
     const [elapsedTime, setElapsedTime] = useState<number>(0);
+
+    const [referenceRecorderAudioInput, setReferenceRecorderAudioInput] = useState<string>("default")
+
+
+    const { audioConfigState } = useAppRoot();
+    const audioRecorderState = useAudioRecorder({
+        enableFlatPath: false,
+        workOnColab: false,
+    });
+    useEffect(() => {
+        if (!audioConfigState.audioContext) {
+            return;
+        }
+        audioRecorderState.initializeAudioRecorder(audioConfigState.audioContext);
+    }, [audioConfigState.audioContext]);
 
     // デフォルトの挙動
     // 現在のスロットのモデルがなくなったとき。最も若い存在するスロットに自動移動。ない場合は-1
@@ -93,27 +117,27 @@ export const AppStateProvider = ({ children }: Props) => {
         const validVoiceCharacter = serverConfigState.voiceCharacterSlotInfos.filter(x => { return x.tts_type != null })
         if (validVoiceCharacter.length == 0) {
             // 有効なスロットが一つもないとき。
-            setCurretVoiceCharacterSlotIndex(null)
+            setCurrentVoiceCharacterSlotIndex(null)
             return
         }
 
-        const currentVoiceCharacter = validVoiceCharacter.find(x => { return x.slot_index === curretVoiceCharacterSlotIndex }) || null
+        const currentVoiceCharacter = validVoiceCharacter.find(x => { return x.slot_index === currentVoiceCharacterSlotIndex }) || null
 
         if (currentVoiceCharacter == null) {
             // 現在のスロットがなかった時。
             const minVoiceCharacter = validVoiceCharacter.sort((a, b) => a.slot_index - b.slot_index)[0]
-            setCurretVoiceCharacterSlotIndex(minVoiceCharacter.slot_index)
+            setCurrentVoiceCharacterSlotIndex(minVoiceCharacter.slot_index)
         }
     }, [serverConfigState.voiceCharacterSlotInfos]);
 
     // Reference Voiceの場合。
     // 選択中のReference Voiceがなくなったら、選択から解除。ひとつもなくなった場合は、最も若いR.V.を一つ選択。R.V.が一つもないときはから配列。
     useEffect(() => {
-        if (curretVoiceCharacterSlotIndex == null) return;
+        if (currentVoiceCharacterSlotIndex == null) return;
         // 選択中キャラクタを抽出。なければ、選択R.V.は全解除
-        const currentVoiceCharacter = serverConfigState.voiceCharacterSlotInfos.find(x => { return x.slot_index === curretVoiceCharacterSlotIndex }) || null
+        const currentVoiceCharacter = serverConfigState.voiceCharacterSlotInfos.find(x => { return x.slot_index === currentVoiceCharacterSlotIndex }) || null
         if (currentVoiceCharacter == null) {
-            currentReferenceVoiceIndexes[curretVoiceCharacterSlotIndex] = []
+            currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex] = []
             setCurrentReferenceVoiceIndexes({ ...currentReferenceVoiceIndexes })
             return
         }
@@ -122,14 +146,14 @@ export const AppStateProvider = ({ children }: Props) => {
         // 現在のキャラの全R.V.のindexを取り出す。(1)
         // R.V.選択情報の音声が存在するかを確認。(2)
         // (1)が(2)に存在するかを確認。存在するものだけを残す。
-        const currentSelectedReferenceVoiceIndexes = currentReferenceVoiceIndexes[curretVoiceCharacterSlotIndex] || []
+        const currentSelectedReferenceVoiceIndexes = currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex] || []
         const validReferenceVoiceIndexes = currentVoiceCharacter.reference_voices.map(x => { return x.slot_index })
         const validSelectedReferenceVoices = currentSelectedReferenceVoiceIndexes.filter((i) => {
             return validReferenceVoiceIndexes.includes(i)
         })
         // フィルタの結果一つでも残っていれば、それを残す。
         if (validSelectedReferenceVoices.length > 0) {
-            currentReferenceVoiceIndexes[curretVoiceCharacterSlotIndex] = validSelectedReferenceVoices
+            currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex] = validSelectedReferenceVoices
             setCurrentReferenceVoiceIndexes({ ...currentReferenceVoiceIndexes })
             return
         }
@@ -138,17 +162,17 @@ export const AppStateProvider = ({ children }: Props) => {
         if (validSelectedReferenceVoices.length == 0) {
             const newSelected = validReferenceVoiceIndexes.sort((a, b) => { return a - b })[0]
 
-            currentReferenceVoiceIndexes[curretVoiceCharacterSlotIndex] = [newSelected]
+            currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex] = [newSelected]
             setCurrentReferenceVoiceIndexes({ ...currentReferenceVoiceIndexes })
             return
         }
 
-    }, [serverConfigState.voiceCharacterSlotInfos, curretVoiceCharacterSlotIndex]);
+    }, [serverConfigState.voiceCharacterSlotInfos, currentVoiceCharacterSlotIndex]);
 
 
     const providerValue: AppStateValue = {
         setDisplayColorMode,
-        setCurretVoiceCharacterSlotIndex,
+        setCurrentVoiceCharacterSlotIndex,
         setCurrentReferenceVoiceIndexes,
         setReferenceVoiceMode,
         setInferenceLanguage,
@@ -159,8 +183,10 @@ export const AppStateProvider = ({ children }: Props) => {
         setAudioMonitor,
         setGeneratedVoice,
         setElapsedTime,
+        setSampleSteps,
+        setReferenceRecorderAudioInput,
         displayColorMode,
-        curretVoiceCharacterSlotIndex,
+        currentVoiceCharacterSlotIndex,
         currentReferenceVoiceIndexes,
         referenceVoiceMode,
         inferenceLanguage,
@@ -170,8 +196,11 @@ export const AppStateProvider = ({ children }: Props) => {
         audioOutput,
         audioMonitor,
         generatedVoice,
-        elapsedTime
+        elapsedTime,
+        sampleSteps,
+        referenceRecorderAudioInput,
 
+        audioRecorderState,
     };
     return <AppStateContext.Provider value={providerValue}>{children}</AppStateContext.Provider>;
 };

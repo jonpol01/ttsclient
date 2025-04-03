@@ -4,32 +4,34 @@ import React from "react";
 import { useAppRoot } from "../../001_AppRootProvider";
 import { useTranslation } from "react-i18next";
 import { useAppState } from "../../002_AppStateProvider";
-import { BasicVoiceType, LanguageType } from "tts-client-typescript-client-lib";
+import { LanguageType } from "tts-client-typescript-client-lib";
 import { BasicButton } from "../../styles/style-components/buttons/01_basic-button.css";
 import { normalButtonThema } from "../../styles/style-components/buttons/thema/button-thema.css";
 import { BasicInput } from "../../styles/style-components/inputs/01_basic-input.css";
 import { BasicAudio } from "../../styles/style-components/audios/01_basic-audio.css";
 import { BasicLabel } from "../../styles/style-components/labels/01_basic-label.css";
 import { useGuiState } from "../GuiStateProvider";
+import { AudioRecorder } from "./003-2-3-1_AudioRecorder";
 
 export const ReferenceVoiceArea = () => {
     const { serverConfigState, triggerToast, generateGetPathFunc } = useAppRoot();
     const { t } = useTranslation();
-    const { currentReferenceVoiceIndexes, curretVoiceCharacterSlotIndex, referenceVoiceMode, setReferenceVoiceMode } = useAppState();
-    const { setDialog2Props, setDialog2Name } = useGuiState()
+    const { currentReferenceVoiceIndexes, currentVoiceCharacterSlotIndex, referenceVoiceMode, setReferenceVoiceMode, audioOutput } = useAppState();
+    const { setDialogName } = useGuiState()
+
 
     const handleFiles = (files) => {
-        if (curretVoiceCharacterSlotIndex == null) {
+        if (currentVoiceCharacterSlotIndex == null) {
             return <></>;
         }
         files.forEach(file => {
             console.log('ファイル名:', file.name);
-            const voiceIndex = currentReferenceVoiceIndexes[curretVoiceCharacterSlotIndex]
+            const voiceIndex = currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex]
             if (!voiceIndex || voiceIndex.length != 1) {
                 console.warn("voiceIndex is invalid", voiceIndex)
                 return
             }
-            serverConfigState.addReferenceVoice(curretVoiceCharacterSlotIndex, voiceIndex[0], "misc", file, (progress: number, end: boolean) => {
+            serverConfigState.addReferenceVoice(currentVoiceCharacterSlotIndex, voiceIndex[0], "misc", file, (progress: number, end: boolean) => {
                 console.log("progress", progress, end)
             })
         });
@@ -87,14 +89,14 @@ export const ReferenceVoiceArea = () => {
 
 
     const component = useMemo(() => {
-        if (curretVoiceCharacterSlotIndex == null) {
+        if (currentVoiceCharacterSlotIndex == null) {
             return <></>;
         }
-        const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[curretVoiceCharacterSlotIndex];
+        const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[currentVoiceCharacterSlotIndex];
         if (!voiceCharacter) {
             return <></>;
         }
-        const selectedVoices = currentReferenceVoiceIndexes[curretVoiceCharacterSlotIndex] || []
+        const selectedVoices = currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex] || []
         if (selectedVoices.length == 0) {
             return <>{t("reference_voice_area_no_selection")}</>
         }
@@ -120,9 +122,9 @@ export const ReferenceVoiceArea = () => {
                         <p>{t("reference_voice_area_fileupload_area_text")}</p>
                     </div >
                     <input type="file" hidden id="reference-voice-area-audio-file-elem" />
+                    <AudioRecorder></AudioRecorder>
                 </>
             );
-
         }
 
         // if (voices[0]) {
@@ -139,7 +141,7 @@ export const ReferenceVoiceArea = () => {
             <div className={characterAreaControl}>
                 <div className={BasicLabel()}>{t("reference_voice_area_audio")}:</div>
                 <div className={characterAreaControlField}>
-                    <audio controls src={audioUrl} className={BasicAudio()} />
+                    <audio id="reference-voice-player" controls src={audioUrl} className={BasicAudio()} />
                 </div>
             </div>
         )
@@ -168,6 +170,18 @@ export const ReferenceVoiceArea = () => {
             </div>
         )
 
+
+
+        // voice_typeの種類をリストで取得。昇順でソートする。
+        const voiceTypeSet = voiceCharacter.emotion_types?.reduce((prev, cur) => {
+            return prev.add(cur.name)
+        }, new Set<string>()) || new Set<string>()
+        voiceCharacter.reference_voices.reduce((prev, cur) => {
+            return prev.add(cur.voice_type)
+        }, voiceTypeSet)
+
+        const voiceTypes = Array.from(voiceTypeSet.values()).sort()
+
         const categoryAreaInEditMode = (
             <div className={characterAreaControl}>
                 <div className={BasicLabel()}>{t("reference_voice_area_category")}:</div>
@@ -177,7 +191,8 @@ export const ReferenceVoiceArea = () => {
                         id="reference-voice-area-category-select"
                         className={BasicInput()}
                     >
-                        {BasicVoiceType.map((x, index) => {
+                        {voiceTypes.map((x, index) => {
+                            const color = voiceCharacter.emotion_types?.find(y => y.name == x)?.color || "white"
                             return (
                                 <option key={x} value={x}>
                                     {x}
@@ -186,6 +201,15 @@ export const ReferenceVoiceArea = () => {
                         })}
                     </select>
                 </div>
+                <button
+                    onClick={() => {
+                        // Open the emotion color dialog
+                        setDialogName("emotionColorDialog");
+                    }}
+                    className={`${BasicButton()} ${normalButtonThema}`}
+                >
+                    {t("emotion_color_edit_button")}
+                </button>
             </div>
         )
 
@@ -219,21 +243,6 @@ export const ReferenceVoiceArea = () => {
             </div>
         )
 
-        const downloadClicked = async () => {
-            const blob = await serverConfigState.downloadVoiceCharacter(curretVoiceCharacterSlotIndex)
-            if (!blob) {
-                triggerToast("error", t("reference_voice_area_download_error"))
-                return
-            }
-            const a = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            a.href = url;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
         const buttonArea = (
             <div className={characterAreaControl}>
                 <button
@@ -241,28 +250,9 @@ export const ReferenceVoiceArea = () => {
                     className={`${BasicButton()} ${normalButtonThema}`}
                 >{t("reference_voice_area_edit_button")}</button>
                 <button
-                    onClick={() => { serverConfigState.deleteReferenceVoice(curretVoiceCharacterSlotIndex, selectedId) }}
+                    onClick={() => { serverConfigState.deleteReferenceVoice(currentVoiceCharacterSlotIndex, selectedId) }}
                     className={`${BasicButton()} ${normalButtonThema}`}
                 >{t("reference_voice_area_delete_button")}</button>
-                <button
-                    onClick={async () => {
-                        setDialog2Props({
-                            title: t("reference_voice_area_download_waiting_dialog_title"),
-                            instruction: `${t("reference_voice_area_download_waiting_dialog_instruction")}`,
-                            defaultValue: "",
-                            resolve: () => { },
-                            options: null,
-                        });
-                        setDialog2Name("waitDialog");
-                        await downloadClicked()
-                        setDialog2Name("none");
-
-
-
-
-                    }}
-                    className={`${BasicButton()} ${normalButtonThema}`}
-                >{t("reference_voice_area_download_button")}</button>
 
             </div>
         )
@@ -276,9 +266,9 @@ export const ReferenceVoiceArea = () => {
                         const languageSelect = document.getElementById("reference-voice-area-language-select") as HTMLSelectElement
 
                         newVoice.text = textArea.value
-                        newVoice.voice_type = categorySelect.value as BasicVoiceType
+                        newVoice.voice_type = categorySelect.value
                         newVoice.language = languageSelect.value as LanguageType
-                        serverConfigState.updateReferenceVoice(curretVoiceCharacterSlotIndex, selectedId, newVoice)
+                        serverConfigState.updateReferenceVoice(currentVoiceCharacterSlotIndex, selectedId, newVoice)
                         setReferenceVoiceMode("view")
 
                     }}
@@ -314,7 +304,23 @@ export const ReferenceVoiceArea = () => {
             );
         }
 
-    }, [serverConfigState.voiceCharacterSlotInfos, currentReferenceVoiceIndexes, curretVoiceCharacterSlotIndex, referenceVoiceMode]);
+    }, [serverConfigState.voiceCharacterSlotInfos, currentReferenceVoiceIndexes, currentVoiceCharacterSlotIndex, referenceVoiceMode]);
+
+    useEffect(() => {
+        const updateSink = async () => {
+            const audioElemOutput = document.getElementById("reference-voice-player") as HTMLAudioElement
+            if (!audioElemOutput) return
+            if (audioOutput == "none") {
+                audioElemOutput.volume = 0
+                return
+            }
+
+            audioElemOutput.volume = 1
+            await audioElemOutput.setSinkId(audioOutput)
+        }
+        updateSink()
+    }, [audioOutput, component])
+
 
     return component
 };

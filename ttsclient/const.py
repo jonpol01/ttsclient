@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Literal, TypeAlias
-
+import sys
 
 # GLOBAL CONSTANTS
 HERE = Path(__file__).parent.absolute()
@@ -29,11 +29,36 @@ def get_frontend_path():
     return Path(frontend_path)
 
 
+# Client
+NATIVE_CLIENT_FILE_WIN = Path(sys._MEIPASS, "native_client", "voice-changer-native-client.exe") if hasattr(sys, "_MEIPASS") else Path("native_client", "voice-changer-native-client.exe")
+NATIVE_CLIENT_FILE_MAC = Path(
+    "voice-changer-native-client.app",
+    "Contents",
+    "MacOS",
+    "voice-changer-native-client",
+)
+
+
 # TTS モジュール
-TTSType: TypeAlias = Literal["GPT-SoVITS", "BROKEN"]
+TTSType: TypeAlias = Literal["GPT-SoVITS", "BROKEN", "RESERVED_FOR_SAMPLE", "VoiceCharacter"]
 TTSTypes: list[TTSType] = [
     "GPT-SoVITS",
     "BROKEN",
+    "RESERVED_FOR_SAMPLE",
+    "VoiceCharacter",
+]
+
+GPTSoVITSVersion: TypeAlias = Literal["v1", "v2"]
+GPTSoVITSVersions: list[GPTSoVITSVersion] = [
+    "v1",
+    "v2",
+]
+
+GPTSoVITSModelVersion: TypeAlias = Literal["v1", "v2", "v3"]
+GPTSoVITSModelVersions: list[GPTSoVITSVersion] = [
+    "v1",
+    "v2",
+    "v3",
 ]
 
 SemanticPredictorType: TypeAlias = Literal["GPTSemanticPredictor",]
@@ -46,9 +71,11 @@ PhoneExtractorTypes: list[PhoneExtractorType] = [
     "BertPhoneExtractor",
 ]
 
-SynthesizerType: TypeAlias = Literal["SovitsSynthesizer",]
+SynthesizerType: TypeAlias = Literal["SovitsSynthesizer", "SovitsSynthesizerV3", "SovitsSynthesizerV3Lora"]
 SynthesizerTypes: list[SynthesizerType] = [
     "SovitsSynthesizer",
+    "SovitsSynthesizerV3",
+    "SovitsSynthesizerV3Lora",
 ]
 
 EmbedderType: TypeAlias = Literal["cnhubert",]
@@ -66,6 +93,11 @@ ModelDir = Path("./models")
 ModelDir.mkdir(parents=True, exist_ok=True)
 MAX_SLOT_INDEX = 20
 SLOT_PARAM_FILE = "params.json"
+GPT_SOVITS_USER_DICT_PATH = Path(sys._MEIPASS, "third_party", "GPT-SoVITS", "GPT_SoVITS", "text", "ja_userdic", "userdict.csv") if hasattr(sys, "_MEIPASS") else Path("third_party", "GPT-SoVITS", "GPT_SoVITS", "text", "ja_userdic", "userdict.csv")
+OPENJTALK_USER_DICT_CSV_FILE = "user_dict.csv"
+OPENJTALK_USER_DICT_TEMP_CSV_FILE = "user_dict_tmp.csv"
+OPENJTALK_USER_DICT_FILE = "user_dict.dict"
+
 
 # Voice Character Slot Manager
 VoiceCharacterDir = Path("./voice_characters")
@@ -74,15 +106,15 @@ MAX_VOICE_CHARACTER_SLOT_INDEX = 200
 VOICE_CHARACTER_SLOT_PARAM_FILE = "params.json"
 MAX_REFERENCE_VOICE_SLOT_INDEX = 100
 
-BasicVoiceType: TypeAlias = Literal["anger", "disgust", "fear", "happy", "sad", "surprise"]
-BasicVoiceTypes: list[BasicVoiceType] = [
-    "anger",
-    "disgust",
-    "fear",
-    "happy",
-    "sad",
-    "surprise",
-]
+# BasicVoiceType: TypeAlias = Literal["anger", "disgust", "fear", "happy", "sad", "surprise"]
+# BasicVoiceTypes: list[BasicVoiceType] = [
+#     "anger",
+#     "disgust",
+#     "fear",
+#     "happy",
+#     "sad",
+#     "surprise",
+# ]
 
 LanguageType: TypeAlias = Literal[
     "all_zh",  # 全部按中文识别
@@ -150,4 +182,63 @@ BackendMode: TypeAlias = Literal[
     "all_onnx",
     "semantic_onnx",
     "synthesizer_onnx",
+]
+
+TranscriberModelSize: TypeAlias = Literal[
+    "tiny",
+    "base",
+    "small",
+    "medium",
+    "large-v1",
+    "large-v2",
+    "large-v3",
+    "large",
+    "distil-large-v2",
+    "distil-large-v3",
+    "large-v3-turbo",
+    "turbo",
+]
+TranscriberModelSizes: list[TranscriberModelSize] = [
+    "tiny",
+    "base",
+    "small",
+    "medium",
+    "large-v1",
+    "large-v2",
+    "large-v3",
+    "large",
+    "distil-large-v2",
+    "distil-large-v3",
+    "large-v3-turbo",
+    "turbo",
+]
+
+TranscriberDevice: TypeAlias = Literal[
+    "cpu",
+    "cuda",
+]
+TranscriberDevices: list[TranscriberDevice] = [
+    "cpu",
+    "cuda",
+]
+
+TranscriberComputeType: TypeAlias = Literal[
+    "int8",
+    "int8_float32",
+    "int8_float16",
+    "int8_bfloat16",
+    "int16",
+    "float16",
+    "bfloat16",
+    "float32",
+]
+TranscriberComputeTypes: list[TranscriberComputeType] = [
+    "int8",
+    "int8_float32",
+    "int8_float16",
+    "int8_bfloat16",
+    "int16",
+    "float16",
+    "bfloat16",
+    "float32",
 ]

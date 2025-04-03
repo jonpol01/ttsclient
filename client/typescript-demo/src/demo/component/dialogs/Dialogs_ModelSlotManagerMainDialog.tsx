@@ -16,6 +16,7 @@ import {
     modelSlotDetailRowValuePointable,
     modelSlotDetailRowValueSmall,
     modelSlotIcon,
+    modelSlotIconContainer,
     modelSlotIconPointable,
 } from "../../../styles/dialog.css";
 import { useGuiState } from "../../GuiStateProvider";
@@ -63,7 +64,37 @@ const IconArea = (props: IconAreaProps) => {
     const iconDivClass = props.tooltip ? tooltip : "";
     const iconClass = props.tooltip ? modelSlotIconPointable : modelSlotIcon;
     return (
-        <div className={iconDivClass}>
+        <div className={`${iconDivClass} ${modelSlotIconContainer}`}
+            onDragOver={(e) => {
+                e.preventDefault();
+                e.currentTarget.style.border = "2px solid #d6b8da";
+            }}
+            onDragEnter={(e) => {
+                e.preventDefault();
+                e.currentTarget.style.border = "2px solid #d6b8da";
+            }}
+            onDragLeave={(e) => {
+                e.preventDefault();
+                e.currentTarget.style.border = "";
+            }}
+
+            onDrop={async (e) => {
+                e.preventDefault();
+                e.currentTarget.style.border = "";
+                // ファイルをアップロード
+                const file = e.dataTransfer.files[0];
+                if (checkExtention(file.name, ["png", "jpg", "jpeg", "gif"]) == false) {
+                    triggerToast("error", t("model_slot_manager_main_change_icon_ext_error"));
+                    return;
+                }
+                if (checkExtention(file.name, ["png", "jpg", "jpeg", "gif"]) == false) {
+                    triggerToast("error", t("model_slot_manager_main_change_icon_ext_error"));
+                    return;
+                }
+                await serverConfigState.uploadIconFile(props.slotIndex, file, (progress: number, end: boolean) => { });
+
+            }}
+        >
             <img
                 src={iconUrl}
                 className={iconClass}
@@ -216,8 +247,9 @@ const GPTSoVITSDetailArea = (props: GPTSoVITSDetailAreaProps) => {
     return (
         <div className={modelSlotDetailArea}>
             <NameRow slotInfo={{ ...slotInfo }}></NameRow>
-            <FileRow title="semantic" slotIndex={slotInfo.slot_index} filePath={slotInfo.semantic_predictor_model || "default"}></FileRow>
-            <FileRow title="synthesize" slotIndex={slotInfo.slot_index} filePath={slotInfo.synthesizer_path || "default"}></FileRow>
+            <FileRow title="semantic" slotIndex={slotInfo.slot_index} filePath={slotInfo.semantic_predictor_model_path || "default"}></FileRow>
+            <FileRow title="synthesize" slotIndex={slotInfo.slot_index} filePath={slotInfo.synthesizer_model_path || "default"}></FileRow>
+            <InfoRow info={`GPT-SoVITS, ver: ${slotInfo.version}, m_ver:${slotInfo.model_version}, lora:${slotInfo.if_lora_v3}`}></InfoRow >
         </div>
     );
 };
@@ -356,7 +388,20 @@ export const ModelSlotManagerMainDialog = (props: ModelSlotManagerDialogMainScre
                         </div>
                     );
                 }
-
+                // sample button
+                let sampleButton = <></>;
+                if (x.tts_type == null) {
+                    sampleButton = (
+                        <div
+                            className={modelSlotButton}
+                            onClick={() => {
+                                props.openSampleDialog(x.slot_index);
+                            }}
+                        >
+                            {t("model_slot_manager_main_sample")}
+                        </div>
+                    );
+                }
                 // edit button
                 // let editButton = <></>;
                 // if (x.tts_type != null) {
@@ -423,9 +468,10 @@ export const ModelSlotManagerMainDialog = (props: ModelSlotManagerDialogMainScre
                         {slotDetail}
                         <div className={modelSlotButtonsArea}>
                             {uploadButton}
+                            {sampleButton}
                             {/* {editButton} */}
                             {moveButton}
-                            {exportButton}
+                            {/* {exportButton} */}
                             {deleteButton}
                         </div>
                     </div>

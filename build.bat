@@ -2,18 +2,21 @@
 
 @REM frontend-libのビルド
 cd client\typescript
-call npx ncu -u
-call npm install --force
-call npm run build:prod
-call npm version patch
-call npm publish
+call ncu.CMD -u
+call pnpm install --force
+call pnpm run build:prod
+call pnpm version patch
+call pnpm publish --no-git-checks
 cd ..\..
 
 @REM frontendのビルド。build:prodのなかでライセンス情報を作っている。
 cd client\typescript-demo
-call npx ncu -u
-call npm install --force
-call npm run build:prod
+call ncu.CMD -u
+@REM  installだとエラーが出る。operation not permitted, unlink hogehoge.. 意味わからん。
+@REM call pnpm install --force
+@REM 下の処理がとまるときには手動でnode_packageを削除したのちにpnpm installを実行する。(多分ファイルロック周り？？？)
+call pnpm update
+call pnpm run build:prod
 cd ..\..
 
 

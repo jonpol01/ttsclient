@@ -17,6 +17,8 @@ export const DialogName = {
     mergeLabDialog: "mergeLabDialog",
     aboutModelDialog: "aboutModelDialog",
     aboutVoiceDialog: "aboutVoiceDialog",
+    emotionColorDialog: "emotionColorDialog",
+    voiceCharacterManagerSamplesDialog: "voiceCharacterManagerSamplesDialog",
 } as const;
 export type DialogName = (typeof DialogName)[keyof typeof DialogName];
 
@@ -26,6 +28,8 @@ export const DialogName2 = {
     confirmDialog: "confirmDialog",
     waitDialog: "waitDialog",
     selectInputDialog: "selectInputDialog",
+    colorSelectDialog: "colorSelectDialog",
+    progressDialog: "progressDialog",
 } as const;
 export type DialogName2 = (typeof DialogName2)[keyof typeof DialogName2];
 
@@ -40,6 +44,9 @@ type GuiStateAndMethod = {
     setDialog2Name: (val: DialogName2) => void;
     dialog2Props: Dialog2Props<any> | null;
     setDialog2Props: (val: Dialog2Props<any> | null) => void;
+
+    progress: number;
+    setProgress: (val: number) => void;
 };
 
 const GuiStateContext = React.createContext<GuiStateAndMethod | null>(null);
@@ -63,6 +70,8 @@ export const GuiStateProvider = ({ children }: Props) => {
     const [dialogName, setDialogName] = useState<DialogName>(DialogName.none);
     const [dialog2Name, setDialog2Name] = useState<DialogName2>(DialogName2.none);
     const [dialog2Props, setDialog2Props] = useState<Dialog2Props<any> | null>(null);
+    const [progress, setProgress] = useState<number>(0);
+
     const { } = useAppRoot();
 
     useEffect(() => {
@@ -80,6 +89,9 @@ export const GuiStateProvider = ({ children }: Props) => {
         setDialog2Name,
         dialog2Props,
         setDialog2Props,
+
+        progress,
+        setProgress,
     };
 
     return <GuiStateContext.Provider value={providerValue}>{children}</GuiStateContext.Provider>;

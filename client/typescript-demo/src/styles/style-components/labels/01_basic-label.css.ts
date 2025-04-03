@@ -29,8 +29,23 @@ export const BasicLabel = recipe({
             large: {
                 width: '8rem',
             },
+            large2: {
+                width: '10rem',
+            },
+            large3: {
+                width: '12rem',
+            },
+            large4: {
+                width: '14rem',
+            },
+            large5: {
+                width: '16rem',
+            },
             "x-large": {
                 width: '20rem',
+            },
+            "max": {
+                width: '100%',
             }
         },
     },

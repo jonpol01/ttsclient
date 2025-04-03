@@ -2,11 +2,17 @@ import logging
 import platform
 import signal
 import fire
+import time
+import sys
 
+sys.path.append("./third_party/GPT-SoVITS/GPT_SoVITS")
+sys.path.append("./third_party/GPT-SoVITS")
+sys.path.append("./third_party/GPT-SoVITS/GPT_SoVITS/BigVGAN")
+
+from ttsclient.client_launcher.client_launcher import ClientLauncher
 from ttsclient.tts.tts_manager.tts_manager import TTSManager
 from ttsclient.utils.download_callback import get_download_callback
 
-import time
 from ttsclient.misc.download_eunjeon import download_modules
 from ttsclient.app_status import AppStatus
 from ttsclient.const import LOG_FILE, LOGGER_NAME, VERSION
@@ -21,7 +27,6 @@ from ttsclient.tts.voice_character_slot_manager.voice_character_slot_manager imp
 from ttsclient.utils.parseBoolArg import parse_bool_arg
 from ttsclient.utils.resolve_url import resolve_base_url
 from simple_performance_timer.Timer import Timer
-
 
 setup_logger(LOGGER_NAME, LOG_FILE)
 
@@ -62,14 +67,25 @@ def download_initial_models() -> None:
     module_manager.download_initial_models(download_callback)
 
     # プレトレインの設定
-    gpt_sovits_icon = module_manager.get_module_filepath("GPT-SoVITS_icon")
+    gpt_sovits_icon_v3 = module_manager.get_module_filepath("GPT-SoVITS_icon_v3")
     model_import_param = GPTSoVITSModelImportParam(
         tts_type="GPT-SoVITS",
-        name="pretrained",
+        name="pretrained_v3",
         terms_of_use_url="https://huggingface.co/wok000/gpt-sovits-models/raw/main/pretrained/term_of_use.txt",
-        icon_file=gpt_sovits_icon,
+        icon_file=gpt_sovits_icon_v3,
+        semantic_predictor_model_path=module_manager.get_module_filepath("gpt_model_v3"),
+        synthesizer_model_path=module_manager.get_module_filepath("sovits_model_v3"),
     )
-    slot_manager.set_new_slot(model_import_param, remove_src=True)
+    slot_manager.set_new_slot(model_import_param, remove_src=False)
+
+    # gpt_sovits_icon = module_manager.get_module_filepath("GPT-SoVITS_icon")
+    # model_import_param = GPTSoVITSModelImportParam(
+    #     tts_type="GPT-SoVITS",
+    #     name="pretrained_v2(deprecated)",
+    #     terms_of_use_url="https://huggingface.co/wok000/gpt-sovits-models/raw/main/pretrained/term_of_use.txt",
+    #     icon_file=gpt_sovits_icon,
+    # )
+    # slot_manager.set_new_slot(model_import_param, remove_src=True)
 
     # finetuneの設定
     ft_semantic = module_manager.get_module_filepath("GPT-SoVITS_FT_JVNV_semantice")
@@ -81,8 +97,8 @@ def download_initial_models() -> None:
         name="JVNV_FT_F1",
         terms_of_use_url="https://huggingface.co/wok000/gpt-sovits-models/raw/main/fine-tune-by-JVNV-F1/term_of_use.txt",
         icon_file=ft_icon,
-        semantic_predictor_model=ft_semantic,
-        synthesizer_path=ft_synthesizer,
+        semantic_predictor_model_path=ft_semantic,
+        synthesizer_model_path=ft_synthesizer,
     )
     slot_manager.set_new_slot(model_import_param, remove_src=True)
 
@@ -132,7 +148,7 @@ def start_cui(
 
         # 各種プロセス起動
         app_status = AppStatus.get_instance()
-        # # (1) VCServer 起動
+        # # (1) TTSServer 起動
         allow_origins = "*"
         tts_server = TTSServer.get_instance(host=host, port=port, https=https, allow_origins=allow_origins)
         tts_server_port = tts_server.start()
@@ -168,7 +184,7 @@ def start_cui(
         urls = [
             ["Application", base_url],
             ["Log(rich)", f"{base_url}/?app_mode=LogViewer"],
-            ["Log(text)", f"{base_url}/vcclient.log"],
+            ["Log(text)", f"{base_url}/ttsclient.log"],
             ["API", f"{base_url}/docs"],
             ["License(js)", f"{base_url}/licenses-js.json"],
             ["License(py)", f"{base_url}/licenses-py.json"],
@@ -214,18 +230,23 @@ def start_cui(
         logging.getLogger(LOGGER_NAME).info("--- TTSClient READY ---")
         print(f"{bold_green_start}Please press Ctrl+C once to exit ttsclient.{reset}")
 
-        # # # (4)Native Client 起動
-        # # if launch_client and platform.system() != "Darwin":
-        # clinet_launcher = ClientLauncher(app_status.stop_app)
-        # clinet_launcher.launch(port, https)
+        # # (4)Native Client 起動
+        # if launch_client and platform.system() != "Darwin":
+        clinet_launcher = ClientLauncher(app_status.stop_app)
+        clinet_launcher.launch(port, https)
 
+    err_msg = ""
     try:
+        check_alive_count = 0
         while True:
-            current_time = time.strftime("%Y/%m/%d %H:%M:%S")
-            logging.getLogger(LOGGER_NAME).info(f"{current_time}: running...")
+            check_alive_count += 1
+            if check_alive_count % 60 == 0:
+                check_alive_count = 0
+                current_time = time.strftime("%Y/%m/%d %H:%M:%S")
+                logging.getLogger(LOGGER_NAME).info(f"{current_time}: running...")
             if app_status.end_flag is True:
                 break
-            time.sleep(60)
+            time.sleep(1)
     except KeyboardInterrupt:
         err_msg = "KeyboardInterrupt"
 
@@ -240,11 +261,11 @@ def start_cui(
 
         try:
             signal.signal(signal.SIGINT, ignore_ctrl_c)
-            # # (3)Native Client 終了(サーバとの通信途中でのサーバ停止を極力避けるため、クライアントから落とす。)
-            # if launch_client:
-            #     clinet_launcher.stop()
+            # (3)Native Client 終了(サーバとの通信途中でのサーバ停止を極力避けるため、クライアントから落とす。)
+            if launch_client:
+                clinet_launcher.stop()
 
-            # # (1) VCServer 終了処理
+            # # (1) TTSServer 終了処理
             print(f"{bold_green_start}tts client is terminating...{reset}")
             tts_server.stop()
             print(f"{bold_green_start}tts client is terminated.[{tts_server_port}]{reset}")

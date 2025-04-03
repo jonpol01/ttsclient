@@ -16,6 +16,7 @@ from ttsclient.server.tts_server_rest_api_configuration_manager import RestAPICo
 from ttsclient.server.tts_server_rest_api_gpu_device_manager import RestAPIGPUDeviceManager
 from ttsclient.server.tts_server_rest_api_hello import RestHello
 from ttsclient.server.tts_server_rest_api_module_manager import RestAPIModuleManager
+from ttsclient.server.tts_server_rest_api_sample_manager import RestAPISampleManager
 from ttsclient.server.tts_server_rest_api_slot_manager import RestAPISlotManager
 from ttsclient.server.tts_server_rest_api_tts_manager import RestAPITTSManager
 from ttsclient.server.tts_server_rest_api_voice_character_slot_manager import RestAPIVoiceCharacterSlotManager
@@ -151,6 +152,8 @@ class RestAPI:
             app_fastapi.include_router(rest_voice_character_slot_manager.router)
             rest_tts_manager = RestAPITTSManager()
             app_fastapi.include_router(rest_tts_manager.router)
+            rest_sample_manager = RestAPISampleManager()
+            app_fastapi.include_router(rest_sample_manager.router)
 
             # voice_changer = RestAPIVoiceChanger()
             # app_fastapi.include_router(voice_changer.router)

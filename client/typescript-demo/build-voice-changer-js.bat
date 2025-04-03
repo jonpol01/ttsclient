@@ -1,5 +1,5 @@
 cd ..\typescript\
-call npm run build:prod
+call npm.cmd run build:prod
 cd %~dp0
 
 rd /s /q "node_modules\tts-client-typescript-client-lib"

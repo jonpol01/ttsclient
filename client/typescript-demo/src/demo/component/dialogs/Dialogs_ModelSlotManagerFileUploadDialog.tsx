@@ -10,6 +10,10 @@ import {
     fileInputAreaLabel,
     fileInputAreaValue,
     instructions,
+    radioButton,
+    radioInputArea,
+    radioInputAreaInput,
+    radioInputAreaLabel,
     selectInputArea,
     selectInputAreaInput,
     selectInputAreaLabel,
@@ -21,7 +25,7 @@ import { useAppRoot } from "../../../001_AppRootProvider";
 import { checkExtention } from "../../../util/checkExctension";
 import { Logger } from "../../../util/logger";
 import { UploadFile, UploadFileKind } from "../../../const";
-import { fileSelector, TTSType, TTSTypes } from "tts-client-typescript-client-lib";
+import { fileSelector, GPTSoVITSVersion, TTSType, TTSTypes } from "tts-client-typescript-client-lib";
 type CloseButtonRowProps = {
     uploadClicked: () => void;
     backClicked: () => void;
@@ -126,13 +130,13 @@ const GPTSoVITSFileChooser = (props: GPTSoVITSFileChooserProps) => {
 
         if (kind == "semanticPredictorModelFile") {
             if (checkExtention(file.name, ["ckpt"]) == false) {
-                triggerToast("error", t("model_slot_manager_fileupload_file_select_rvc_model_error"));
+                triggerToast("error", t("model_slot_manager_fileupload_file_select_gpt_sovits_semantic_error"));
                 return;
             }
             props.setUploadFile({ kind: kind, file: file });
         } else if (kind == "synthesizerModelFile") {
             if (checkExtention(file.name, ["pth"]) == false) {
-                triggerToast("error", t("model_slot_manager_fileupload_file_select_rvc_index_error"));
+                triggerToast("error", t("model_slot_manager_fileupload_file_select_gpt_sovits_synthesize_error"));
                 return;
             }
             props.setUploadFile({ kind: kind, file: file });
@@ -192,9 +196,14 @@ export const ModelSlotManagerFileUploadDialog = (props: ModelSlotManagerFileUplo
             setUploadProgress(0);
             const semanticPredictorModelFile = uploadFiles.find((x) => x.kind === "semanticPredictorModelFile");
             const synthesizerModelFile = uploadFiles.find((x) => x.kind === "synthesizerModelFile");
+
+            // // version を取得
+            // const gptSovitsVersionInput = document.querySelector('input[name="gpt-sovits-version"]:checked') as HTMLInputElement;
+            // const gptSovitsVersion = gptSovitsVersionInput.value as GPTSoVITSVersion
+
             try {
                 const files: UploadFile[] = [];
-                if(semanticPredictorModelFile){
+                if (semanticPredictorModelFile) {
                     files.push(semanticPredictorModelFile);
                 }
                 if (synthesizerModelFile) {
@@ -204,6 +213,7 @@ export const ModelSlotManagerFileUploadDialog = (props: ModelSlotManagerFileUplo
                     Logger.getLogger().info("progress", progress, end);
                     setUploadProgress(Math.floor(progress - 1));
                 });
+
             } catch (e) {
                 triggerToast("error", `upload failed: ${e.detail || ""}`);
                 Logger.getLogger().error(`upload failed: ${e.detail || ""}`);
@@ -220,7 +230,24 @@ export const ModelSlotManagerFileUploadDialog = (props: ModelSlotManagerFileUplo
 
     let fileChooserArea = <></>;
     if (tTSType == "GPT-SoVITS") {
-        fileChooserArea = <GPTSoVITSFileChooser setUploadFile={setUploadFile} uploadFiles={uploadFiles}></GPTSoVITSFileChooser>;
+        fileChooserArea = (
+            <>
+                <div className={radioInputArea}>
+                    {/* <div className={radioInputAreaLabel}>version: </div>
+                    <div className={radioInputAreaInput}>
+                        <span className={radioButton}>
+                            <input type="radio" id="v3" name="gpt-sovits-version" value="v3" defaultChecked />
+                            <label htmlFor="v3">v3</label>
+                        </span>
+                        <span className={radioButton}>
+                            <input type="radio" id="v2" name="gpt-sovits-version" value="v2" />
+                            <label htmlFor="v2">v2 (depricated)</label>
+                        </span>
+                    </div> */}
+                </div>
+                <GPTSoVITSFileChooser setUploadFile={setUploadFile} uploadFiles={uploadFiles}></GPTSoVITSFileChooser>
+            </>
+        );
     }
 
     return (

@@ -1,79 +1,39 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import React from "react";
 import { textInputArea } from "../../styles/textInputArea.css";
 import { useTranslation } from "react-i18next";
-import { CutMethod, LanguageType, GenerateVoiceParam, GPTSoVITSSlotInfo } from "tts-client-typescript-client-lib";
+import { GenerateVoiceParam, GPTSoVITSSlotInfo, GPTSoVITSModelVersion, GetPhonesParam, GetJpTextToUserDictRecordsParam, OpenJTalkUserDictRecord } from "tts-client-typescript-client-lib";
 import { useAppState } from "../../002_AppStateProvider";
 import { useAppRoot } from "../../001_AppRootProvider";
-import { AUDIO_ELEMENT_FOR_PLAY_MONITOR, AUDIO_ELEMENT_FOR_PLAY_RESULT } from "../../const";
-import { use } from "i18next";
 import { BasicButton } from "../../styles/style-components/buttons/01_basic-button.css"
-import { BasicInput } from "../../styles/style-components/inputs/01_basic-input.css";
 import { normalButtonThema } from "../../styles/style-components/buttons/thema/button-thema.css";
 import { useGuiState } from "../GuiStateProvider";
-import { BasicAudio } from "../../styles/style-components/audios/01_basic-audio.css";
 import { BasicLabel } from "../../styles/style-components/labels/01_basic-label.css";
 import { SectionHeader } from "../../styles/style-components/labels/02_section-header.css";
+import { TextInputAreaCommon } from "./004-1_TextInputArea_common";
+import { TextInputAreaOutputArea } from "./004-2_TextInputArea_output_area";
+import { TextInputAreaGPTSettingArea } from "./004-3_TextInputArea_gpt_setting_area";
+import { TextInputAreaFasterSetting } from "./004-4_TextInputArea_faster_setting";
+import { TextInputAreaDiffusionSettingArea } from "./004-5_TextInputArea_diffusion_setting_area";
 export const TextInputArea = () => {
     const { t } = useTranslation();
-    const { triggerToast, serverConfigState } = useAppRoot();
-    const { inferenceLanguage, setInferenceLanguage: setInferenceLanguage, speed, setSpeed, cutMethod, setCutMethod, curretVoiceCharacterSlotIndex, currentReferenceVoiceIndexes, audioOutput, audioMonitor, generatedVoice, setGeneratedVoice, elapsedTime, setElapsedTime } = useAppState();
+    const { triggerToast, serverConfigState, generateGetPathFunc } = useAppRoot();
+    const { inferenceLanguage, speed, cutMethod, currentVoiceCharacterSlotIndex, currentReferenceVoiceIndexes, setGeneratedVoice, setElapsedTime, sampleSteps, elapsedTime } = useAppState();
 
     const { setDialog2Name, setDialog2Props } = useGuiState()
-    useEffect(() => {
-        if (generatedVoice == null) {
-            return
-        }
 
-        const url = URL.createObjectURL(generatedVoice);
-        const audioElemOutput = document.getElementById(AUDIO_ELEMENT_FOR_PLAY_RESULT) as HTMLAudioElement;
-        const audioElemMonitor = document.getElementById(AUDIO_ELEMENT_FOR_PLAY_MONITOR) as HTMLAudioElement;
-        audioElemOutput.src = url;
-        audioElemMonitor.src = url;
+    const [useAdvanceInputMode, setUseAdvanceInputMode] = React.useState(false)
+    const [jpDictRecords, setJpDictRecords] = React.useState<OpenJTalkUserDictRecord[]>([])
 
-    }, [generatedVoice])
-
-    useEffect(() => {
-        const updateSink = async () => {
-            const audioElemOutput = document.getElementById(AUDIO_ELEMENT_FOR_PLAY_RESULT) as HTMLAudioElement
-            if (!audioElemOutput) return
-            if (audioOutput == "none") {
-                audioElemOutput.volume = 0
-                return
-            }
-
-            audioElemOutput.volume = 1
-            await audioElemOutput.setSinkId(audioOutput)
-            if (!generatedVoice) {
-                return
-            }
-            const url = URL.createObjectURL(generatedVoice);
-            audioElemOutput.src = url
-        }
-        updateSink()
-    }, [audioOutput])
-
-    useEffect(() => {
-        const updateSink = async () => {
-            const audioElemMonitor = document.getElementById(AUDIO_ELEMENT_FOR_PLAY_MONITOR) as HTMLAudioElement
-            if (!audioElemMonitor) return
-            if (audioMonitor == "none") {
-                audioElemMonitor.volume = 0
-                return
-            }
-            audioElemMonitor.volume = 1
-
-            await audioElemMonitor.setSinkId(audioMonitor)
-            if (!generatedVoice) {
-                return
-            }
-            const url = URL.createObjectURL(generatedVoice);
-            audioElemMonitor.src = url
-        }
-        updateSink()
-
-    }, [audioMonitor])
-
+    // カタカナのみかどうかをチェックする関数
+    const isKatakanaOnly = (text: string): boolean => {
+        // カタカナの Unicode 範囲: \u30A0-\u30FF
+        // 長音記号 (ー): \u30FC
+        // 空白も許可
+        // アポストロフィも許可
+        const katakanaRegex = /^[\u30A0-\u30FF\u30FC\s\’]+$/;
+        return katakanaRegex.test(text);
+    }
 
     const area = useMemo(() => {
         if (!serverConfigState.serverConfiguration) return
@@ -82,94 +42,48 @@ export const TextInputArea = () => {
         const slotInfo = serverConfigState.serverSlotInfos[slotIndex]
         if (!slotInfo) return
 
-        let topK = 15
-        let topP = 1.0
-        let temperature = 1.0
-        let batchSize = 20
+        let gptSovitsModelVersion: GPTSoVITSModelVersion | null = null
         if (slotInfo.tts_type == "GPT-SoVITS") {
-            const gptSovitsSlotImnfo = slotInfo as GPTSoVITSSlotInfo
-            topK = gptSovitsSlotImnfo.top_k
-            topP = gptSovitsSlotImnfo.top_p
-            temperature = gptSovitsSlotImnfo.temperature
-            batchSize = gptSovitsSlotImnfo.batch_size
+            const gptSovitsSlotInfo = slotInfo as GPTSoVITSSlotInfo
+            gptSovitsModelVersion = gptSovitsSlotInfo.model_version
         }
 
-        const languageSelect = (
-            <select
-                defaultValue={inferenceLanguage}
-                id="reference-voice-area-language-select"
-                onChange={(e) => {
-                    setInferenceLanguage(e.target.value as LanguageType);
-                }}
-                className={BasicInput()}
-            >
-                {LanguageType.map((x, index) => {
-                    return (
-                        <option key={x} value={x}>
-                            {x}
-                        </option>
-                    )
-                })}
-            </select>
-        )
-        const speedInput = (
-            <input
-                type="number"
-                id="reference-voice-area-speed-input"
-                defaultValue={speed}
-                step="0.05"
-                min="0.6"
-                max="1.65"
-                onChange={(e) => {
-                    setSpeed(parseFloat(e.target.value));
-                }}
-                className={BasicInput()}
-            />
-        )
-        const cutMethodSelect = (
-            <select
-                defaultValue={cutMethod}
-                id="reference-voice-area-cut-method-select"
-                onChange={(e) => {
-                    setCutMethod(e.target.value as CutMethod);
-                }}
-                className={BasicInput()}
-            >
-                {CutMethod.map((x, index) => {
-                    return (
-                        <option key={x} value={x}>
-                            {x}
-                        </option>
-                    )
-                })}
-            </select>
-        )
         const runClicked = async () => {
             const text = (document.getElementById("text-input-area-textarea") as HTMLTextAreaElement).value;
 
-
-            if (curretVoiceCharacterSlotIndex == null) {
+            if (currentVoiceCharacterSlotIndex == null) {
                 return
             }
-            const voices = currentReferenceVoiceIndexes[curretVoiceCharacterSlotIndex]
+            const voices = currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex]
             if (!voices || voices.length != 1) {
                 triggerToast("error", `multi voice not implemented: ${voices}, ${voices.length}`)
                 return
             }
             const voice = voices[0]
 
+
             const start = performance.now();
             const param: GenerateVoiceParam = {
-                voice_character_slot_index: curretVoiceCharacterSlotIndex,
+                voice_character_slot_index: currentVoiceCharacterSlotIndex,
                 reference_voice_slot_index: voice,
                 text: text,
                 language: inferenceLanguage,
                 speed: speed,
                 cutMethod: cutMethod,
+                sample_steps: sampleSteps,
+                phone_symbols: null,
             }
+
+            console.log("gptSovitsModelVersion", gptSovitsModelVersion, useAdvanceInputMode)
+            if ((gptSovitsModelVersion == "v3" || gptSovitsModelVersion == "v2") && useAdvanceInputMode == true) {
+                // v2 or v3 かつ advance input modeの場合は、phone_symbolsを設定する。
+                const phoneSymbols = (document.getElementById("text-input-area-phonearea") as HTMLTextAreaElement).value;
+                param.phone_symbols = JSON.parse(phoneSymbols)
+            }
+
+
             try {
                 const blob = await serverConfigState.generateVoice(param)
-
                 if (blob == null) {
                     // TODO: error handling
                     console.log("blob is null")
@@ -192,139 +106,266 @@ export const TextInputArea = () => {
             setElapsedTime(elapsedTime)
         }
 
-        const topKOptions = Array(100).fill(0).map((x, i) => { return (<option key={i} value={i + 1}>{i + 1}</option>) })
-        const topKSelect = (
-            <select
-                defaultValue={topK}
-                id="reference-voice-area-top-k-select"
-                onChange={(e) => {
-                    if (!serverConfigState.serverConfiguration) return
-                    if (!serverConfigState.serverSlotInfos) return
+        let useAdvanceInputModeButton = <></>
+        let getWordsButton = <></>
+        let wordsList = <></>
+        let getPhoneButton = <></>
+        let phonesInputArea = <></>
+        if (gptSovitsModelVersion == "v3" || gptSovitsModelVersion == "v2") {
+
+            useAdvanceInputModeButton = (
+                <button onClick={async () => {
+                    setUseAdvanceInputMode(!useAdvanceInputMode)
+                }} className={`${BasicButton({ active: useAdvanceInputMode, height: "short" })} ${normalButtonThema}`}>advanced</button>
+            )
+            if (useAdvanceInputMode) {
+                const iconUrl = generateGetPathFunc("/assets/icons/chevrons-down.svg");
+                if (inferenceLanguage == "ja" || inferenceLanguage == "all_ja") {
+                    getWordsButton = (
+                        <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+
+                            <button onClick={
+                                async () => {
+                                    if (currentVoiceCharacterSlotIndex == null) {
+                                        return
+                                    }
+                                    const text = (document.getElementById("text-input-area-textarea") as HTMLTextAreaElement).value;
+                                    const param_dict: GetJpTextToUserDictRecordsParam = {
+                                        text: text,
+                                        voice_character_slot_index: currentVoiceCharacterSlotIndex,
+                                    }
+                                    try {
+                                        const records = await serverConfigState.getJpTextToUserDictRecords(param_dict)
+                                        console.log(records)
+                                        if (records == null) {
+                                            return
+                                        }
+                                        // Store the received dictionary records in state
+                                        setJpDictRecords(records)
+                                    } catch (e) {
+                                        console.error(e)
+                                        // 1秒スリープ
+                                        triggerToast("error", `error occured during generating voice`)
+                                    }
+                                }} className={`${BasicButton({})} ${normalButtonThema}`}
+                            >
+
+                                <img src={iconUrl} alt="get phones" />
+                            </button>
+                        </div>
+                    )
+
+                    wordsList = (
+                        <>
+                            <div className={BasicLabel({ width: "max" })}>{t("text_input_area_word_list_label")}</div>
+                            <div style={{ width: "100%", maxHeight: "5rem", overflowY: "auto", overflowX: "hidden" }}>
+                                <table style={{ width: "100%", borderCollapse: "collapse", border: "1px solid #ccc", fontSize: "0.7rem" }}>
+                                    <thead>
+                                        <tr>
+                                            <th style={{ border: "1px solid #ccc", backgroundColor: "#f0f0f0" }}>{t("text_input_area_word_list_column_string")}</th>
+                                            <th style={{ border: "1px solid #ccc", backgroundColor: "#f0f0f0" }}>{t("text_input_area_word_list_column_pronunciation")}</th>
+                                            <th style={{ border: "1px solid #ccc", backgroundColor: "#f0f0f0" }}>{t("text_input_area_word_list_column_accent")}</th>
+                                            <th style={{ border: "1px solid #ccc", backgroundColor: "#f0f0f0" }}>{t("text_input_area_word_list_column_mora_count")}</th>
+                                            <th style={{ border: "1px solid #ccc", backgroundColor: "#f0f0f0" }}>{t("text_input_area_word_list_column_save")}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {jpDictRecords.map((record, index) => (
+                                            <tr key={index}>
+                                                <td style={{ border: "1px solid #ccc", padding: "4px" }}>
+                                                    <div style={{ padding: "2px" }}>{record.string || ""}</div>
+                                                </td>
+                                                <td style={{ border: "1px solid #ccc", padding: "4px" }}>
+                                                    <input
+                                                        type="text"
+                                                        value={record.pron || ""}
+                                                        style={{
+                                                            width: "100%",
+                                                            border: isKatakanaOnly(record.pron || "") ? "none" : "1px solid red",
+                                                            padding: "2px",
+                                                            fontSize: "0.7rem",
+                                                            // カタカナ以外の文字が使われていたら赤くする
+                                                            color: isKatakanaOnly(record.pron || "") ? "inherit" : "red",
+                                                            backgroundColor: isKatakanaOnly(record.pron || "") ? "inherit" : "rgba(255, 0, 0, 0.05)"
+                                                        }}
+                                                        title={isKatakanaOnly(record.pron || "") ? "" : "カタカナのみを入力してください"}
+                                                        onChange={(e) => {
+                                                            const newValue = e.target.value;
+                                                            const newRecords = [...jpDictRecords];
+                                                            newRecords[index] = { ...newRecords[index], pron: newValue };
+                                                            setJpDictRecords(newRecords);
+
+                                                            // // 入力時に非カタカナ文字が含まれていたら警告を表示
+                                                            // if (newValue && !isKatakanaOnly(newValue)) {
+                                                            //     triggerToast("warning", `"${record.string}" の発音にカタカナ以外の文字が含まれています`);
+                                                            // }
+                                                        }}
+                                                    />
+                                                </td>
+                                                <td style={{ border: "1px solid #ccc", padding: "4px" }}>
+                                                    <input
+                                                        type="number"
+                                                        min={0}
+                                                        max={record.mora_size > 0 ? record.mora_size + 1 : 0}
+                                                        value={record.acc || 0}
+                                                        style={{ width: "100%", border: "none", padding: "2px", fontSize: "0.7rem" }}
+                                                        onChange={(e) => {
+                                                            const value = parseInt(e.target.value) || 0;
+                                                            const maxAccent = record.mora_size > 0 ? record.mora_size : 0;
+                                                            const validValue = Math.min(Math.max(0, value), maxAccent);
+
+                                                            const newRecords = [...jpDictRecords];
+                                                            newRecords[index] = { ...newRecords[index], acc: validValue };
+                                                            setJpDictRecords(newRecords);
+                                                        }}
+                                                    />
+                                                </td>
+                                                <td style={{ border: "1px solid #ccc", padding: "4px" }}>
+                                                    <div style={{ padding: "2px" }}>{record.mora_size || 0}</div>
+                                                </td>
+                                                <td style={{ border: "1px solid #ccc", padding: "4px", textAlign: "center" }}>
+                                                    <button
+                                                        onClick={() => {
+                                                            if (currentVoiceCharacterSlotIndex == null) {
+                                                                return
+                                                            }
+                                                            // Save this specific word record
+                                                            const recordToSave = jpDictRecords[index];
+                                                            console.log("Saving record:", recordToSave);
+
+                                                            // カタカナのみかチェック
+                                                            if (!isKatakanaOnly(recordToSave.pron || "")) {
+                                                                triggerToast("error", t("text_input_area_error_non_katakana", { 0: recordToSave.string }));
+                                                                return;
+                                                            }
+
+                                                            // 保存処理
+                                                            serverConfigState.addUserDictRecord(currentVoiceCharacterSlotIndex, recordToSave);
 
 
-                    if (slotInfo.tts_type == "GPT-SoVITS") {
-                        const gptSoVITSSlotInfo = slotInfo as GPTSoVITSSlotInfo
-                        gptSoVITSSlotInfo.top_k = parseInt(e.target.value)
-                        serverConfigState.updateServerSlotInfo(gptSoVITSSlotInfo)
-                    }
-                }}
-                className={BasicInput()}
-            >
-                {topKOptions}
-            </select >
-        )
-        const topPOptions = Array(100).fill(0).map((x, i) => { return (<option key={i} value={(i + 1) / 100}>{(i + 1) / 100}</option>) })
-        const topPSelect = (
-            <select
-                defaultValue={topP}
-                id="reference-voice-area-top-p-select"
-                onChange={(e) => {
-                    if (!serverConfigState.serverConfiguration) return
-                    if (!serverConfigState.serverSlotInfos) return
 
 
-                    if (slotInfo.tts_type == "GPT-SoVITS") {
-                        const gptSoVITSSlotInfo = slotInfo as GPTSoVITSSlotInfo
-                        gptSoVITSSlotInfo.top_p = parseFloat(e.target.value)
-                        serverConfigState.updateServerSlotInfo(gptSoVITSSlotInfo)
-                    }
-                }}
-                className={BasicInput()}
-            >
-                {topPOptions}
-            </select >
-        )
-        const temperatureOptions = Array(100).fill(0).map((x, i) => { return (<option key={i} value={(i + 1) / 100}>{(i + 1) / 100}</option>) })
-        const temperatureSelect = (
-            <select
-                defaultValue={temperature}
-                id="reference-voice-area-temperature-select"
-                onChange={(e) => {
-                    if (!serverConfigState.serverConfiguration) return
-                    if (!serverConfigState.serverSlotInfos) return
 
-                    if (slotInfo.tts_type == "GPT-SoVITS") {
-                        const gptSoVITSSlotInfo = slotInfo as GPTSoVITSSlotInfo
-                        gptSoVITSSlotInfo.temperature = parseFloat(e.target.value)
-                        serverConfigState.updateServerSlotInfo(gptSoVITSSlotInfo)
-                    }
-                }}
-            >
-                {temperatureOptions}
-            </select >
-        )
+                                                            // Here you would implement the actual save functionality
+                                                            triggerToast("success", t("text_input_area_success_save_settings", { 0: recordToSave.string }));
+                                                        }}
+                                                        className={`${BasicButton({ height: "short", width: "small" })} ${normalButtonThema}`}
+                                                        style={{ fontSize: "0.7rem", padding: "2px 5px" }}
+                                                    >
+                                                        {t("text_input_area_word_list_save_button")}
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                {jpDictRecords.length === 0 && (
+                                    <div style={{ padding: "10px", textAlign: "center", color: "#666" }}>
+                                        {t("text_input_area_dict_records_empty")}
+                                    </div>
+                                )}
+                            </div>
 
-        const useFasterCheckBox = (
-            <>
-                <input type="checkbox" onChange={(e) => {
-                    if (!serverConfigState.serverConfiguration) return
-                    if (!serverConfigState.serverSlotInfos) return
+                        </>
+                    )
+                }
 
-                    if (slotInfo.tts_type == "GPT-SoVITS") {
-                        const gptSoVITSSlotInfo = slotInfo as GPTSoVITSSlotInfo
-                        gptSoVITSSlotInfo.enable_faster = e.target.checked
-                        serverConfigState.updateServerSlotInfo(gptSoVITSSlotInfo)
-                    }
-                }} />
-                <div>{t("text_input_area_enable faster inference_label")}</div>
-            </>
-        )
+                getPhoneButton = (
+                    <div style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}>
 
-        const batchSizeOptions = Array(200).fill(0).map((x, i) => { return (<option key={i} value={i + 1}>{i + 1}</option>) })
-        const batchSizeSelector = (
-            <select
-                defaultValue={batchSize}
-                id="reference-voice-area-batch-size-select"
-                onChange={(e) => {
-                    if (!serverConfigState.serverConfiguration) return
-                    if (!serverConfigState.serverSlotInfos) return
+                        <button onClick={
+                            async () => {
+                                if (currentVoiceCharacterSlotIndex == null) {
+                                    return
+                                }
+                                // ウェイトダイアログ表示
+                                setDialog2Props({
+                                    title: t("wait_dialog_title_generating"),
+                                    instruction: `${t("wait_dialog_instruction_generating")}`,
+                                    defaultValue: "",
+                                    resolve: () => { },
+                                    options: null,
+                                });
+                                setDialog2Name("waitDialog");
 
-                    if (slotInfo.tts_type == "GPT-SoVITS") {
-                        const gptSoVITSSlotInfo = slotInfo as GPTSoVITSSlotInfo
-                        gptSoVITSSlotInfo.batch_size = parseInt(e.target.value)
-                        serverConfigState.updateServerSlotInfo(gptSoVITSSlotInfo)
-                    }
-                }}
-                className={BasicInput()}
-            >
-                {batchSizeOptions}
-            </select>
+                                // 処理
+                                const text = (document.getElementById("text-input-area-textarea") as HTMLTextAreaElement).value;
+                                // jpDictRecordsの発音にカタカナ以外が含まれていたらエラー
+                                for (const record of jpDictRecords) {
+                                    if (!isKatakanaOnly(record.pron || "")) {
+                                        triggerToast("error", t("text_input_area_error_non_katakana", { 0: record.string }));
+                                        // ウェイトダイアログ消去
+                                        setDialog2Name("none");
+                                        return;
+                                    }
+                                }
 
-        )
+                                const param: GetPhonesParam = {
+                                    text: text,
+                                    language: inferenceLanguage,
+                                    voice_character_slot_index: currentVoiceCharacterSlotIndex,
+                                    user_dict_records: jpDictRecords,
+                                }
+                                try {
+                                    const phones = await serverConfigState.getPhones(param)
+                                    if (phones == null) {
+                                        return
+                                    }
+                                    const phonesElement = document.getElementById("text-input-area-phonearea") as HTMLTextAreaElement
+                                    phonesElement.value = JSON.stringify(phones.phone_symbols)
+                                } catch (e) {
+                                    console.error(e)
+                                    // 1秒スリープ
+                                    triggerToast("error", `error occured during generating voice`)
+                                }
 
+                                // ウェイトダイアログ消去
+                                setDialog2Name("none");
+                            }} className={`${BasicButton({})} ${normalButtonThema}`}
+                        >
 
+                            <img src={iconUrl} alt="get phones" />
+                        </button>
+                    </div>
+                )
+                phonesInputArea = (
+                    <>
+                        <div className={BasicLabel({ width: "max" })}>{t("text_input_area_phoneme_data_label")}</div>
+
+                        <div>
+                            <textarea id="text-input-area-phonearea" rows={5} cols={50} style={{ padding: "5px" }}></textarea>
+                        </div>
+                    </>
+                )
+            }
+        }
         return (
             <div className={textInputArea}>
                 <div className={SectionHeader()}>
                     {t("text_input_area_title")}
                 </div>
-                <div style={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
-                    <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
-                        <div>{t("text_input_area_language_label")}</div>
-                        <div>
-                            {languageSelect}
-                        </div>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
-                        <div>{t("text_input_area_speed_label")}</div>
-                        <div>
-                            {speedInput}
-                        </div>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
-                        <div>{t("text_input_area_cut_method_label")}</div>
-                        <div>
-                            {cutMethodSelect}
-                        </div>
-                    </div>
-                </div>
+                <TextInputAreaCommon></TextInputAreaCommon>
 
-                <div style={{ display: "flex", flexDirection: "row", gap: "2rem" }}>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                        <div className={BasicLabel({ width: "x-large" })}>{t("text_input_area_textarea-label")}</div>
-                        <div>
-                            <textarea id="text-input-area-textarea" rows={5} cols={50}></textarea>
+                <div style={{ display: "flex", flexDirection: "row", gap: "2rem", width: "100%", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "5px", width: "45%" }}>
+                        <div style={{ display: "flex", gap: "15px", alignItems: "flex-end" }}>
+                            <div className={BasicLabel({ width: "large5" })}>
+                                {t("text_input_area_textarea-label")}
+                            </div>
+                            {useAdvanceInputModeButton}
                         </div>
+
+                        <div>
+                            <textarea id="text-input-area-textarea" rows={5} style={{ width: "100%", padding: "5px" }}></textarea>
+                        </div>
+
+                        {getWordsButton}
+                        {wordsList}
+
+                        {getPhoneButton}
+                        {phonesInputArea}
+
+
                         <div style={{ textAlign: "right" }}>
                             <button id="text-input-area-submit-button" onClick={async () => {
                                 setDialog2Props({
@@ -340,89 +381,29 @@ export const TextInputArea = () => {
                             }} className={`${BasicButton()} ${normalButtonThema}`}>{t("text_input_area_submit_button")}</button>
                         </div>
                     </div>
-
-
-
-
-                    <div style={{ display: "flex", flexDirection: "column" }}>
+                    <div style={{ display: "flex", flexDirection: "column", width: "45%" }}>
                         <div className={BasicLabel({ width: "x-large" })}>{t("text_input_area_model_setting_label")}</div>
-
-                        <div style={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
-                            <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
-                                {useFasterCheckBox}
-                            </div>
-                            <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
-                                <div>{t("text_input_area_batch_size_label")}</div>
-                                <div>
-                                    {batchSizeSelector}
-                                </div>
-                            </div>
-
-
-                        </div>
-
-
-                        <div style={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
-                            <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
-                                <div>{t("text_input_area_top_k_label")}</div>
-                                <div>
-                                    {topKSelect}
-                                </div>
-                            </div>
-                            <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
-                                <div>{t("text_input_area_top_p_label")}</div>
-                                <div>
-                                    {topPSelect}
-                                </div>
-                            </div>
-                            <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
-                                <div>{t("text_input_area_temperature_label")}</div>
-                                <div>
-                                    {temperatureSelect}
-                                </div>
-                            </div>
-                        </div>
-
+                        <TextInputAreaFasterSetting></TextInputAreaFasterSetting>
+                        <TextInputAreaGPTSettingArea></TextInputAreaGPTSettingArea>
+                        <TextInputAreaDiffusionSettingArea></TextInputAreaDiffusionSettingArea>
 
                         <div className={BasicLabel({ width: "x-large" })}>{t("text_input_area_generated_voice_label")}[{elapsedTime.toFixed(0)}ms]</div>
-                        <div style={{ display: "flex" }}>
-                            <div style={{ width: "5rem" }}>{t("text_input_area_audio_device_output")}</div>
-                            <audio controls id={AUDIO_ELEMENT_FOR_PLAY_RESULT} className={BasicAudio()}></audio>
-                        </div>
-                        <div style={{ display: "flex" }}>
-                            <div style={{ width: "5rem" }}>{t("text_input_area_audio_device_monitor")}</div>
-                            <audio controls id={AUDIO_ELEMENT_FOR_PLAY_MONITOR} className={BasicAudio()}></audio>
-                        </div>
-                        <div>
-                            <button
-                                className={`${BasicButton()} ${normalButtonThema}`}
-                                disabled={!generatedVoice ? true : false} onClick={() => {
-                                    if (!generatedVoice) {
-                                        return
-                                    }
-                                    const a = document.createElement('a');
-                                    const url = URL.createObjectURL(generatedVoice);
-                                    a.href = url;
-                                    a.download = 'output.wav';
-                                    document.body.appendChild(a);
-                                    a.click();
-                                    document.body.removeChild(a);
-                                    URL.revokeObjectURL(url);
-                                }}>download</button>
-                        </div>
+                        <TextInputAreaOutputArea></TextInputAreaOutputArea>
                     </div>
                 </div>
-            </div>
+            </div >
         );
     }, [inferenceLanguage,
         speed,
         cutMethod,
-        curretVoiceCharacterSlotIndex,
+        currentVoiceCharacterSlotIndex,
         currentReferenceVoiceIndexes,
-        generatedVoice,
         serverConfigState.serverSlotInfos,
         serverConfigState.serverConfiguration,
+        sampleSteps,
+        useAdvanceInputMode,
         elapsedTime,
+        jpDictRecords
     ]);
     return area;
 };

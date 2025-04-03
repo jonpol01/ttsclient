@@ -58,7 +58,7 @@ export const normalButtonThema = createTheme(buttonThemeContract, {
         borderHover: "#000000",
 
         textActive: "#000000",
-        backgroundActive: "#00ff00",
+        backgroundActive: "#fae3f5",
         borderActive: "#000000",
 
         textDisabled: "#000000",

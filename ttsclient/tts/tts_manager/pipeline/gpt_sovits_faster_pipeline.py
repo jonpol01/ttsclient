@@ -24,18 +24,18 @@ class GPTSoVITSFasterPipeline(Pipeline):
         module_manager = ModuleManager.get_instance()
         tts_config = TTS_Config()
 
-        if self.slot_info.semantic_predictor_model is None:
+        if self.slot_info.semantic_predictor_model_path is None:
             tts_config.t2s_weights_path = module_manager.get_module_filepath("gpt_model")
             logging.getLogger(LOGGER_NAME).info("use default sematic predictor")
         else:
-            tts_config.t2s_weights_path = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.semantic_predictor_model
+            tts_config.t2s_weights_path = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.semantic_predictor_model_path
             logging.getLogger(LOGGER_NAME).info(f"use custom sematic predictor {tts_config.t2s_weights_path}")
 
-        if self.slot_info.synthesizer_path is None:
+        if self.slot_info.synthesizer_model_path is None:
             tts_config.vits_weights_path = module_manager.get_module_filepath("sovits_model")
             logging.getLogger(LOGGER_NAME).info("use default sematic predictor")
         else:
-            tts_config.vits_weights_path = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.synthesizer_path
+            tts_config.vits_weights_path = ModelDir / f"{self.slot_info.slot_index}" / self.slot_info.synthesizer_model_path
             logging.getLogger(LOGGER_NAME).info(f"use custom sematic predictor {tts_config.vits_weights_path}")
 
         tts_config.cnhuhbert_base_path = ModuleManager.get_instance().get_module_filepath("chinese-hubert-base_bin").parent
@@ -73,6 +73,9 @@ class GPTSoVITSFasterPipeline(Pipeline):
         seed: int = -1,
         parallel_infer: bool = True,
         repetition_penalty: float = 1.35,
+        # v3追加オプション
+        sample_steps: int = 8,
+        phone_symbols: list[str] | None = None,
     ):
         print("START FAST PIPELINE!")
 

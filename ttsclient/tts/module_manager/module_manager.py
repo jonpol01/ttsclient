@@ -27,6 +27,20 @@ REGISTERD_MODULES: list[ModuleInfo] = [
         save_to=ModuleDir / Path("s2G2333k.pth"),
         hash="924fdccaa3c574bf139c25c9759aa1ed3b3f99e19a7c529ee996c2bc17663695",
     ),
+    ModuleInfo(
+        id="gpt_model_v3",
+        display_name="gpt_model_v3",
+        url="https://huggingface.co/lj1995/GPT-SoVITS/resolve/main/s1v3.ckpt",
+        save_to=ModuleDir / Path("s1v3.ckpt"),
+        hash="87133414860ea14ff6620c483a3db5ed07b44be42e2c3fcdad65523a729a745a",
+    ),
+    ModuleInfo(
+        id="sovits_model_v3",
+        display_name="sovits_model_v3",
+        url="https://huggingface.co/lj1995/GPT-SoVITS/resolve/main/s2Gv3.pth",
+        save_to=ModuleDir / Path("s2Gv3.pth"),
+        hash="f33abb1920076d988e1711d5f41b5c9c6d7f92575b4acf0ad4fae6a4ebf0cf19",
+    ),
     # // chinese-roberta-wwm-ext-large // #
     ModuleInfo(
         id="chinese-roberta-wwm-ext-large_bin",
@@ -52,6 +66,13 @@ REGISTERD_MODULES: list[ModuleInfo] = [
         save_to=ModuleDir / Path("chinese-roberta-wwm-ext-large/tokenizer.json"),
         hash="173796956820ea27bd14f76bf28162607ff4254807e2948253eb5b46f5bb643b",
     ),
+    ModuleInfo(
+        id="chinese-roberta-wwm-ext-large_G2PWModel_1.1.zip",
+        display_name="G2PWModel_1.1.zip",
+        url="https://paddlespeech.bj.bcebos.com/Parakeet/released_models/g2p/G2PWModel_1.1.zip",
+        save_to="GPT_SoVITS/text/G2PWModel_1.1.zip",
+        hash="b116f6930a7ee55eef6576a8d8e14bf40c1106583439e8ae924b901512379c64",
+    ),
     # // chinese-hubert-base // #
     ModuleInfo(
         id="chinese-hubert-base_bin",
@@ -74,29 +95,51 @@ REGISTERD_MODULES: list[ModuleInfo] = [
         save_to=ModuleDir / Path("chinese-hubert-base/preprocessor_config.json"),
         hash="dcd684124d06722947939d41ea6ae58dbf10968c60a11a29f23ddc602c64a29b",
     ),
+    # bigvgan (v3)
+    ModuleInfo(
+        id="bigvgan_v2_24khz_100band_256x_bigvgan_generator_pt",
+        display_name="bigvgan_v2_24khz_100band_256x_bigvgan_generator_pt",
+        url="https://huggingface.co/lj1995/GPT-SoVITS/resolve/main/models--nvidia--bigvgan_v2_24khz_100band_256x/bigvgan_generator.pt",
+        save_to=ModuleDir / Path("bigvgan_v2_24khz_100band_256x/bigvgan_generator.pt"),
+        hash="6f9c5715550c9d0f11159ceb8935638da5aeb19e27d1e63677632df095e376f5",
+    ),
+    ModuleInfo(
+        id="bigvgan_v2_24khz_100band_256x_config.json",
+        display_name="bigvgan_v2_24khz_100band_256x_config_json",
+        url="https://huggingface.co/lj1995/GPT-SoVITS/resolve/main/models--nvidia--bigvgan_v2_24khz_100band_256x/config.json",
+        save_to=ModuleDir / Path("bigvgan_v2_24khz_100band_256x/config.json"),
+        hash="d77e2c96583ca2296ac112a56ec7cc6bd5da4bf7681ceff18448bedc4fcf6512",
+    ),
     # ---------------------- #
     # Intial Models
     # ---------------------- #
     ModuleInfo(
         id="GPT-SoVITS_icon",
         display_name="GPT-SoVITS_icon",
-        url="https://huggingface.co/wok000/gpt-sovits-models/resolve/main/pretrained/pretrained.png",
-        save_to=UPLOAD_DIR / Path("pretrained.png"),
-        hash="af664eb8a206e62313b0b9a5880c73d4d266ec61f2ebde5753ee4a391371bee0",
+        url="https://huggingface.co/wok000/gpt-sovits-models/resolve/main/pretrained/gpt_sovits_pretrain_v2.png",
+        save_to=UPLOAD_DIR / Path("gpt_sovits_pretrain_v2.png"),
+        hash="fe93ed71bada8098d66620c418ebefe9fd93f22dbfe6f64e03eb55cc11691a72",
+    ),
+    ModuleInfo(
+        id="GPT-SoVITS_icon_v3",
+        display_name="GPT-SoVITS_icon_v3",
+        url="https://huggingface.co/wok000/gpt-sovits-models/resolve/main/pretrained/gpt_sovits_pretrain_v3.png",
+        save_to=UPLOAD_DIR / Path("gpt_sovits_pretrain_v3.png"),
+        hash="740a3754bd6cfe60a0bf032b9f6ea0cddc889299c78a7191ae8e27d7c88791c9",
     ),
     ModuleInfo(
         id="GPT-SoVITS_FT_JVNV_semantice",
         display_name="PT-SoVITS_FT_JVNV_semantice",
         url="https://huggingface.co/wok000/gpt-sovits-models/resolve/main/fine-tune-by-JVNV-F1/jvnv_f1-e15.ckpt",
         save_to=UPLOAD_DIR / Path("jvnv_f1-e15.ckpt"),
-        hash="2ea6105d2dab14a0df28dc4d79077cf06ea41e28ff72cf47914fe78751ffe910",
+        hash="d47a7070039a3327b760f27122b9ccc9d3bbd5a59b72ec1b5ed9c1ae75194b6b",
     ),
     ModuleInfo(
         id="GPT-SoVITS_FT_JVNV_synthesizer",
         display_name="GPT-SoVITS_FT_JVNV_synthesize",
         url="https://huggingface.co/wok000/gpt-sovits-models/resolve/main/fine-tune-by-JVNV-F1/jvnv_f1_e8_s480.pth",
         save_to=UPLOAD_DIR / Path("jvnv_f1_e8_s480.pth"),
-        hash="d47a7070039a3327b760f27122b9ccc9d3bbd5a59b72ec1b5ed9c1ae75194b6b",
+        hash="2ea6105d2dab14a0df28dc4d79077cf06ea41e28ff72cf47914fe78751ffe910",
     ),
     ModuleInfo(
         id="GPT-SoVITS_FT_JVNV_icon",
@@ -135,17 +178,22 @@ REGISTERD_MODULES: list[ModuleInfo] = [
     ),
 ]
 REQUIRED_MODULES = [
-    "gpt_model",
-    "sovits_model",
+    # "gpt_model",
+    # "sovits_model",
+    "gpt_model_v3",
+    "sovits_model_v3",
     "chinese-roberta-wwm-ext-large_bin",
     "chinese-roberta-wwm-ext-large_config",
     "chinese-roberta-wwm-ext-large_tokenizer",
     "chinese-hubert-base_bin",
     "chinese-hubert-base_config",
     "chinese-hubert-base_preprocessor_config",
+    "bigvgan_v2_24khz_100band_256x_bigvgan_generator_pt",
+    "bigvgan_v2_24khz_100band_256x_config.json",
 ]
 INITIAL_MODELS = [
-    "GPT-SoVITS_icon",
+    # "GPT-SoVITS_icon",
+    "GPT-SoVITS_icon_v3",
     "GPT-SoVITS_FT_JVNV_semantice",
     "GPT-SoVITS_FT_JVNV_synthesizer",
     "GPT-SoVITS_FT_JVNV_icon",
@@ -325,11 +373,11 @@ class ModuleManager:
     def download_initial_modules(self, callback: Callable[[list[ModuleDownloadStatus]], None]):
         modules = [x for x in self.get_modules() if x.info.id in REQUIRED_MODULES and x.valid is False]
 
-        logging.getLogger(LOGGER_NAME).info("---- TEST MODULES ---- start")
+        # logging.getLogger(LOGGER_NAME).info("---- TEST MODULES ---- start")
         test_modules = [x for x in self.get_modules() if x.info.id in REQUIRED_MODULES]
         for i in test_modules:
             logging.getLogger(LOGGER_NAME).info(f"Module:{i.info.id} -> Download:{i.downloaded}, Status:{i.valid}")
-        logging.getLogger(LOGGER_NAME).info("---- TEST MODULES ---- end")
+        # logging.getLogger(LOGGER_NAME).info("---- TEST MODULES ---- end")
 
         # x.info.idをキーにした辞書配列でstatusを管理。
         status_dict = {x.info.id: ModuleDownloadStatus(id=x.info.id, status="processing", progress=0.0) for x in modules}
@@ -364,3 +412,8 @@ class ModuleManager:
             threads.join()
         print("")
         print("initial model download fin!")
+
+    def download_one_module(self, id: str, callback: Callable[[list[ModuleDownloadStatus]], None]):
+        self.download(id, callback)
+        for threads in self.threads.values():
+            threads.join()

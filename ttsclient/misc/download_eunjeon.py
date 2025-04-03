@@ -3,8 +3,11 @@ import requests
 import zipfile
 
 # URLとダウンロード先のファイルパスを定義
-url = "https://huggingface.co/wok000/python_modules/resolve/main/eunjeon-0.4.0-cp312-cp312-win_amd64.zip"
-download_path = "eunjeon-0.4.0-cp312-cp312-win_amd64.zip"
+# url = "https://huggingface.co/wok000/python_modules/resolve/main/eunjeon-0.4.0-cp312-cp312-win_amd64.zip"
+url = "https://huggingface.co/wok000/python_modules/resolve/main/eunjeon-0.4.0-cp310-cp310-win_amd64.zip"
+
+# download_path = "eunjeon-0.4.0-cp312-cp312-win_amd64.zip"
+download_path = "eunjeon-0.4.0-cp310-cp310-win_amd64.zip"
 extract_to = "ext_lib"
 
 

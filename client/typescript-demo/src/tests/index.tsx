@@ -126,10 +126,10 @@ export const Tests = () => {
                 Logger.getLogger().info(slot);
             })}
             {generateTestRow("Upload Server Slot Info[1]", async () => {
-                const semantic_predictor_model = await fileSelector("");
+                const semantic_predictor_model_path = await fileSelector("");
                 // const synthesizer_path = await fileSelector("");
 
-                client.current!.uploadGPTSoVITSModelFile(1, semantic_predictor_model, null, (progress: number, end: boolean) => {
+                client.current!.uploadGPTSoVITSModelFile(1, semantic_predictor_model_path, null, (progress: number, end: boolean) => {
                     Logger.getLogger().info(`file upload progress: ${progress}, end: ${end}`);
                 });
             })}

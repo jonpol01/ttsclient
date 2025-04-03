@@ -11,6 +11,12 @@ import {
     TTSType,
     ReferenceVoice,
     GenerateVoiceParam,
+    GetPhonesParam,
+    GetPhonesResponse,
+    OpenJTalkUserDictRecord,
+    GetJpTextToUserDictRecordsParam,
+    SampleInfo,
+    SlotInfo,
 } from "tts-client-typescript-client-lib";
 import { UploadFile, VoiceCharacterUploadFile } from "../../const";
 
@@ -18,6 +24,7 @@ export type ServerConfigState = {
     serverConfiguration?: TTSConfiguration;
     serverGpuInfo?: GPUInfo[];
     serverModuleStatus?: ModuleStatus;
+    samples: SampleInfo[];
     serverSlotInfos?: SlotInfoMember[];
     voiceCharacterSlotInfos: VoiceCharacter[]
     // voiceChangerManagerInfo?: VoiceChangerManagerInfo;
@@ -31,6 +38,7 @@ export type ServerConfigStateAndMethod = ServerConfigState & {
     reloadVoiceCharacterSlotInfos: () => Promise<void>;
     initializeServer: () => Promise<void>
     updateServerConfiguration: (conf: TTSConfiguration) => Promise<void>;
+    downloadSample: (slotIndex: number, sampleId: string) => Promise<void>;
     uploadModelFile: (
         slotIndex: number | null,
         tTSType: TTSType,
@@ -61,6 +69,12 @@ export type ServerConfigStateAndMethod = ServerConfigState & {
     updateReferenceVoiceIconFile: (voiceCharacterSlotIndex: number, voiceIndex: number, iconFile: File, onprogress: (progress: number, end: boolean) => void) => Promise<void>
 
     generateVoice: (genearteVoiceParam: GenerateVoiceParam) => Promise<Blob | null>
+    getPhones: (getPhonesParam: GetPhonesParam) => Promise<GetPhonesResponse | null>
+    getJpTextToUserDictRecords: (param: GetJpTextToUserDictRecordsParam) => Promise<OpenJTalkUserDictRecord[] | null>
+    addUserDictRecord: (slotIndex: number, param: OpenJTalkUserDictRecord) => Promise<void | null>
+
+    getServerSlotInfo: (slotIndex: number) => Promise<SlotInfo | null>
+    getVoiceCharacterSlotInfo: (slotIndex: number) => Promise<VoiceCharacter | null>
 };
 
 export type UseServerConfigProps = {
@@ -71,12 +85,14 @@ export type UseServerConfigProps = {
 };
 // サーバ情報取得と更新。音声変換以外のRESTでの操作が集まっている。
 export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateAndMethod => {
-    const restClient = useRef<TTSRestClient>();
+    const restClient = useRef<TTSRestClient | null>(null);
     const [serverConfiguration, setServerConfiguration] = useState<TTSConfiguration>();
     const [serverGpuInfo, setServerGpuInfo] = useState<GPUInfo[]>();
     const [serverModuleStatus, setServerModuleStatus] = useState<ModuleStatus>();
     const [serverSlotInfos, setServerSlotInfos] = useState<SlotInfoMember[]>([]);
     const [voiceCharacterSlotInfos, setVoiceCharacterSlotInfos] = useState<VoiceCharacter[]>([]);
+    const [samples, setSamples] = useState<SampleInfo[]>([]);
+
     // const [voiceChangerManagerInfo, setVoiceChangerManagerInfo] = useState<VoiceChangerManagerInfo>();
 
     useEffect(() => {
@@ -89,6 +105,7 @@ export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateA
         reloadServerConfiguration();
         reloadServerGpuInfo();
         reloadServerModuleStatus();
+        reloadSamples();
         reloadServerSlotInfos();
         reloadVoiceCharacterSlotInfos();
         // reloadVoiceChangerManagerInfos();
@@ -122,6 +139,14 @@ export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateA
         setServerModuleStatus(moduleStatus);
     };
 
+    const reloadSamples = async () => {
+        if (!restClient.current) {
+            return;
+        }
+        const samples = await restClient.current.getSamples();
+        setSamples(samples);
+    };
+
 
     const reloadServerSlotInfos = async () => {
         if (!restClient.current) {
@@ -139,6 +164,22 @@ export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateA
         setVoiceCharacterSlotInfos(voiceCharacterSlotInfos);
     }
 
+    // 参照系（ステートレス）
+    const getServerSlotInfo = async (slotIndex: number) => {
+        if (!restClient.current) {
+            return null;
+        }
+        const slotInfo = await restClient.current.getServerSlotInfo(slotIndex)
+        return slotInfo
+    }
+
+    const getVoiceCharacterSlotInfo = async (slotIndex: number) => {
+        if (!restClient.current) {
+            return null;
+        }
+        const voiceCharacter = await restClient.current.getVoiceCharacterSlotInfo(slotIndex)
+        return voiceCharacter
+    }
 
     // 設定系
     // 共通のエラーハンドリング関数
@@ -168,6 +209,16 @@ export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateA
         }
         await restClient.current.updateServerConfiguration(conf);
         reloadServerConfiguration();
+    };
+
+
+    const downloadSample = async (slotIndex: number, sampleId: string) => {
+        if (!restClient.current) {
+            return;
+        }
+        await restClient.current.downloadSample(slotIndex, sampleId);
+        reloadServerSlotInfos();
+        reloadVoiceCharacterSlotInfos();
     };
 
     //  モデルスロット
@@ -312,6 +363,13 @@ export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateA
         await restClient.current.uploadReferenceVoiceIconFile(voiceCharacterSlotIndex, voiceIndex, iconFile, onprogress);
         reloadVoiceCharacterSlotInfos();
     }
+    const addUserDictRecord = async (slotIndex: number, param: OpenJTalkUserDictRecord) => {
+        if (!restClient.current) {
+            return null;
+        }
+        const records = await restClient.current.addUserDictRecord(slotIndex, param);
+        return records
+    }
 
 
     // オペレーション系
@@ -322,6 +380,20 @@ export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateA
         const blob = await restClient.current.generateVoice(genearteVoiceParam);
         return blob
 
+    }
+    const getPhones = async (getPhonesParam: GetPhonesParam) => {
+        if (!restClient.current) {
+            return null;
+        }
+        const phones = await restClient.current.getPhones(getPhonesParam);
+        return phones
+    }
+    const getJpTextToUserDictRecords = async (param: GetJpTextToUserDictRecordsParam) => {
+        if (!restClient.current) {
+            return null;
+        }
+        const records = await restClient.current.getJpTextToUserDictRecords(param);
+        return records
     }
 
     const initializeServer = async () => {
@@ -338,6 +410,7 @@ export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateA
         serverConfiguration,
         serverGpuInfo,
         serverModuleStatus,
+        samples,
         serverSlotInfos,
         voiceCharacterSlotInfos,
         reloadServerConfiguration,
@@ -346,6 +419,7 @@ export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateA
         reloadServerSlotInfos,
         reloadVoiceCharacterSlotInfos,
         updateServerConfiguration,
+        downloadSample,
         uploadModelFile,
         updateServerSlotInfo,
         deleteServerSlotInfo,
@@ -369,6 +443,12 @@ export const useServerConfig = (props: UseServerConfigProps): ServerConfigStateA
         // stopServerDevice,
         initializeServer,
         generateVoice,
+        getPhones,
+        getJpTextToUserDictRecords,
+        addUserDictRecord,
+
+        getServerSlotInfo,
+        getVoiceCharacterSlotInfo,
     };
     return res;
 };

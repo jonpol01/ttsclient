@@ -72,7 +72,7 @@ const VoiceCharacterFileChooser = (props: VoiceCharacterFileChooserProps) => {
     const [isZipFileSelecting, setIsZipFileSelecting] = useState<boolean>(false);
 
     const zipFile = useMemo(() => {
-        const zipFile = props.uploadFiles.find((x) => x.kind === "zipFile" ) || null;
+        const zipFile = props.uploadFiles.find((x) => x.kind === "zipFile") || null;
         return (
             <div className={fileInputArea}>
                 <div className={fileInputAreaLabel}>zip: </div>
@@ -126,30 +126,30 @@ export const VoiceCharacterSlotManagerFileUploadDialog = (props: VoiceCharacterS
     const { serverConfigState, triggerToast } = useAppRoot();
     const { setDialogName } = useGuiState();
 
-    const [tTSType, setTTSType] = useState<TTSType>("GPT-SoVITS");
+    // const [tTSType, setTTSType] = useState<TTSType>("GPT-SoVITS");
     const [uploadFiles, setUploadFiles] = useState<VoiceCharacterUploadFile[]>([]);
 
     const [uploadProgress, setUploadProgress] = useState<number>(0);
 
-    const voiceChangerTypeSelector = useMemo(() => {
+    // const voiceChangerTypeSelector = useMemo(() => {
 
-        return (
-            <select
-                defaultValue={tTSType}
-                onChange={(event) => {
-                    setTTSType(event.target.value as TTSType);
-                }}
-            >
-                {TTSTypes.map((x) => {
-                    return (
-                        <option key={x} value={x}>
-                            {x}
-                        </option>
-                    );
-                })}
-            </select>
-        );
-    }, [tTSType]);
+    //     return (
+    //         <select
+    //             defaultValue={tTSType}
+    //             onChange={(event) => {
+    //                 setTTSType(event.target.value as TTSType);
+    //             }}
+    //         >
+    //             {TTSTypes.map((x) => {
+    //                 return (
+    //                     <option key={x} value={x}>
+    //                         {x}
+    //                     </option>
+    //                 );
+    //             })}
+    //         </select>
+    //     );
+    // }, [tTSType]);
 
     const setUploadFile = (file: VoiceCharacterUploadFile) => {
         const newUploadFiles = uploadFiles.filter((x) => {
@@ -162,22 +162,25 @@ export const VoiceCharacterSlotManagerFileUploadDialog = (props: VoiceCharacterS
         setUploadFiles([]);
     };
     const uploadClicked = async () => {
-        const nameInput = document.getElementById("voice-character-slot-manager-fileUpload-dialog-name-input-text")! as HTMLInputElement;
-        const name = nameInput.value
-        if(name == ""){
-            triggerToast("error", t("voice_character_slot_manager_fileupload_name_input_error"));
-            return
-        }
-        if (tTSType == "GPT-SoVITS") {
+        // const nameInput = document.getElementById("voice-character-slot-manager-fileUpload-dialog-name-input-text")! as HTMLInputElement;
+        // const name = nameInput.value
+        // if(name == ""){
+        //     triggerToast("error", t("voice_character_slot_manager_fileupload_name_input_error"));
+        //     return
+        // }
+        // if (tTSType == "GPT-SoVITS") {
+        if (true) {
 
             setUploadProgress(0);
             const zipFile = uploadFiles.find((x) => x.kind === "zipFile");
             try {
                 const files: VoiceCharacterUploadFile[] = [];
-                if(zipFile){
-                    files.push(zipFile);
+                if (!zipFile) {
+                    triggerToast("error", t("voice_character_slot_manager_fileupload_zip_input_error"));
+                    return
                 }
-                await serverConfigState.uploadVoiceCharacterFile(props.slotIndex, tTSType, name, files, (progress, end) => {
+                files.push(zipFile);
+                await serverConfigState.uploadVoiceCharacterFile(props.slotIndex, "VoiceCharacter", "", files, (progress, end) => {
                     Logger.getLogger().info("progress", progress, end);
                     setUploadProgress(Math.floor(progress - 1));
                 });
@@ -196,7 +199,8 @@ export const VoiceCharacterSlotManagerFileUploadDialog = (props: VoiceCharacterS
     };
 
     let fileChooserArea = <></>;
-    if (tTSType == "GPT-SoVITS") {
+    // if (tTSType == "GPT-SoVITS") {
+    if (true) {
         fileChooserArea = <VoiceCharacterFileChooser setUploadFile={setUploadFile} uploadFiles={uploadFiles}></VoiceCharacterFileChooser>;
     }
 
@@ -205,16 +209,16 @@ export const VoiceCharacterSlotManagerFileUploadDialog = (props: VoiceCharacterS
             <div className={dialogTitle}>{t("voice_character_slot_manager_fileupload_title")}</div>
             <div className={instructions}>{t("voice_character_slot_manager_fileupload_instruction")}</div>
             <div className={dialogFixedSizeContent}>
-                <div className={selectInputArea}>
+                {/* <div className={selectInputArea}>
                     <div className={selectInputAreaLabel}>TTS Type: </div>
                     <div className={selectInputAreaInput}>{voiceChangerTypeSelector}</div>
-                </div>
-                <div className={textInputArea}>
+                </div> */}
+                {/* <div className={textInputArea}>
                     <div className={textInputAreaLabel}>{t("voice_character_slot_manager_fileupload_name_input_label")}:</div>
                     <div className={textInputAreaInput}>
                         <input id="voice-character-slot-manager-fileUpload-dialog-name-input-text" type="text"></input>
                     </div>
-                </div>
+                </div> */}
                 {fileChooserArea}
                 <div className={uploadStatusArea}>{uploadProgress > 0 ? uploadProgress + "%" : " "}</div>
             </div>

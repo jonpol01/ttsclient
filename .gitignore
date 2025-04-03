@@ -17,3 +17,6 @@ eunjeon-0.4.0-cp312-cp312-win_amd64.zip
 G2PWModel_1.1.zip
 
 poetry.lock
+native_client
+/weight.json
+/GPT_SoVITS

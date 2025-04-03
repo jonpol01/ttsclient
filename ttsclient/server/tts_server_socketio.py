@@ -42,6 +42,10 @@ class SocketIOApp:
                         "filename": f"{get_frontend_path()}/assets/icons/buymeacoffee.png",
                         "content_type": "image/png",
                     },
+                    "/assets/icons/chevrons-down.svg": {
+                        "filename": f"{get_frontend_path()}/assets/icons/chevrons-down.svg",
+                        "content_type": "image/svg+xml",
+                    },
                     "/ort-wasm-simd.wasm": {
                         "filename": f"{get_frontend_path()}/ort-wasm-simd.wasm",
                         "content_type": "application/wasm",

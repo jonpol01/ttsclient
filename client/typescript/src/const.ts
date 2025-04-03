@@ -7,7 +7,46 @@ export const MAX_REFERENCE_VOICE_SLOT_INDEX = 20
 export type TTSConfiguration = {
     current_slot_index: number;
     gpu_device_id_int: number;
+
+    transcribe_audio: boolean;
+    transcriber_model_size: TranscriberModelSize;
+    transcriber_device: TranscriberDevice;
+    transcriber_compute_type: TranscriberComputeType;
 };
+
+export const TranscriberModelSize = {
+    "tiny": "tiny",
+    "base": "base",
+    "small": "small",
+    "medium": "medium",
+    "large-v1": "large-v1",
+    "large-v2": "large-v2",
+    "large-v3": "large-v3",
+    "large": "large",
+    "distil-large-v2": "distil-large-v2",
+    "distil-large-v3": "distil-large-v3",
+    "large-v3-turbo": "large-v3-turbo",
+    "turbo": "turbo",
+} as const;
+export type TranscriberModelSize = (typeof TranscriberModelSize)[keyof typeof TranscriberModelSize];
+
+export const TranscriberDevice = {
+    "cuda": "cuda",
+    "cpu": "cpu",
+} as const;
+export type TranscriberDevice = (typeof TranscriberDevice)[keyof typeof TranscriberDevice];
+
+export const TranscriberComputeType = {
+    "int8": "int8",
+    "int8_float32": "int8_float32",
+    "int8_float16": "int8_float16",
+    "int8_bfloat16": "int8_bfloat16",
+    "int16": "int16",
+    "float16": "float16",
+    "bfloat16": "bfloat16",
+    "float32": "float32",
+} as const;
+export type TranscriberComputeType = (typeof TranscriberComputeType)[keyof typeof TranscriberComputeType];
 
 export const AudioDeviceType = {
     audioinput: "audioinput",
@@ -42,8 +81,42 @@ export type ModuleStatus = {
     valid: boolean;
 };
 
-export const TTSTypes = ["GPT-SoVITS"] as const;
+
+export type SampleInfo = {
+    id: string;
+    tts_type: TTSType;
+    lang: string;
+    tag: string[];
+    name: string;
+    terms_of_use_url: string;
+    icon_url: string;
+    credit: string;
+    description: string;
+};
+
+export type GPTSoVITSSampleInfo = SampleInfo & {
+    semantic_predictor_model_url: string
+    synthesizer_model_url: string
+    version: string
+    model_version: string
+    lora_v3: boolean
+};
+
+export type VoiceCharacterSampleInfo = SampleInfo & {
+    zip_url: string
+}
+
+export const TTSTypes = [
+    "GPT-SoVITS",
+    "RESERVED_FOR_SAMPLE",
+    "BROKEN",
+    "VoiceCharacter",
+] as const;
 export type TTSType = (typeof TTSTypes)[number];
+export const GPTSoVITSVersions = ["v1", "v2"] as const;
+export type GPTSoVITSVersion = (typeof GPTSoVITSVersions)[number];
+export const GPTSoVITSModelVersions = ["v1", "v2", "v3"] as const;
+export type GPTSoVITSModelVersion = (typeof GPTSoVITSModelVersions)[number];
 
 export type SlotInfoMember = SlotInfo | GPTSoVITSSlotInfo;
 export type SlotInfo = {
@@ -57,9 +130,12 @@ export type SlotInfo = {
 };
 export type GPTSoVITSSlotInfo = SlotInfo & {
     tts_type: "GPT-SoVITS";
+    version: GPTSoVITSVersion;
+    model_version: GPTSoVITSModelVersion;
+    if_lora_v3: boolean;
     enable_faster: boolean
-    semantic_predictor_model: string;
-    synthesizer_path: string;
+    semantic_predictor_model_path: string;
+    synthesizer_model_path: string;
     top_k: number;
     top_p: number;
     temperature: number;
@@ -85,6 +161,10 @@ export type GPTSoVITSSlotInfo = SlotInfo & {
     repetition_penalty: number   // only for faster
 
 };
+export type ReservedForSampleSlotInfo = SlotInfo & {
+    progress: number;
+};
+
 
 export type ModelImportParamMember = ModelImportParam | GPTSoVITSModelImportParam;
 
@@ -97,8 +177,8 @@ export type ModelImportParam = {
 
 export type GPTSoVITSModelImportParam = ModelImportParam & {
     tts_type: "GPT-SoVITS";
-    semantic_predictor_model: string | null;
-    synthesizer_path?: string | null;
+    semantic_predictor_model_path: string | null;
+    synthesizer_model_path?: string | null;
 };
 
 export type MoveModelParam = {
@@ -117,8 +197,8 @@ export type DownloadParam = {
 };
 
 
-export const BasicVoiceType = ["anger", "disgust", "fear", "happy", "sad", "surprise", "other"] as const;
-export type BasicVoiceType = (typeof BasicVoiceType)[number];
+// export const BasicVoiceType = ["anger", "disgust", "fear", "happy", "sad", "surprise", "other"] as const;
+// export type BasicVoiceType = (typeof BasicVoiceType)[number];
 
 export const LanguageType = [
     "all_zh",  // 全部按中文识别
@@ -151,13 +231,19 @@ export type BackendMode = (typeof BackendMode)[number]
 
 export type ReferenceVoice = {
     slot_index: number
-    voice_type: BasicVoiceType | string
+    // voice_type: BasicVoiceType | string
+    voice_type: string
     wav_file: string
     text: string
     language: LanguageType
     icon_file: string | null
     speed: number
 }
+export type EmotionType = {
+    name: string
+    color: string
+}
+
 
 export type VoiceCharacter = {
     slot_index: number;
@@ -168,6 +254,8 @@ export type VoiceCharacter = {
     terms_of_use_url: string;
     icon_file: string | null;
     reference_voices: ReferenceVoice[];
+    emotion_types: EmotionType[]
+    progress: number
 };
 
 export type VoiceCharacterImportParam = {
@@ -180,7 +268,8 @@ export type VoiceCharacterImportParam = {
 }
 
 export type ReferenceVoiceImportParam = {
-    voice_type: BasicVoiceType | string
+    // voice_type: BasicVoiceType | string
+    voice_type: string
     wav_file: string
     voice_character_slot_index: number
     slot_index: number | null
@@ -199,7 +288,48 @@ export type GenerateVoiceParam = {
     language: LanguageType
     speed: number
     cutMethod: CutMethod
+    // v3追加オプション
+    sample_steps: number
+    phone_symbols: string[] | null
 }
+
+export type GetPhonesParam = {
+    text: string
+    language: LanguageType
+    voice_character_slot_index: number
+    user_dict_records: OpenJTalkUserDictRecord[] | null
+
+}
+
+export type GetPhonesResponse = {
+    phones: number[]
+    phone_symbols: string[]
+}
+
+export type GetJpTextToUserDictRecordsParam = {
+    text: string
+    voice_character_slot_index: number
+}
+
+export type OpenJTalkUserDictRecord = {
+    string: string
+    pos: string
+    pos_group1: string
+    pos_group2: string
+    pos_group3: string
+    ctype: string
+    cform: string
+    orig: string
+    read: string
+    pron: string
+    acc: number
+    mora_size: number
+    chain_rule: string
+    chain_flag: number
+}
+
+
+
 
 ////////////////////////////////////////////
 // VoiceChangerClient Settings

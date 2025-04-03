@@ -5,8 +5,12 @@ from pathlib import Path
 import shutil
 import uuid
 import zipfile
-from ttsclient.const import LOGGER_NAME, MAX_REFERENCE_VOICE_SLOT_INDEX, MAX_VOICE_CHARACTER_SLOT_INDEX, VOICE_CHARACTER_SLOT_PARAM_FILE, VoiceCharacterDir
-from ttsclient.tts.data_types.slot_manager_data_types import MoveModelParam, MoveReferenceVoiceParam, ReferenceVoice, ReferenceVoiceImportParam, SetIconParam, VoiceCharacter, VoiceCharacterImportParam
+
+from faster_whisper import WhisperModel
+from ttsclient.const import LOGGER_NAME, MAX_REFERENCE_VOICE_SLOT_INDEX, MAX_VOICE_CHARACTER_SLOT_INDEX, OPENJTALK_USER_DICT_CSV_FILE, VOICE_CHARACTER_SLOT_PARAM_FILE, TranscriberComputeType, TranscriberDevice, TranscriberModelSize, VoiceCharacterDir
+from ttsclient.tts.configuration_manager.configuration_manager import ConfigurationManager
+from ttsclient.tts.data_types.slot_manager_data_types import MoveModelParam, MoveReferenceVoiceParam, ReferenceVoice, ReferenceVoiceImportParam, ReservedForSampleModelImportParam, SetIconParam, VoiceCharacter, VoiceCharacterImportParam
+from ttsclient.tts.data_types.tts_manager_data_types import OpenJTalkUserDictRecord
 from ttsclient.tts.voice_character_slot_manager.importer.importer import import_voice_character
 
 
@@ -23,8 +27,11 @@ def load_slot_info(model_dir: Path, slot_index: int) -> VoiceCharacter:
     try:
         tmp_slot_info = VoiceCharacter.model_validate_json(open(json_file, encoding="utf-8").read())
         logging.getLogger(LOGGER_NAME).debug(tmp_slot_info)
-        if tmp_slot_info.tts_type == "GPT-SoVITS":
-            slot_info = VoiceCharacter.model_validate_json(open(json_file, encoding="utf-8").read())
+        # if tmp_slot_info.tts_type == "RESERVED_FOR_SAMPLE":
+        #     slot_info: SlotInfoMember = ReservedForSampleSlotInfo.model_validate_json(open(json_file, encoding="utf-8").read())
+        # elif tmp_slot_info.tts_type == "GPT-SoVITS":
+
+        slot_info = VoiceCharacter.model_validate_json(open(json_file, encoding="utf-8").read())
 
         return slot_info
     except Exception as e:
@@ -58,6 +65,10 @@ class VoiceCharacterSlotManager:
 
     def __init__(self):
         self.reload()
+        self.transcriber: WhisperModel | None = None
+        self.current_transcriber_model_size: TranscriberModelSize | None = None
+        self.current_transcriber_device: TranscriberDevice | None = None
+        self.current_transcriber_compute_type: TranscriberComputeType | None = None
 
     def reload(self, use_log=True) -> list[VoiceCharacter]:
         logging.getLogger(LOGGER_NAME).debug("Reloading Slot info")
@@ -91,10 +102,45 @@ class VoiceCharacterSlotManager:
         import_voice_character(VoiceCharacterDir, voice_character_import_param, remove_src)
         self.reload()
 
+    def reserve_slot_for_sample(self, slot_index: int, progress: float = 0.0):
+        """
+        サンプル用にスロットを確保する。
+        サンプルのインポートは次の流れを想定している。
+        (1)リザーブ -> (2)ダウンロード -> (3)解放 -> (4)インポートの流れで処理を行う
+        厳密には(3)から(4)にかけてをアトミックにする必要があるが、厳密にはやらない。
+        隙間に入り込まれたら処理が壊れるが、その場合はスロットをデリートすることで対応してもらう。
+
+        ※別の観点で、同じファイル名のサンプルが同時にダウンロードされると、uploadフォルダ内で上書きされてしまうが、それもまずは見てみないふりをする。
+        """
+        assert self.get_slot_info(slot_index).tts_type is None, f"slot_index:{slot_index} is already exists."
+        import_param = ReservedForSampleModelImportParam(
+            voice_changer_type="RESERVED_FOR_SAMPLE",
+            name="RESERVED_FOR_SAMPLE",
+            slot_index=slot_index,
+            progress=progress,
+        )
+        import_voice_character(VoiceCharacterDir, import_param)
+        self.reload()
+
+    def update_slot_for_sample(self, slot_index: int, progress: float):
+        slot_info = self.get_slot_info(slot_index)
+        assert slot_info.tts_type == "RESERVED_FOR_SAMPLE", f"slot_index:{slot_index} is not reserved for sample."
+        slot_info.progress = progress
+
+    def release_slot_from_reseved_for_sample(self, slot_index: int):
+        """
+        サンプル用に確保していたスロットを解放する。
+        reserve_new_slot_as_sampleを参照。
+        """
+        self.delete_slot(slot_index)
+
     def delete_slot(self, slot_index: int):
         slot_dir = VoiceCharacterDir / str(slot_index)
         if os.path.exists(slot_dir):
-            shutil.rmtree(slot_dir)
+            try:
+                shutil.rmtree(slot_dir)
+            except Exception as e:
+                logging.getLogger(LOGGER_NAME).error(f"Error in deleting slot: {e}")
         self.reload(use_log=False)
 
     def update_slot_info(self, slot_info: VoiceCharacter):
@@ -187,6 +233,7 @@ class VoiceCharacterSlotManager:
         return next_index
 
     def add_voice_audio(self, index: int, import_params: ReferenceVoiceImportParam, remove_src: bool = False):
+        config = ConfigurationManager.get_instance().get_tts_configuration()
         try:
             voice_character = self.get_slot_info(index)
             assert voice_character.tts_type is not None, f"voice_character_slot_index:{index} is not exists."
@@ -198,6 +245,54 @@ class VoiceCharacterSlotManager:
             wav_name = uuid.uuid4()
             audio_dst_path = VoiceCharacterDir / f"{index}" / f"{wav_name}.wav"
             shutil.move(import_params.wav_file, audio_dst_path)
+
+            # パディング
+            import librosa
+            import soundfile as sf
+
+            # audio_dst_pathのファイルを読み込み
+            y, sr = librosa.load(audio_dst_path, sr=None)
+            # 3秒未満の場合、3秒になるようにパディング
+            if len(y) < sr * 3:
+                y = librosa.util.fix_length(y, size=sr * 3)
+                sf.write(audio_dst_path, y, sr)
+            # 10秒以上の場合、10秒になるようにカット
+            elif len(y) > sr * 10:
+                y = y[: sr * 10]
+                sf.write(audio_dst_path, y, sr)
+
+            # 音声書き起こし
+            # モデルのロード
+            try:
+                if config.transcribe_audio is True:
+                    if self.transcriber is None or self.current_transcriber_model_size != config.transcriber_model_size or self.current_transcriber_device != config.transcriber_device or self.current_transcriber_compute_type != config.transcriber_compute_type:
+                        print(f"Initialize Transcriber.... {config.transcriber_model_size}, {config.transcriber_device}, {config.transcriber_compute_type}")
+                        os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+                        self.transcriber = WhisperModel(config.transcriber_model_size, device=config.transcriber_device, compute_type=config.transcriber_compute_type)
+                        self.current_transcriber_model_size = config.transcriber_model_size
+                        self.current_transcriber_device = config.transcriber_device
+                        self.current_transcriber_compute_type = config.transcriber_compute_type
+                        print("Initialize Transcriber.... done.")
+                else:
+                    self.transcriber = None
+            except Exception as e:
+                print(f"Error in initializing Transcriber: {e}")
+                self.transcriber = None
+
+            # 書き起こし
+            text = ""
+            if self.transcriber is not None:
+                segments, info = self.transcriber.transcribe(
+                    audio_dst_path,
+                    beam_size=5,
+                    vad_filter=True,
+                    without_timestamps=True,
+                )
+                print("Detected language '%s' with probability %f" % (info.language, info.language_probability))
+                for segment in segments:
+                    print("[%.2fs -> %.2fs] %s" % (segment.start, segment.end, segment.text))
+                    text += segment.text
+
             if import_params.icon_file is not None:
                 logging.getLogger(LOGGER_NAME).info(f"icon_file: {import_params.icon_file}")
                 icon_name = uuid.uuid4()
@@ -211,7 +306,7 @@ class VoiceCharacterSlotManager:
                 voice_type=import_params.voice_type,
                 slot_index=import_params.slot_index,
                 wav_file=Path(audio_dst_path.name),
-                text=import_params.text if import_params.text is not None else "",
+                text=import_params.text if import_params.text is not None else text,
                 language="all_ja",
                 icon_file=import_params.icon_file if import_params.icon_file is not None else None,
             )
@@ -294,3 +389,31 @@ class VoiceCharacterSlotManager:
         finally:
             if param.icon_file.exists():
                 param.icon_file.unlink()
+
+    def add_user_dict_record(self, index: int, param: OpenJTalkUserDictRecord):
+        slot_info = self.get_slot_info(index)
+        assert slot_info.tts_type is not None, f"slot_index:{index} is not exists."
+
+        user_dict_file = VoiceCharacterDir / f"{index}" / OPENJTALK_USER_DICT_CSV_FILE
+
+        # Create new entry
+        entry = f"{param.string},*,*,-32767,{param.pos},{param.pos_group1},{param.pos_group2},{param.pos_group3},{param.ctype},{param.cform},{param.orig},{param.read},{param.pron},{param.acc}/{param.mora_size},{param.chain_rule}\n"
+
+        # Read existing entries
+        existing_entries = []
+        if user_dict_file.exists():
+            with open(user_dict_file, "r", encoding="utf-8") as f:
+                existing_entries = f.readlines()
+
+        # Remove entries with matching first column
+        updated_entries = [e for e in existing_entries if e.split(",")[0] != param.string]
+
+        # Add new entry
+        updated_entries.append(entry)
+
+        # Write back all entries
+        with open(user_dict_file, "w", encoding="utf-8") as f:
+            f.writelines(updated_entries)
+
+        logging.getLogger(LOGGER_NAME).debug(f"add_user_dict_record: {entry}")
+        self.reload(use_log=False)
