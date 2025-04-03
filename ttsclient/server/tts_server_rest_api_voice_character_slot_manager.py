@@ -1,6 +1,7 @@
 import logging
 import traceback
 from fastapi import APIRouter, HTTPException, Response
+from pydantic import BaseModel
 
 # from fastapi.responses import StreamingResponse
 
@@ -47,6 +48,9 @@ class RestAPIVoiceCharacterSlotManager:
         self.router.add_api_route("/api_voice-character-slot-manager_slots_operation_move_model", self.post_move_model, methods=["POST"])
         self.router.add_api_route("/api_voice-character-slot-manager_slots_{index}_operation_set_icon_file", self.post_set_icon_file, methods=["POST"])
         self.router.add_api_route("/api_voice-character-slot-manager_slots_{index}_voices_operation_add_user_dict_record", self.post_add_user_dict_record, methods=["POST"])
+
+        # YMM4 向けhack
+        self.router.add_api_route("/api/models_info", self.get_voice_character_ymm4, methods=["GET"])
 
     def get_slots(self, reload: bool = False):
         slot_manager = VoiceCharacterSlotManager.get_instance()
@@ -132,3 +136,19 @@ class RestAPIVoiceCharacterSlotManager:
     def post_add_user_dict_record(self, index: int, param: OpenJTalkUserDictRecord):
         slot_manager = VoiceCharacterSlotManager.get_instance()
         slot_manager.add_user_dict_record(index, param)
+
+    def get_voice_character_ymm4(self):
+        class VoiceCharacterYMM4(BaseModel):
+            name: str
+            files: list[str]
+            styles: list[str]
+            speakers: list[str]
+
+        slots = self.get_slots()
+        voice_characters = [VoiceCharacterYMM4(name=f"{chara.slot_index:02d}_{chara.name}", files=[f"dummy_{chara.name}"], styles=[f"{voice.slot_index}_{voice.voice_type}" for voice in chara.reference_voices], speakers=[f"{chara.slot_index:02d}_{chara.name}"]) for chara in slots if chara.tts_type is not None]
+
+        # voice_characters: list[VoiceCharacterYMM4] = [
+        #     VoiceCharacterYMM4(name="ymm4aaa", files=["ymm4"], styles=["ymm4", "df"], speakers=["ymm4", "as"]),
+        #     VoiceCharacterYMM4(name="ymm4aaa11", files=["ymm4"], styles=["ymm411", "df11"], speakers=["ymm411", "as11"]),
+        # ]
+        return voice_characters
