@@ -54,18 +54,25 @@ https://youtu.be/Fy7qifNB5T0
 - [VCClient Mutator Vocis in Tempore Reali](https://github.com/w-okada/voice-changer)
 
 ## Download
-Rogo te ut download facias ex [repositorio Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main).
+
+[チュートリアル 日本語](https://youtu.be/deOsmixKfbw) /
+[Tutorial English](https://youtu.be/BhSIvoxSuxQ) /
+[튜토리얼 한국어](https://youtu.be/FZINjbzdUgg)/
+[教程 中文(zh)](https://youtu.be/IkOMV6rViog)/
+[教程 中文(yue)](https://youtu.be/4Ms_9SBIbKk)/
+
+Ex [Hugging Face repository](https://huggingface.co/wok000/ttsclient000/tree/main) quaeso download.
 
 - editio win_std: Editio Windows quae in CPU operatur. Tardior quam editio CUDA, sed in CPU recentibus cum bonis specificationibus operatur.
 - editio win_cuda: Editio Windows quae in GPU NVIDIA operatur. Celerius operatur cum acceleratione hardware GPU.
 - editio mac: Editio pro Mac (Apple silicon (M1, M2, M3, etc)).
 
 ## Usus
-- Post extractionem file zip, exequere `start_http.bat`. Accede ad URL in navigatore tuo visum.
-- Usando `start_https.bat` potes accedere ex locis remotis.
-- (Proficientibus) Usando `start_http_with_ngrok.bat` potes accedere per tunnel ngrok.
-
-Nota: Pro editione mac, substitue .bat cum .command.
+- Post extractionem file zip, `start_http.bat` exequere. Ad URL in navigatro tuo monstratum accede.
+- Usando `start_https.bat` a locis remotis accedere potes.
+- (Pro usuariis peritis) Usando `start_http_with_ngrok.bat` per tunnel ngrok accedere potes.
+- Si Coreanum in Windows uti vis, primum download_korean_module.bat exequere.
+Nota: Pro editione mac, .bat cum .command muta.
 
 ### GPT-SoVITS
 

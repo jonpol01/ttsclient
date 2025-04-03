@@ -54,6 +54,13 @@ https://youtu.be/Fy7qifNB5T0
 - [실시간 음성 변조 VCClient](https://github.com/w-okada/voice-changer)
 
 ## 다운로드
+
+[チュートリアル 日本語](https://youtu.be/deOsmixKfbw) /
+[Tutorial English](https://youtu.be/BhSIvoxSuxQ) /
+[튜토리얼 한국어](https://youtu.be/FZINjbzdUgg)/
+[教程 中文(zh)](https://youtu.be/IkOMV6rViog)/
+[教程 中文(yue)](https://youtu.be/4Ms_9SBIbKk)/
+
 [Hugging Face 저장소](https://huggingface.co/wok000/ttsclient000/tree/main)에서 다운로드하세요.
 
 - win_std 에디션: CPU에서 실행되는 Windows용 에디션입니다. CUDA 버전에 비해 느리지만, 최근의 적절한 사양의 CPU에서는 작동합니다.
@@ -64,7 +71,7 @@ https://youtu.be/Fy7qifNB5T0
 - zip 파일을 압축 해제한 후, `start_http.bat`를 실행하세요. 표시된 URL을 브라우저에서 접속하세요.
 - `start_https.bat`를 사용하면 원격에서도 접속할 수 있습니다.
 - (고급) `start_http_with_ngrok.bat`를 사용하면 ngrok를 통한 터널링으로 접속할 수 있습니다.
-
+- Windows에서 한국어를 사용하려면 먼저 download_korean_module.bat를 실행하세요.
 참고: mac 에디션은 .bat를 .command로 바꿔서 사용하세요.
 
 ### GPT-SoVITS

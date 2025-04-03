@@ -54,6 +54,13 @@ https://youtu.be/Fy7qifNB5T0
 - [مغير الصوت في الوقت الفعلي VCClient](https://github.com/w-okada/voice-changer)
 
 ## التحميل
+
+[チュートリアル 日本語](https://youtu.be/deOsmixKfbw) /
+[Tutorial English](https://youtu.be/BhSIvoxSuxQ) /
+[튜토리얼 한국어](https://youtu.be/FZINjbzdUgg)/
+[教程 中文(zh)](https://youtu.be/IkOMV6rViog)/
+[教程 中文(yue)](https://youtu.be/4Ms_9SBIbKk)/
+
 يرجى التحميل من [مستودع Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main).
 
 - إصدار win_std: إصدار Windows الذي يعمل على وحدة المعالجة المركزية. أبطأ مقارنة بإصدار CUDA، ولكنه يعمل على وحدات المعالجة المركزية الحديثة ذات المواصفات الجيدة.
@@ -64,7 +71,7 @@ https://youtu.be/Fy7qifNB5T0
 - بعد فك ضغط ملف zip، قم بتشغيل `start_http.bat`. قم بالوصول إلى عنوان URL المعروض في متصفحك.
 - باستخدام `start_https.bat` يمكنك الوصول من المواقع البعيدة.
 - (متقدم) باستخدام `start_http_with_ngrok.bat` يمكنك الوصول من خلال نفق ngrok.
-
+- إذا كنت تريد استخدام اللغة الكورية في Windows، قم أولاً بتشغيل download_korean_module.bat.
 ملاحظة: لإصدار mac، استبدل .bat بـ .command.
 
 ### GPT-SoVITS

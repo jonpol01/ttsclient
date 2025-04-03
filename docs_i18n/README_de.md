@@ -54,6 +54,13 @@ https://youtu.be/Fy7qifNB5T0
 - [Echtzeit-Stimmwandler VCClient](https://github.com/w-okada/voice-changer)
 
 ## Download
+
+[チュートリアル 日本語](https://youtu.be/deOsmixKfbw) /
+[Tutorial English](https://youtu.be/BhSIvoxSuxQ) /
+[튜토리얼 한국어](https://youtu.be/FZINjbzdUgg)/
+[教程 中文(zh)](https://youtu.be/IkOMV6rViog)/
+[教程 中文(yue)](https://youtu.be/4Ms_9SBIbKk)/
+
 Bitte laden Sie von der [Hugging Face Repository](https://huggingface.co/wok000/ttsclient000/tree/main) herunter.
 
 - win_std Edition: Windows Edition, die auf CPU läuft. Langsamer als die CUDA-Version, aber funktioniert auf aktuellen CPUs mit anständiger Spezifikation.
@@ -64,7 +71,7 @@ Bitte laden Sie von der [Hugging Face Repository](https://huggingface.co/wok000/
 - Nach dem Entpacken der zip-Datei, führen Sie `start_http.bat` aus. Greifen Sie auf die angezeigte URL in Ihrem Browser zu.
 - Mit `start_https.bat` können Sie von entfernten Standorten aus zugreifen.
 - (Fortgeschritten) Mit `start_http_with_ngrok.bat` können Sie über ngrok-Tunneling zugreifen.
-
+- Wenn Sie Koreanisch unter Windows verwenden möchten, führen Sie zuerst download_korean_module.bat aus.
 Hinweis: Für mac Edition ersetzen Sie .bat durch .command.
 
 ### GPT-SoVITS

@@ -54,18 +54,25 @@ https://youtu.be/Fy7qifNB5T0
 - [Real-time Voice Changer VCClient](https://github.com/w-okada/voice-changer)
 
 ## Download
+
+[チュートリアル 日本語](https://youtu.be/deOsmixKfbw) /
+[Tutorial English](https://youtu.be/BhSIvoxSuxQ) /
+[튜토리얼 한국어](https://youtu.be/FZINjbzdUgg)/
+[教程 中文(zh)](https://youtu.be/IkOMV6rViog)/
+[教程 中文(yue)](https://youtu.be/4Ms_9SBIbKk)/
+
 Please download from the [Hugging Face repository](https://huggingface.co/wok000/ttsclient000/tree/main).
 
-- win_std edition: Windows edition that runs on CPU. Slower compared to the CUDA version, but works on recent decent-spec CPUs.
+- win_std edition: Windows edition that runs on CPU. Slower compared to the CUDA edition, but works on recent CPUs with good specifications.
 - win_cuda edition: Windows edition that runs on NVIDIA GPU. Runs faster with GPU hardware acceleration.
 - mac edition: Edition for Mac (Apple silicon (M1, M2, M3, etc)).
 
 ## Usage
-- After extracting the zip file, run `start_http.bat`. Access the displayed URL in your browser.
-- Using `start_https.bat` allows access from remote locations.
-- (Advanced) Using `start_http_with_ngrok.bat` enables access through ngrok tunneling.
-
-note: For mac edition, replace .bat with .command.
+- After extracting the zip file, run `start_http.bat`. Access the URL displayed in your browser.
+- Using `start_https.bat` you can access from remote locations.
+- (Advanced) Using `start_http_with_ngrok.bat` you can access through ngrok tunneling.
+- If you want to use Korean in Windows, first run download_korean_module.bat.
+Note: For mac edition, replace .bat with .command.
 
 ### GPT-SoVITS
 

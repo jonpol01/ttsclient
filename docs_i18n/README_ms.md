@@ -54,17 +54,24 @@ https://youtu.be/Fy7qifNB5T0
 - [VCClient Penukar Suara Masa Nyata](https://github.com/w-okada/voice-changer)
 
 ## Muat Turun
+
+[チュートリアル 日本語](https://youtu.be/deOsmixKfbw) /
+[Tutorial English](https://youtu.be/BhSIvoxSuxQ) /
+[튜토리얼 한국어](https://youtu.be/FZINjbzdUgg)/
+[教程 中文(zh)](https://youtu.be/IkOMV6rViog)/
+[教程 中文(yue)](https://youtu.be/4Ms_9SBIbKk)/
+
 Sila muat turun dari [repositori Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main).
 
-- edisi win_std: Edisi Windows yang berfungsi pada CPU. Lebih perlahan daripada edisi CUDA, tetapi berfungsi pada CPU terkini dengan spesifikasi yang baik.
-- edisi win_cuda: Edisi Windows yang berfungsi pada GPU NVIDIA. Berfungsi lebih pantas dengan pecutan perkakasan GPU.
+- edisi win_std: Edisi Windows yang berjalan pada CPU. Lebih perlahan berbanding edisi CUDA, tetapi berfungsi pada CPU terkini dengan spesifikasi yang baik.
+- edisi win_cuda: Edisi Windows yang berjalan pada GPU NVIDIA. Berjalan lebih pantas dengan pecutan perkakasan GPU.
 - edisi mac: Edisi untuk Mac (Apple silicon (M1, M2, M3, etc)).
 
 ## Penggunaan
 - Selepas mengekstrak fail zip, jalankan `start_http.bat`. Akses URL yang dipaparkan dalam pelayar anda.
 - Menggunakan `start_https.bat` anda boleh mengakses dari lokasi jauh.
 - (Lanjutan) Menggunakan `start_http_with_ngrok.bat` anda boleh mengakses melalui terowong ngrok.
-
+- Jika anda ingin menggunakan bahasa Korea di Windows, jalankan download_korean_module.bat terlebih dahulu.
 Nota: Untuk edisi mac, gantikan .bat dengan .command.
 
 ### GPT-SoVITS

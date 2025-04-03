@@ -54,6 +54,13 @@ https://youtu.be/Fy7qifNB5T0
 - [实时语音变声器 VCClient](https://github.com/w-okada/voice-changer)
 
 ## 下载
+
+[チュートリアル 日本語](https://youtu.be/deOsmixKfbw) /
+[Tutorial English](https://youtu.be/BhSIvoxSuxQ) /
+[튜토리얼 한국어](https://youtu.be/FZINjbzdUgg)/
+[教程 中文(zh)](https://youtu.be/IkOMV6rViog)/
+[教程 中文(yue)](https://youtu.be/4Ms_9SBIbKk)/
+
 请从[Hugging Face仓库](https://huggingface.co/wok000/ttsclient000/tree/main)下载。
 
 - win_std版本：Windows CPU版本。与CUDA版本相比速度较慢，但在最近的普通配置CPU上可以运行。
@@ -64,7 +71,7 @@ https://youtu.be/Fy7qifNB5T0
 - 解压zip文件后，运行`start_http.bat`。在浏览器中访问显示的URL。
 - 使用`start_https.bat`可以从远程位置访问。
 - （高级）使用`start_http_with_ngrok.bat`可以通过ngrok隧道访问。
-
+- 在Windows上使用韩语时，请先运行download_korean_module.bat。
 注意：mac版本请将.bat替换为.command。
 
 ### GPT-SoVITS

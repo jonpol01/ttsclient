@@ -53,18 +53,25 @@ https://youtu.be/Fy7qifNB5T0
 ## Связанное программное обеспечение
 - [VCClient Преобразователь голоса в реальном времени](https://github.com/w-okada/voice-changer)
 
-## Загрузка
-Пожалуйста, загрузите с [репозитория Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main).
+## Скачать
 
-- издание win_std: Издание Windows, работающее на CPU. Медленнее, чем издание CUDA, но работает на современных CPU с хорошими характеристиками.
-- издание win_cuda: Издание Windows, работающее на GPU NVIDIA. Работает быстрее с аппаратным ускорением GPU.
+[チュートリアル 日本語](https://youtu.be/deOsmixKfbw) /
+[Tutorial English](https://youtu.be/BhSIvoxSuxQ) /
+[튜토리얼 한국어](https://youtu.be/FZINjbzdUgg)/
+[教程 中文(zh)](https://youtu.be/IkOMV6rViog)/
+[教程 中文(yue)](https://youtu.be/4Ms_9SBIbKk)/
+
+Пожалуйста, скачайте из [репозитория Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main).
+
+- издание win_std: Издание для Windows, работающее на CPU. Медленнее по сравнению с изданием CUDA, но работает на современных CPU с хорошими характеристиками.
+- издание win_cuda: Издание для Windows, работающее на GPU NVIDIA. Работает быстрее благодаря аппаратному ускорению GPU.
 - издание mac: Издание для Mac (Apple silicon (M1, M2, M3, etc)).
 
 ## Использование
 - После распаковки zip-файла запустите `start_http.bat`. Откройте URL, отображаемый в вашем браузере.
-- Используя `start_https.bat`, вы можете получить доступ из удаленных мест.
-- (Для продвинутых) Используя `start_http_with_ngrok.bat`, вы можете получить доступ через туннель ngrok.
-
+- Используя `start_https.bat`, вы можете получить доступ с удаленных мест.
+- (Для продвинутых пользователей) Используя `start_http_with_ngrok.bat`, вы можете получить доступ через туннелирование ngrok.
+- Если вы хотите использовать корейский язык в Windows, сначала запустите download_korean_module.bat.
 Примечание: Для издания mac замените .bat на .command.
 
 ### GPT-SoVITS

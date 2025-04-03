@@ -45,6 +45,12 @@ https://github.com/user-attachments/assets/cdf33212-3077-4ff0-9fa2-8635ee5417f4
 
 ## Télécharger
 
+[チュートリアル 日本語](https://youtu.be/deOsmixKfbw) /
+[Tutorial English](https://youtu.be/BhSIvoxSuxQ) /
+[튜ートリアル 한국어](https://youtu.be/FZINjbzdUgg)/
+[教程 中文(zh)](https://youtu.be/IkOMV6rViog)/
+[教程 中文(yue)](https://youtu.be/4Ms_9SBIbKk)/
+
 [Depuis le dépôt Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main)veuillez télécharger.
 
 * Édition win_std : C'est une édition fonctionnant sur un CPU pour Windows. Elle est plus lente que la version cuda, mais fonctionne sur un CPU de spécifications récentes.
@@ -56,6 +62,7 @@ https://github.com/user-attachments/assets/cdf33212-3077-4ff0-9fa2-8635ee5417f4
 * Après avoir extrait le fichier zip,`start_http.bat`veuillez exécuter. Accédez à l'URL affichée dans votre navigateur.
 * `start_https.bat`En utilisant, vous pouvez y accéder même à distance.
 * (Pour utilisateurs avancés)`start_http_with_ngrok.bat`En utilisant, vous pouvez accéder en utilisant le tunneling avec ngrok.
+* Si vous souhaitez utiliser le coréen sous Windows, exécutez d'abord download_korean_module.bat.
 
 note : pour l'édition mac, remplacez .bat par .command.
 

@@ -54,6 +54,13 @@ https://youtu.be/Fy7qifNB5T0
 - [Πρόγραμμα Αλλαγής Φωνής σε Πραγματικό Χρόνο VCClient](https://github.com/w-okada/voice-changer)
 
 ## Λήψη
+
+[チュートリアル 日本語](https://youtu.be/deOsmixKfbw) /
+[Tutorial English](https://youtu.be/BhSIvoxSuxQ) /
+[튜토리얼 한국어](https://youtu.be/FZINjbzdUgg)/
+[教程 中文(zh)](https://youtu.be/IkOMV6rViog)/
+[教程 中文(yue)](https://youtu.be/4Ms_9SBIbKk)/
+
 Παρακαλώ κατεβάστε από το [αποθετήριο Hugging Face](https://huggingface.co/wok000/ttsclient000/tree/main).
 
 - έκδοση win_std: Έκδοση Windows που εκτελείται σε CPU. Πιο αργή σε σύγκριση με την έκδοση CUDA, αλλά λειτουργεί σε πρόσφατες CPU με καλές προδιαγραφές.
@@ -64,7 +71,7 @@ https://youtu.be/Fy7qifNB5T0
 - Μετά την αποσυμπίεση του αρχείου zip, εκτελέστε το `start_http.bat`. Πρόσβαση στη διεύθυνση URL που εμφανίζεται στον browser σας.
 - Χρησιμοποιώντας το `start_https.bat` μπορείτε να έχετε πρόσβαση από απομακρυσμένες τοποθεσίες.
 - (Προχωρημένο) Χρησιμοποιώντας το `start_http_with_ngrok.bat` μπορείτε να έχετε πρόσβαση μέσω σήραγγας ngrok.
-
+- Αν θέλετε να χρησιμοποιήσετε Κορεατικά στα Windows, εκτελέστε πρώτα το download_korean_module.bat.
 Σημείωση: Για την έκδοση mac, αντικαταστήστε το .bat με .command.
 
 ### GPT-SoVITS
