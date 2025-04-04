@@ -47,7 +47,7 @@ export const HeaderArea = (_props: HeaderAreaProps) => {
                 className={tooltip}
                 onClick={() => {
                     // @ts-ignore
-                    window.electronAPI.openBrowser("https://github.com/w-okada/voice-changer/blob/master/tutorials/tutorial_rvc_ja_latest.md");
+                    window.electronAPI.openBrowser("https://github.com/w-okada/ttsclient");
                 }}
             >
                 <img src={iconUrl} className={HeaderIcon()} />
@@ -56,7 +56,7 @@ export const HeaderArea = (_props: HeaderAreaProps) => {
         ) : (
             <a
                 className={tooltip}
-                href="https://github.com/w-okada/voice-changer/blob/master/tutorials/tutorial_rvc_ja_latest.md"
+                href="https://github.com/w-okada/ttsclient"
                 target="_blank"
                 rel="noopener noreferrer"
             >
