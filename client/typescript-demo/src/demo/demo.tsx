@@ -17,8 +17,8 @@ export const Demo = () => {
     const { displayColorMode } = useAppState();
     useEffect(() => {
         const bodyClass = displayColorMode == "light" ? lightTheme : darkTheme;
-        document.body.className = bodyClass
-    }, [displayColorMode])
+        document.body.className = bodyClass;
+    }, [displayColorMode]);
     return (
         <GuiStateProvider>
             <Dialogs2 />
@@ -26,7 +26,7 @@ export const Demo = () => {
             <HeaderArea></HeaderArea>
             <ModelSlotArea></ModelSlotArea>
             <div className={spacer_h10px}></div>
-            <VoiceCharacterSlotArea ></VoiceCharacterSlotArea >
+            <VoiceCharacterSlotArea></VoiceCharacterSlotArea>
             <CharacterArea></CharacterArea>
             <TextInputArea></TextInputArea>
             <DeviceSettingArea></DeviceSettingArea>
@@ -36,8 +36,7 @@ export const Demo = () => {
                     <MoreActionsArea></MoreActionsArea>
                 </div>
             </div>
-            <div className={configArea}>
-            </div>
+            <div className={configArea}></div>
         </GuiStateProvider>
     );
 };
