@@ -1,4 +1,5 @@
 import eslint from "@eslint/js";
+import globals from "globals";
 import tseslint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 import reactPlugin from "eslint-plugin-react";
@@ -17,20 +18,8 @@ export default [
                 ecmaVersion: 13,
                 sourceType: "module",
             },
-            globals: {
-                File: "readonly",
-                FormData: "readonly",
-                Blob: "readonly",
-                Request: "readonly",
-                fetch: "readonly",
-                console: "readonly",
-                URL: "readonly",
-                document: "readonly",
-                HTMLInputElement: "readonly",
-                FileReader: "readonly",
-                indexedDB: "readonly",
-                MediaStream: "readonly",
-            },
+            ecmaVersion: 2020,
+            globals: globals.browser,
         },
         plugins: {
             "@typescript-eslint": tseslint,
