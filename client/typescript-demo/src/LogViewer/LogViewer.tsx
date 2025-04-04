@@ -1,6 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import hljs from "highlight.js";
-// import "highlight.js/styles/default.css";
 import { decoratedWordBlue, decoratedWordGreen, decoratedWordRed, logLine, loggerArea, loggerControlArea, loggerControlButton, loggerDiv } from "../styles";
 import { useAppRoot } from "../001_AppRootProvider";
 import { Logger } from "../util/logger";
@@ -63,7 +61,7 @@ export const LogViewer = () => {
 
         const keywords = redKeywords.concat(blueKeywords).concat(greenKeywords);
         const escapeRegExp = (string) => {
-            return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+            return string.replace(/[.*+?^=!:${}()|[\]/\\]/g, "\\$&");
         };
         const escapedKeywords = keywords.map(escapeRegExp);
 

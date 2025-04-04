@@ -47,7 +47,7 @@ const IconArea = (props: IconAreaProps) => {
             triggerToast("error", t("model_slot_manager_main_change_icon_ext_error"));
             return;
         }
-        await serverConfigState.uploadIconFile(props.slotIndex, file, (progress: number, end: boolean) => { });
+        await serverConfigState.uploadIconFile(props.slotIndex, file, (_progress: number, _end: boolean) => {});
     };
 
     let iconUrl: string;
@@ -56,15 +56,15 @@ const IconArea = (props: IconAreaProps) => {
     } else {
         // iconUrl = "model_dir" + "/" + props.slotIndex + "/" + props.iconUrl.split(/[\/\\]/).pop();
         iconUrl = props.iconUrl || "/assets/icons/noimage.png";
-        iconUrl = props.iconUrl != null ? "models" + "/" + props.slotIndex + "/" + props.iconUrl.split(/[\/\\]/).pop() : "./assets/icons/human.png";
-
+        iconUrl = props.iconUrl != null ? "models" + "/" + props.slotIndex + "/" + props.iconUrl.split(/[/\\]/).pop() : "./assets/icons/human.png";
     }
-    iconUrl = generateGetPathFunc(iconUrl)
+    iconUrl = generateGetPathFunc(iconUrl);
 
     const iconDivClass = props.tooltip ? tooltip : "";
     const iconClass = props.tooltip ? modelSlotIconPointable : modelSlotIcon;
     return (
-        <div className={`${iconDivClass} ${modelSlotIconContainer}`}
+        <div
+            className={`${iconDivClass} ${modelSlotIconContainer}`}
             onDragOver={(e) => {
                 e.preventDefault();
                 e.currentTarget.style.border = "2px solid #d6b8da";
@@ -77,7 +77,6 @@ const IconArea = (props: IconAreaProps) => {
                 e.preventDefault();
                 e.currentTarget.style.border = "";
             }}
-
             onDrop={async (e) => {
                 e.preventDefault();
                 e.currentTarget.style.border = "";
@@ -91,8 +90,7 @@ const IconArea = (props: IconAreaProps) => {
                     triggerToast("error", t("model_slot_manager_main_change_icon_ext_error"));
                     return;
                 }
-                await serverConfigState.uploadIconFile(props.slotIndex, file, (progress: number, end: boolean) => { });
-
+                await serverConfigState.uploadIconFile(props.slotIndex, file, (_progress: number, _end: boolean) => {});
             }}
         >
             <img
@@ -185,7 +183,7 @@ const FileRow = (props: FileRowProps) => {
 
         const link = document.createElement("a");
         link.href = url;
-        link.download = path.replace(/^.*[\\\/]/, "");
+        link.download = path.replace(/^.*[\\/]/, "");
         link.click();
         link.remove();
     };
@@ -249,19 +247,16 @@ const GPTSoVITSDetailArea = (props: GPTSoVITSDetailAreaProps) => {
             <NameRow slotInfo={{ ...slotInfo }}></NameRow>
             <FileRow title="semantic" slotIndex={slotInfo.slot_index} filePath={slotInfo.semantic_predictor_model_path || "default"}></FileRow>
             <FileRow title="synthesize" slotIndex={slotInfo.slot_index} filePath={slotInfo.synthesizer_model_path || "default"}></FileRow>
-            <InfoRow info={`GPT-SoVITS, ver: ${slotInfo.version}, m_ver:${slotInfo.model_version}, lora:${slotInfo.if_lora_v3}`}></InfoRow >
+            <InfoRow info={`GPT-SoVITS, ver: ${slotInfo.version}, m_ver:${slotInfo.model_version}, lora:${slotInfo.if_lora_v3}`}></InfoRow>
         </div>
     );
 };
 
-
-
 type BrokenDetailAreaProps = {
     slotInfo: SlotInfo;
 };
-const BrokenDetailArea = (props: BrokenDetailAreaProps) => {
+const BrokenDetailArea = (_props: BrokenDetailAreaProps) => {
     const { t } = useTranslation();
-    const slotInfo = props.slotInfo;
     return (
         <div className={modelSlotDetailArea}>
             <InfoRow info={t("model_slot_manager_main_broken_message")}></InfoRow>
@@ -291,7 +286,7 @@ type ModelSlotManagerDialogMainScreenProps = {
 };
 
 export const ModelSlotManagerMainDialog = (props: ModelSlotManagerDialogMainScreenProps) => {
-    const { serverConfigState, triggerToast } = useAppRoot();
+    const { serverConfigState } = useAppRoot();
     const { t } = useTranslation();
     const { setDialog2Props, setDialog2Name } = useGuiState();
 
@@ -417,29 +412,28 @@ export const ModelSlotManagerMainDialog = (props: ModelSlotManagerDialogMainScre
                 //     );
                 // }
                 //  export button
-                let exportButton = <></>;
-                if (x.tts_type != null) {
-                    exportButton = (
-                        <div
-                            className={modelSlotButton}
-                            onClick={async () => {
-
-                                setDialog2Props({
-                                    title: t("wait_dialog_title_generating_onnx"),
-                                    instruction: `${t("wait_dialog_instruction_generating_onnx")}`,
-                                    defaultValue: "",
-                                    resolve: () => { },
-                                    options: null,
-                                });
-                                setDialog2Name("waitDialog");
-                                await serverConfigState.generateOnnx(index)
-                                setDialog2Name("none");
-                            }}
-                        >
-                            {t("model_slot_manager_main_export_onnx")}
-                        </div>
-                    );
-                }
+                // let exportButton = <></>;
+                // if (x.tts_type != null) {
+                //     exportButton = (
+                //         <div
+                //             className={modelSlotButton}
+                //             onClick={async () => {
+                //                 setDialog2Props({
+                //                     title: t("wait_dialog_title_generating_onnx"),
+                //                     instruction: `${t("wait_dialog_instruction_generating_onnx")}`,
+                //                     defaultValue: "",
+                //                     resolve: () => {},
+                //                     options: null,
+                //                 });
+                //                 setDialog2Name("waitDialog");
+                //                 await serverConfigState.generateOnnx(index);
+                //                 setDialog2Name("none");
+                //             }}
+                //         >
+                //             {t("model_slot_manager_main_export_onnx")}
+                //         </div>
+                //     );
+                // }
 
                 // move button
                 let moveButton = <></>;
@@ -459,12 +453,7 @@ export const ModelSlotManagerMainDialog = (props: ModelSlotManagerDialogMainScre
                 // スロット作成
                 return (
                     <div key={index} className={modelSlot}>
-                        <IconArea
-                            slotIndex={x.slot_index}
-                            iconUrl={x.icon_file}
-                            tooltip={x.tts_type != null}
-                            iconEditable={x.tts_type != null}
-                        ></IconArea>
+                        <IconArea slotIndex={x.slot_index} iconUrl={x.icon_file} tooltip={x.tts_type != null} iconEditable={x.tts_type != null}></IconArea>
                         {slotDetail}
                         <div className={modelSlotButtonsArea}>
                             {uploadButton}

@@ -2,8 +2,6 @@ import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaSortAlphaDown, FaSortNumericDown } from "react-icons/fa";
 import {
-    button,
-    buttonActive,
     buttonGroup,
     buttons,
     modelSlotArea,
@@ -28,6 +26,7 @@ const SortTypes = {
     slot: "slot",
     name: "name",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type SortTypes = (typeof SortTypes)[keyof typeof SortTypes];
 
 export const ModelSlotArea = (_props: ModelSlotAreaProps) => {
@@ -44,8 +43,8 @@ export const ModelSlotArea = (_props: ModelSlotAreaProps) => {
             sortType == "slot"
                 ? serverConfigState.serverSlotInfos
                 : serverConfigState.serverSlotInfos.slice().sort((a, b) => {
-                    return a.name.localeCompare(b.name);
-                });
+                      return a.name.localeCompare(b.name);
+                  });
 
         return modelSlots
             .map((x, index) => {
@@ -60,8 +59,8 @@ export const ModelSlotArea = (_props: ModelSlotAreaProps) => {
 
                 // const modelDir = x.slotIndex == "Beatrice-JVS" ? "model_dir_static" : serverSetting.serverSetting.voiceChangerParams.model_dir;
                 // const icon = x.icon_file != null ? x.icon_file : "./assets/icons/human.png";
-                let icon = x.icon_file != null ? "models" + "/" + x.slot_index + "/" + x.icon_file.split(/[\/\\]/).pop() : "./assets/icons/human.png";
-                icon = generateGetPathFunc(icon)
+                let icon = x.icon_file != null ? "models" + "/" + x.slot_index + "/" + x.icon_file.split(/[/\\]/).pop() : "./assets/icons/human.png";
+                icon = generateGetPathFunc(icon);
 
                 const iconElem =
                     x.icon_file != null ? (
@@ -125,15 +124,12 @@ export const ModelSlotArea = (_props: ModelSlotAreaProps) => {
                                 onClick={() => {
                                     setSortType("name");
                                 }}
-
                             >
                                 <FaSortAlphaDown />
                             </div>
                         </div>
                         <div className={buttonGroup}>
-                            <div
-                                className={`${BasicButton({ width: "small" })} ${modelSlotButtonThema}`}
-                                onClick={onModelSlotEditClicked}>
+                            <div className={`${BasicButton({ width: "small" })} ${modelSlotButtonThema}`} onClick={onModelSlotEditClicked}>
                                 {t("model_slot_edit")}
                             </div>
                         </div>

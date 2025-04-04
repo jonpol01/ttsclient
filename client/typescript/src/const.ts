@@ -1,6 +1,6 @@
 export const MAX_SLOT_INDEX = 20;
-export const MAX_VOICE_CHARACTER_SLOT_INDEX = 200
-export const MAX_REFERENCE_VOICE_SLOT_INDEX = 20
+export const MAX_VOICE_CHARACTER_SLOT_INDEX = 200;
+export const MAX_REFERENCE_VOICE_SLOT_INDEX = 20;
 ////////////////////////////////////////////
 // REST Params
 ////////////////////////////////////////////
@@ -13,51 +13,55 @@ export type TTSConfiguration = {
     transcriber_device: TranscriberDevice;
     transcriber_compute_type: TranscriberComputeType;
 };
-
 export const TranscriberModelSize = {
-    "tiny": "tiny",
-    "base": "base",
-    "small": "small",
-    "medium": "medium",
+    tiny: "tiny",
+    base: "base",
+    small: "small",
+    medium: "medium",
     "large-v1": "large-v1",
     "large-v2": "large-v2",
     "large-v3": "large-v3",
-    "large": "large",
+    large: "large",
     "distil-large-v2": "distil-large-v2",
     "distil-large-v3": "distil-large-v3",
     "large-v3-turbo": "large-v3-turbo",
-    "turbo": "turbo",
+    turbo: "turbo",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type TranscriberModelSize = (typeof TranscriberModelSize)[keyof typeof TranscriberModelSize];
 
 export const TranscriberDevice = {
-    "cuda": "cuda",
-    "cpu": "cpu",
+    cuda: "cuda",
+    cpu: "cpu",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type TranscriberDevice = (typeof TranscriberDevice)[keyof typeof TranscriberDevice];
 
 export const TranscriberComputeType = {
-    "int8": "int8",
-    "int8_float32": "int8_float32",
-    "int8_float16": "int8_float16",
-    "int8_bfloat16": "int8_bfloat16",
-    "int16": "int16",
-    "float16": "float16",
-    "bfloat16": "bfloat16",
-    "float32": "float32",
+    int8: "int8",
+    int8_float32: "int8_float32",
+    int8_float16: "int8_float16",
+    int8_bfloat16: "int8_bfloat16",
+    int16: "int16",
+    float16: "float16",
+    bfloat16: "bfloat16",
+    float32: "float32",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type TranscriberComputeType = (typeof TranscriberComputeType)[keyof typeof TranscriberComputeType];
 
 export const AudioDeviceType = {
     audioinput: "audioinput",
     audiooutpu: "audiooutput",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type AudioDeviceType = (typeof AudioDeviceType)[keyof typeof AudioDeviceType];
 
 export const VoiceChangerInputMode = {
     server: "server",
     client: "client",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type VoiceChangerInputMode = (typeof VoiceChangerInputMode)[keyof typeof VoiceChangerInputMode];
 
 export type GPUInfo = {
@@ -81,7 +85,6 @@ export type ModuleStatus = {
     valid: boolean;
 };
 
-
 export type SampleInfo = {
     id: string;
     tts_type: TTSType;
@@ -95,23 +98,18 @@ export type SampleInfo = {
 };
 
 export type GPTSoVITSSampleInfo = SampleInfo & {
-    semantic_predictor_model_url: string
-    synthesizer_model_url: string
-    version: string
-    model_version: string
-    lora_v3: boolean
+    semantic_predictor_model_url: string;
+    synthesizer_model_url: string;
+    version: string;
+    model_version: string;
+    lora_v3: boolean;
 };
 
 export type VoiceCharacterSampleInfo = SampleInfo & {
-    zip_url: string
-}
+    zip_url: string;
+};
 
-export const TTSTypes = [
-    "GPT-SoVITS",
-    "RESERVED_FOR_SAMPLE",
-    "BROKEN",
-    "VoiceCharacter",
-] as const;
+export const TTSTypes = ["GPT-SoVITS", "RESERVED_FOR_SAMPLE", "BROKEN", "VoiceCharacter"] as const;
 export type TTSType = (typeof TTSTypes)[number];
 export const GPTSoVITSVersions = ["v1", "v2"] as const;
 export type GPTSoVITSVersion = (typeof GPTSoVITSVersions)[number];
@@ -133,7 +131,7 @@ export type GPTSoVITSSlotInfo = SlotInfo & {
     version: GPTSoVITSVersion;
     model_version: GPTSoVITSModelVersion;
     if_lora_v3: boolean;
-    enable_faster: boolean
+    enable_faster: boolean;
     semantic_predictor_model_path: string;
     synthesizer_model_path: string;
     top_k: number;
@@ -141,30 +139,26 @@ export type GPTSoVITSSlotInfo = SlotInfo & {
     temperature: number;
     if_freeze: number;
 
-
     backend_mode: BackendMode;
-    onnx_vq_model_path: string | null
-    onnx_spec_path: string | null
-    onnx_latent_path: string | null
-    onnx_encoder_path: string | null
-    onnx_fsdec_path: string | null
-    onnx_ssdec_path: string | null
+    onnx_vq_model_path: string | null;
+    onnx_spec_path: string | null;
+    onnx_latent_path: string | null;
+    onnx_encoder_path: string | null;
+    onnx_fsdec_path: string | null;
+    onnx_ssdec_path: string | null;
 
-
-    batch_size: number   // only for faster
-    batch_threshold: number // only for faster
-    split_bucket: boolean   // only for faster
-    return_fragment: boolean   // only for faster
-    fragment_interval: number   // only for faster
-    seed: number     // only for faster
-    parallel_infer: boolean  // only for faster
-    repetition_penalty: number   // only for faster
-
+    batch_size: number; // only for faster
+    batch_threshold: number; // only for faster
+    split_bucket: boolean; // only for faster
+    return_fragment: boolean; // only for faster
+    fragment_interval: number; // only for faster
+    seed: number; // only for faster
+    parallel_infer: boolean; // only for faster
+    repetition_penalty: number; // only for faster
 };
 export type ReservedForSampleSlotInfo = SlotInfo & {
     progress: number;
 };
-
 
 export type ModelImportParamMember = ModelImportParam | GPTSoVITSModelImportParam;
 
@@ -190,30 +184,28 @@ export type SetIconParam = {
     icon_file: string;
 };
 
-
 export type DownloadParam = {
     slot_index: number;
     sample_id: string;
 };
 
-
 // export const BasicVoiceType = ["anger", "disgust", "fear", "happy", "sad", "surprise", "other"] as const;
 // export type BasicVoiceType = (typeof BasicVoiceType)[number];
 
 export const LanguageType = [
-    "all_zh",  // 全部按中文识别
-    "en",  // 全部按英文识别#######不变
-    "all_ja",  // 全部按日文识别
-    "all_yue",  // 全部按中文识别
+    "all_zh", // 全部按中文识别
+    "en", // 全部按英文识别#######不变
+    "all_ja", // 全部按日文识别
+    "all_yue", // 全部按中文识别
     // "all_ko",  // 全部按韩文识别
-    "zh",  // 按中英混合识别####不变
-    "ja",  // 按日英混合识别####不变
-    "yue",  // 按粤英混合识别####不变
+    "zh", // 按中英混合识别####不变
+    "ja", // 按日英混合识别####不变
+    "yue", // 按粤英混合识别####不变
     // "ko",  // 按韩英混合识别####不变
     "auto", // 多语种启动切分识别语种
-    "auto_yue",  // 多语种启动切分识别语种
-
-] as const
+    "auto_yue", // 多语种启动切分识别语种
+] as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type LanguageType = (typeof LanguageType)[number];
 export const CutMethod = [
     "No slice",
@@ -222,28 +214,28 @@ export const CutMethod = [
     "Slice by Chinese punct",
     "Slice by English punct",
     "Slice by every punct",
-] as const
+] as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type CutMethod = (typeof CutMethod)[number];
 
-export const BackendMode = ["all_torch", "all_onnx", "semantic_onnx", "synthesizer_onnx"] as const
-export type BackendMode = (typeof BackendMode)[number]
-
+export const BackendMode = ["all_torch", "all_onnx", "semantic_onnx", "synthesizer_onnx"] as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
+export type BackendMode = (typeof BackendMode)[number];
 
 export type ReferenceVoice = {
-    slot_index: number
+    slot_index: number;
     // voice_type: BasicVoiceType | string
-    voice_type: string
-    wav_file: string
-    text: string
-    language: LanguageType
-    icon_file: string | null
-    speed: number
-}
+    voice_type: string;
+    wav_file: string;
+    text: string;
+    language: LanguageType;
+    icon_file: string | null;
+    speed: number;
+};
 export type EmotionType = {
-    name: string
-    color: string
-}
-
+    name: string;
+    color: string;
+};
 
 export type VoiceCharacter = {
     slot_index: number;
@@ -254,82 +246,77 @@ export type VoiceCharacter = {
     terms_of_use_url: string;
     icon_file: string | null;
     reference_voices: ReferenceVoice[];
-    emotion_types: EmotionType[]
-    progress: number
+    emotion_types: EmotionType[];
+    progress: number;
 };
 
 export type VoiceCharacterImportParam = {
-    tts_type: TTSType
-    name: string
-    terms_of_use_url: string
-    slot_index: number | null
-    icon_file: string | null
-    zip_file: string | null
-}
+    tts_type: TTSType;
+    name: string;
+    terms_of_use_url: string;
+    slot_index: number | null;
+    icon_file: string | null;
+    zip_file: string | null;
+};
 
 export type ReferenceVoiceImportParam = {
     // voice_type: BasicVoiceType | string
-    voice_type: string
-    wav_file: string
-    voice_character_slot_index: number
-    slot_index: number | null
-}
-
+    voice_type: string;
+    wav_file: string;
+    voice_character_slot_index: number;
+    slot_index: number | null;
+};
 
 export type MoveReferenceVoiceParam = {
-    src: number
-    dst: number
-}
+    src: number;
+    dst: number;
+};
 
 export type GenerateVoiceParam = {
-    voice_character_slot_index: number
-    reference_voice_slot_index: number
-    text: string
-    language: LanguageType
-    speed: number
-    cutMethod: CutMethod
+    voice_character_slot_index: number;
+    reference_voice_slot_index: number;
+    text: string;
+    language: LanguageType;
+    speed: number;
+    cutMethod: CutMethod;
     // v3追加オプション
-    sample_steps: number
-    phone_symbols: string[] | null
-}
+    sample_steps: number;
+    phone_symbols: string[] | null;
+};
 
 export type GetPhonesParam = {
-    text: string
-    language: LanguageType
-    voice_character_slot_index: number
-    user_dict_records: OpenJTalkUserDictRecord[] | null
-
-}
+    text: string;
+    language: LanguageType;
+    voice_character_slot_index: number;
+    user_dict_records: OpenJTalkUserDictRecord[] | null;
+};
 
 export type GetPhonesResponse = {
-    phones: number[]
-    phone_symbols: string[]
-}
+    phones: number[];
+    phone_symbols: string[];
+};
 
 export type GetJpTextToUserDictRecordsParam = {
-    text: string
-    voice_character_slot_index: number
-}
+    text: string;
+    voice_character_slot_index: number;
+};
 
 export type OpenJTalkUserDictRecord = {
-    string: string
-    pos: string
-    pos_group1: string
-    pos_group2: string
-    pos_group3: string
-    ctype: string
-    cform: string
-    orig: string
-    read: string
-    pron: string
-    acc: number
-    mora_size: number
-    chain_rule: string
-    chain_flag: number
-}
-
-
-
+    string: string;
+    pos: string;
+    pos_group1: string;
+    pos_group2: string;
+    pos_group3: string;
+    ctype: string;
+    cform: string;
+    orig: string;
+    read: string;
+    pron: string;
+    acc: number;
+    mora_size: number;
+    chain_rule: string;
+    chain_flag: number;
+};
 
 ////////////////////////////////////////////
 // VoiceChangerClient Settings
@@ -343,6 +330,7 @@ export type ClientSetting = {
 export const SampleRate = {
     "48000": 48000,
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type SampleRate = (typeof SampleRate)[keyof typeof SampleRate];
 
 export type VoiceChangerClientSetting = {
@@ -367,12 +355,14 @@ export const SendingSampleRate = {
     "44100": 44100,
     "24000": 24000,
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type SendingSampleRate = (typeof SendingSampleRate)[keyof typeof SendingSampleRate];
 
 export const DownSamplingMode = {
     decimate: "decimate",
     average: "average",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type DownSamplingMode = (typeof DownSamplingMode)[keyof typeof DownSamplingMode];
 
 export type WorkletNodeSetting = {
@@ -430,6 +420,7 @@ export const VOICE_CHANGER_CLIENT_EXCEPTION = {
     ERR_INTERNAL_AUDIO_PROCESS_CALLBACK_IS_NOT_INITIALIZED: "ERR_INTERNAL_AUDIO_PROCESS_CALLBACK_IS_NOT_INITIALIZED",
     ERR_HTTP_EXCEPTION: "ERR_HTTP_EXCEPTION",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type VOICE_CHANGER_CLIENT_EXCEPTION = (typeof VOICE_CHANGER_CLIENT_EXCEPTION)[keyof typeof VOICE_CHANGER_CLIENT_EXCEPTION];
 
 export type HttpException = {
@@ -463,19 +454,3 @@ export type VCClientErrorInfo = {
     action: string;
     detail: string | null;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

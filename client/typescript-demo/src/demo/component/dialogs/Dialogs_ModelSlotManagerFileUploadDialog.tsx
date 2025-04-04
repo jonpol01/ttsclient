@@ -10,10 +10,7 @@ import {
     fileInputAreaLabel,
     fileInputAreaValue,
     instructions,
-    radioButton,
     radioInputArea,
-    radioInputAreaInput,
-    radioInputAreaLabel,
     selectInputArea,
     selectInputAreaInput,
     selectInputAreaLabel,
@@ -25,7 +22,7 @@ import { useAppRoot } from "../../../001_AppRootProvider";
 import { checkExtention } from "../../../util/checkExctension";
 import { Logger } from "../../../util/logger";
 import { UploadFile, UploadFileKind } from "../../../const";
-import { fileSelector, GPTSoVITSVersion, TTSType, TTSTypes } from "tts-client-typescript-client-lib";
+import { fileSelector, TTSType, TTSTypes } from "tts-client-typescript-client-lib";
 type CloseButtonRowProps = {
     uploadClicked: () => void;
     backClicked: () => void;
@@ -150,7 +147,6 @@ const GPTSoVITSFileChooser = (props: GPTSoVITSFileChooserProps) => {
     );
 };
 
-
 export const ModelSlotManagerFileUploadDialog = (props: ModelSlotManagerFileUploadDialogProps) => {
     const { t } = useTranslation();
     const { serverConfigState, triggerToast } = useAppRoot();
@@ -162,7 +158,6 @@ export const ModelSlotManagerFileUploadDialog = (props: ModelSlotManagerFileUplo
     const [uploadProgress, setUploadProgress] = useState<number>(0);
 
     const voiceChangerTypeSelector = useMemo(() => {
-
         return (
             <select
                 defaultValue={tTSType}
@@ -213,7 +208,6 @@ export const ModelSlotManagerFileUploadDialog = (props: ModelSlotManagerFileUplo
                     Logger.getLogger().info("progress", progress, end);
                     setUploadProgress(Math.floor(progress - 1));
                 });
-
             } catch (e) {
                 triggerToast("error", `upload failed: ${e.detail || ""}`);
                 Logger.getLogger().error(`upload failed: ${e.detail || ""}`);

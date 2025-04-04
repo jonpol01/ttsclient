@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { characterAreaControl, characterAreaControlField, characterAreaControlTitle, characterAreaText } from "../../styles/characterArea.css";
+import { characterAreaControl, characterAreaControlField, characterAreaText } from "../../styles/characterArea.css";
 import React from "react";
 import { useAppRoot } from "../../001_AppRootProvider";
 import { useTranslation } from "react-i18next";

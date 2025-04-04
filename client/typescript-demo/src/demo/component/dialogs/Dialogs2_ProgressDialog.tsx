@@ -1,14 +1,6 @@
 import React, { useMemo } from "react";
-import {
-    dialogFrame,
-    dialogTitle,
-    instructions,
-    progressBarContainer,
-    progressBar,
-    progressText,
-    progressInfo
-} from "../../../styles/dialog.css";
-import { GuiStateProvider, useGuiState } from "../../GuiStateProvider";
+import { dialogFrame, dialogTitle, instructions, progressBarContainer, progressBar, progressText, progressInfo } from "../../../styles/dialog.css";
+import { useGuiState } from "../../GuiStateProvider";
 import { useAppRoot } from "../../../001_AppRootProvider";
 
 export const ProgressDialog = () => {
@@ -22,7 +14,7 @@ export const ProgressDialog = () => {
     }
 
     // Ensure progress is a number between 0-100
-    const progressValue = progress * 100
+    const progressValue = progress * 100;
 
     // Format progress for display
     const progressPercent = Math.round(progressValue);
@@ -35,27 +27,27 @@ export const ProgressDialog = () => {
                 <div className={instructions}>{dialog2Props.instruction}</div>
 
                 {/* Rich progress bar */}
-                <div className={progressInfo}>
-                    {progressLabel}
-                </div>
+                <div className={progressInfo}>{progressLabel}</div>
                 <div className={progressBarContainer}>
                     <div
                         className={progressBar}
                         style={{
                             width: `${progressValue}%`,
-                            transition: 'all 0.5s ease'
+                            transition: "all 0.5s ease",
                         }}
                     >
-                        <span className={progressText}
+                        <span
+                            className={progressText}
                             style={{
                                 // backgroundColor: progressValue === 100 ? '#00cc00' : undefined,
                                 // boxShadow: progressValue === 100 ? '0 0 10px #00cc00' : undefined,
                                 // fontSize: progressValue === 100 ? '1.5rem' : undefined,
                                 // color: progressValue === 100 ? 'red' : undefined,
-                                transition: 'all 0.5s ease'
-
+                                transition: "all 0.5s ease",
                             }}
-                        >{progressLabel}</span>
+                        >
+                            {progressLabel}
+                        </span>
                     </div>
                 </div>
             </div>

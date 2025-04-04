@@ -2,7 +2,6 @@
 
 const fs = require("fs");
 const path = require("path");
-const glob = require("glob");
 
 //  Constants
 const jsonFilePathEn = path.join("public/assets/i18n/en/translation.json");

@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 
 type CloseButtonRowProps = {};
 
-const CloseButtonRow = (props: CloseButtonRowProps) => {
+const CloseButtonRow = (_props: CloseButtonRowProps) => {
     const { t } = useTranslation();
     const { setDialogName } = useGuiState();
     return (
@@ -34,7 +34,7 @@ const CloseButtonRow = (props: CloseButtonRowProps) => {
 
 type AboutModelDialogProps = {};
 
-export const AboutModelDialog = (props: AboutModelDialogProps) => {
+export const AboutModelDialog = (_props: AboutModelDialogProps) => {
     const { t } = useTranslation();
 
     return (
@@ -42,13 +42,9 @@ export const AboutModelDialog = (props: AboutModelDialogProps) => {
             <div className={dialogTitle}>{t("dialog_about_model_title")}VOICE</div>
             <div className={instructions}></div>
             <div className={dialogFixedSizeContent}>
-                <div className={aboutModelModelName}>
-                    {/* {modelName}({modelVersion}) */}
-                </div>
+                <div className={aboutModelModelName}>{/* {modelName}({modelVersion}) */}</div>
                 <div className={aboutModelModelDescription}>
-                    <pre className={aboutModelModelDescriptionPre}>
-                        {/* {modelDescription} */}
-                    </pre>
+                    <pre className={aboutModelModelDescriptionPre}>{/* {modelDescription} */}</pre>
                 </div>
             </div>
 

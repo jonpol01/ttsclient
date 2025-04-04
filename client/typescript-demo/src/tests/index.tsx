@@ -2,9 +2,7 @@ import * as React from "react";
 import {
     TTSRestClient,
     fileSelector,
-    downloadAsWav,
     MoveModelParam,
-    PerformanceData,
 } from "tts-client-typescript-client-lib";
 import { rowButton, rowDesc, rowTitle, split_4_2_4, testRowContainer } from "../styles";
 import { useAppRoot } from "../001_AppRootProvider";
@@ -44,7 +42,7 @@ export const Tests = () => {
         );
     };
 
-    const generateInputAudioDeviceSelect = () => {
+    const _generateInputAudioDeviceSelect = () => {
         if (audioConfigState.audioInputs.length == 0) return <div>no input device</div>;
         return (
             <select
@@ -63,7 +61,7 @@ export const Tests = () => {
             </select>
         );
     };
-    const generateOutputAudioDeviceSelect = () => {
+    const _generateOutputAudioDeviceSelect = () => {
         if (audioConfigState.audioOutputs.length == 0) return <div>no output device</div>;
         return (
             <select

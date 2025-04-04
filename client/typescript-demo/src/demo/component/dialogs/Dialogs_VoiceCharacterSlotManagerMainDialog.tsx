@@ -48,7 +48,7 @@ const IconArea = (props: IconAreaProps) => {
             triggerToast("error", t("voice_character_slot_manager_main_change_icon_ext_error"));
             return;
         }
-        await serverConfigState.uploadVoiceCharacterIconFile(props.slotIndex, file, (progress: number, end: boolean) => { });
+        await serverConfigState.uploadVoiceCharacterIconFile(props.slotIndex, file, (_progress: number, _end: boolean) => {});
     };
 
     let iconUrl: string;
@@ -57,14 +57,14 @@ const IconArea = (props: IconAreaProps) => {
     } else {
         // iconUrl = "model_dir" + "/" + props.slotIndex + "/" + props.iconUrl.split(/[\/\\]/).pop();
         iconUrl = props.iconUrl || "/assets/icons/noimage.png";
-        iconUrl = props.iconUrl != null ? "voice_characters" + "/" + props.slotIndex + "/" + props.iconUrl.split(/[\/\\]/).pop() : "./assets/icons/human.png";
-
+        iconUrl = props.iconUrl != null ? "voice_characters" + "/" + props.slotIndex + "/" + props.iconUrl.split(/[/\\]/).pop() : "./assets/icons/human.png";
     }
-    iconUrl = generateGetPathFunc(iconUrl)
+    iconUrl = generateGetPathFunc(iconUrl);
     const iconDivClass = props.tooltip ? tooltip : "";
     const iconClass = props.tooltip ? modelSlotIconPointable : modelSlotIcon;
     return (
-        <div className={`${iconDivClass} ${modelSlotIconContainer}`}
+        <div
+            className={`${iconDivClass} ${modelSlotIconContainer}`}
             onDragOver={(e) => {
                 e.preventDefault();
                 e.currentTarget.style.border = "2px solid #d6b8da";
@@ -77,7 +77,6 @@ const IconArea = (props: IconAreaProps) => {
                 e.preventDefault();
                 e.currentTarget.style.border = "";
             }}
-
             onDrop={async (e) => {
                 e.preventDefault();
                 e.currentTarget.style.border = "";
@@ -91,11 +90,8 @@ const IconArea = (props: IconAreaProps) => {
                     triggerToast("error", t("model_slot_manager_main_change_icon_ext_error"));
                     return;
                 }
-                await serverConfigState.uploadVoiceCharacterIconFile(props.slotIndex, file, (progress: number, end: boolean) => { });
-
+                await serverConfigState.uploadVoiceCharacterIconFile(props.slotIndex, file, (_progress: number, _end: boolean) => {});
             }}
-
-
         >
             <img
                 src={iconUrl}
@@ -187,7 +183,7 @@ const FileRow = (props: FileRowProps) => {
 
         const link = document.createElement("a");
         link.href = url;
-        link.download = path.replace(/^.*[\\\/]/, "");
+        link.download = path.replace(/^.*[/\\]/, "");
         link.click();
         link.remove();
     };
@@ -254,14 +250,11 @@ const GPTSoVITSDetailArea = (props: GPTSoVITSDetailAreaProps) => {
     );
 };
 
-
-
 type BrokenDetailAreaProps = {
     voiceCharacter: VoiceCharacter;
 };
-const BrokenDetailArea = (props: BrokenDetailAreaProps) => {
+const BrokenDetailArea = (_props: BrokenDetailAreaProps) => {
     const { t } = useTranslation();
-    const slotInfo = props.voiceCharacter.slot_index;
     return (
         <div className={modelSlotDetailArea}>
             <InfoRow info={t("voice_character_slot_manager_main_broken_message")}></InfoRow>
@@ -287,7 +280,7 @@ const CloseButtonRow = () => {
 };
 type VoiceCharacterSlotManagerDialogMainProps = {
     openFileUploadDialog: (targetSlotIndex: number) => void;
-    openVoiceCharacterSampleDialog: (targetSlotIndex: number) => void
+    openVoiceCharacterSampleDialog: (targetSlotIndex: number) => void;
 };
 
 export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotManagerDialogMainProps) => {
@@ -314,7 +307,7 @@ export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotMan
             const newName = await p;
             // Send to Server
             if (!newName) {
-                return
+                return;
             }
             if (!newName || newName.length == 0) {
                 triggerToast("error", t("voice_character_slot_manager_main_new_error"));
@@ -331,7 +324,7 @@ export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotMan
                 triggerToast("error", `upload failed: ${e.detail || ""}`);
                 Logger.getLogger().error(`upload failed: ${e.detail || ""}`);
             }
-        }
+        };
         const onDeleteClicked = async (slotIndex: number) => {
             const p = new Promise<boolean>((resolve) => {
                 setDialog2Props({
@@ -401,7 +394,6 @@ export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotMan
                             className={modelSlotButton}
                             onClick={() => {
                                 onNewClicked(x.slot_index);
-
                             }}
                         >
                             {t("voice_character_slot_manager_main_new")}
@@ -437,21 +429,21 @@ export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotMan
                         </div>
                     );
                 }
-                // edit button
-                let editButton = <></>;
-                if (x.tts_type != null) {
-                    editButton = (
-                        <div
-                            className={modelSlotButton}
-                            onClick={() => {
-                                // props.openEditor(index);
-                                triggerToast("error", "Not implemented yet");
-                            }}
-                        >
-                            {t("voice_character_slot_manager_main_edit")}
-                        </div>
-                    );
-                }
+                // // edit button
+                // let editButton = <></>;
+                // if (x.tts_type != null) {
+                //     editButton = (
+                //         <div
+                //             className={modelSlotButton}
+                //             onClick={() => {
+                //                 // props.openEditor(index);
+                //                 triggerToast("error", "Not implemented yet");
+                //             }}
+                //         >
+                //             {t("voice_character_slot_manager_main_edit")}
+                //         </div>
+                //     );
+                // }
                 // move button
                 let moveButton = <></>;
                 if (x.tts_type != null) {
@@ -473,13 +465,12 @@ export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotMan
                         <div
                             className={modelSlotButton}
                             onClick={async () => {
-
-                                const blob = await serverConfigState.downloadVoiceCharacter(x.slot_index)
+                                const blob = await serverConfigState.downloadVoiceCharacter(x.slot_index);
                                 if (!blob) {
-                                    triggerToast("error", t("reference_voice_area_download_error"))
-                                    return
+                                    triggerToast("error", t("reference_voice_area_download_error"));
+                                    return;
                                 }
-                                const a = document.createElement('a');
+                                const a = document.createElement("a");
                                 const url = URL.createObjectURL(blob);
                                 a.href = url;
                                 a.download = `voice_character_${x.name}.zip`;
@@ -487,12 +478,10 @@ export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotMan
                                 a.click();
                                 document.body.removeChild(a);
                                 URL.revokeObjectURL(url);
-
-
                             }}
                         >
                             {t("voice_character_slot_manager_main_download")}
-                        </div >
+                        </div>
                     );
                 }
                 // sample button
@@ -510,16 +499,10 @@ export const VoiceCharacterSlotManagerMainDialog = (props: VoiceCharacterSlotMan
                     );
                 }
 
-
                 // スロット作成
                 return (
                     <div key={index} className={modelSlot}>
-                        <IconArea
-                            slotIndex={x.slot_index}
-                            iconUrl={x.icon_file}
-                            tooltip={x.tts_type != null}
-                            iconEditable={x.tts_type != null}
-                        ></IconArea>
+                        <IconArea slotIndex={x.slot_index} iconUrl={x.icon_file} tooltip={x.tts_type != null} iconEditable={x.tts_type != null}></IconArea>
                         {slotDetail}
                         <div className={modelSlotButtonsArea}>
                             {newSlotButton}

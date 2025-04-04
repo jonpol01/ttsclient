@@ -1,4 +1,4 @@
-import { createGlobalTheme, createTheme, createThemeContract, globalStyle, style } from "@vanilla-extract/css";
+import { createGlobalTheme, createTheme, createThemeContract, globalStyle } from "@vanilla-extract/css";
 
 export const globaVars = createGlobalTheme(":root", {
     color: {
@@ -40,7 +40,6 @@ export const darkTheme = createTheme(themeContract, {
         title: globaVars.color.titleDarkMode,
     },
 });
-
 
 globalStyle("*", {
     margin: 0,

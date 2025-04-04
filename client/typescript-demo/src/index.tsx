@@ -38,7 +38,7 @@ const App = () => {
 };
 
 const AppStateWrapper = () => {
-    const { guiSetting, triggerToast } = useAppRoot();
+    const { guiSetting} = useAppRoot();
 
     if (guiSetting.guiSettingLoaded) {
         return (

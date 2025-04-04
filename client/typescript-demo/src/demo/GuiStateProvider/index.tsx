@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ReactNode } from "react";
-import { useAppState } from "../../002_AppStateProvider";
-import { useAppRoot } from "../../001_AppRootProvider";
 
 export const DialogName = {
     none: "none",
@@ -20,6 +18,7 @@ export const DialogName = {
     emotionColorDialog: "emotionColorDialog",
     voiceCharacterManagerSamplesDialog: "voiceCharacterManagerSamplesDialog",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type DialogName = (typeof DialogName)[keyof typeof DialogName];
 
 export const DialogName2 = {
@@ -31,6 +30,7 @@ export const DialogName2 = {
     colorSelectDialog: "colorSelectDialog",
     progressDialog: "progressDialog",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type DialogName2 = (typeof DialogName2)[keyof typeof DialogName2];
 
 type Props = {
@@ -71,8 +71,6 @@ export const GuiStateProvider = ({ children }: Props) => {
     const [dialog2Name, setDialog2Name] = useState<DialogName2>(DialogName2.none);
     const [dialog2Props, setDialog2Props] = useState<Dialog2Props<any> | null>(null);
     const [progress, setProgress] = useState<number>(0);
-
-    const { } = useAppRoot();
 
     useEffect(() => {
         const url = new URL(location.href);

@@ -1,18 +1,12 @@
 import React, { useMemo } from "react";
-import {
-    closeButton,
-    closeButtonRow,
-    dialogFrame,
-    dialogTitle,
-    instructions,
-} from "../../../styles/dialog.css";
+import { closeButton, closeButtonRow, dialogFrame, dialogTitle, instructions } from "../../../styles/dialog.css";
 import { useGuiState } from "../../GuiStateProvider";
 import { useTranslation } from "react-i18next";
 import { useAppRoot } from "../../../001_AppRootProvider";
 import { colorGridContainer, colorTile, EmotionColors } from "../../../styles/style-components/buttons/02_emotion-button.css";
 
 export const ColorSelectDialog = () => {
-    const { serverConfigState, triggerToast } = useAppRoot();
+    const { triggerToast } = useAppRoot();
     const { dialog2Props, setDialog2Name } = useGuiState();
     const { t } = useTranslation();
 
@@ -40,13 +34,7 @@ export const ColorSelectDialog = () => {
                 {/* Display color tiles in a grid */}
                 <div className={colorGridContainer}>
                     {EmotionColors.map((color, index) => (
-                        <div
-                            key={index}
-                            className={colorTile}
-                            style={{ backgroundColor: color }}
-                            onClick={() => handleColorSelect(color)}
-                            title={color}
-                        />
+                        <div key={index} className={colorTile} style={{ backgroundColor: color }} onClick={() => handleColorSelect(color)} title={color} />
                     ))}
                 </div>
 

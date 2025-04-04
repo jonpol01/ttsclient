@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 
 type CloseButtonRowProps = {};
 
-const CloseButtonRow = (props: CloseButtonRowProps) => {
+const CloseButtonRow = (_props: CloseButtonRowProps) => {
     const { t } = useTranslation();
     const { setDialogName } = useGuiState();
     return (
@@ -34,7 +34,7 @@ const CloseButtonRow = (props: CloseButtonRowProps) => {
 
 type AboutVoiceDialogProps = {};
 
-export const AboutVoiceDialog = (props: AboutVoiceDialogProps) => {
+export const AboutVoiceDialog = (_props: AboutVoiceDialogProps) => {
     const { t } = useTranslation();
     // const { slotInfo } = useAppRoot();
 
@@ -43,13 +43,9 @@ export const AboutVoiceDialog = (props: AboutVoiceDialogProps) => {
             <div className={dialogTitle}>{t("dialog_about_voice_title")}</div>
             <div className={instructions}></div>
             <div className={dialogFixedSizeContent}>
-                <div className={aboutModelModelName}>
-                    {/* {voice.name}(pitch: {voice.average_pitch}) */}
-                </div>
+                <div className={aboutModelModelName}>{/* {voice.name}(pitch: {voice.average_pitch}) */}</div>
                 <div className={aboutModelModelDescription}>
-                    <pre className={aboutModelModelDescriptionPre}>
-                        {/* {voice.description} */}
-                    </pre>
+                    <pre className={aboutModelModelDescriptionPre}>{/* {voice.description} */}</pre>
                 </div>
             </div>
 

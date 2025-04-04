@@ -23,7 +23,7 @@ const fileB = readJsonFile(jsonFilePathJa);
 function reorderKeys(template, target) {
     let ordered = {};
     for (let key of Object.keys(template)) {
-        if (target.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(target, key)) {
             ordered[key] = target[key];
         }
     }

@@ -3,7 +3,6 @@ import {
     portraitArea,
     portraitAreaAboutModelAndVoice,
     portraitAreaAboutModelAndVoicePopupLink,
-    portraitAreaChangable,
     portraitAreaContainer,
     portraitAreaTermsOfUse,
     portraitContainer,
@@ -39,7 +38,6 @@ export const CharacterAreaPortrait = () => {
             return <></>;
         }
 
-
         return (
             <div className={portraitAreaTermsOfUse}>
                 <a href={voiceCharacter.terms_of_use_url} target="_blank" rel="noopener noreferrer" className="portrait-area-terms-of-use-link">
@@ -54,7 +52,7 @@ export const CharacterAreaPortrait = () => {
             return <></>;
         }
         const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[currentVoiceCharacterSlotIndex];
-        if (!voiceCharacter == null) {
+        if (!voiceCharacter) {
             return <></>;
         }
         if (voiceCharacter.description == null && voiceCharacter.credit == null) {
@@ -74,105 +72,99 @@ export const CharacterAreaPortrait = () => {
         );
     }, [serverConfigState.voiceCharacterSlotInfos, currentReferenceVoiceIndexes, currentVoiceCharacterSlotIndex]);
 
-
-    const portraitClicked = () => {
-        console.log("portraitClicked")
+    const _portraitClicked = () => {
+        console.log("portraitClicked");
         if (referenceVoiceMode == "view") {
-            return
+            return;
         }
         if (currentVoiceCharacterSlotIndex == null) {
-            return
+            return;
         }
         const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[currentVoiceCharacterSlotIndex];
         if (voiceCharacter == null) {
-            return
+            return;
         }
-        const selectedReferenceVoiceIndexes = currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex]
+        const selectedReferenceVoiceIndexes = currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex];
         if (selectedReferenceVoiceIndexes.length != 1) {
-            return
+            return;
         }
 
-
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = 'image/*';
-        fileInput.style.display = 'none';
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+        fileInput.style.display = "none";
         document.body.appendChild(fileInput);
         fileInput.click();
 
         // ファイルが選択されたときの処理
         fileInput.onchange = async () => {
             if (!fileInput.files) {
-                return
+                return;
             }
             const file = fileInput.files[0];
             if (file) {
-                serverConfigState.updateReferenceVoiceIconFile(currentVoiceCharacterSlotIndex, selectedReferenceVoiceIndexes[0], file, () => { });
+                serverConfigState.updateReferenceVoiceIconFile(currentVoiceCharacterSlotIndex, selectedReferenceVoiceIndexes[0], file, () => {});
             }
 
             // ファイル選択後にinput要素を削除
             document.body.removeChild(fileInput);
-        }
-    }
+        };
+    };
     const uplodaFile = (f: File) => {
         if (currentVoiceCharacterSlotIndex == null) {
-            return
+            return;
         }
         const voiceCharacter = serverConfigState.voiceCharacterSlotInfos[currentVoiceCharacterSlotIndex];
         if (voiceCharacter == null) {
-            return
+            return;
         }
-        const selectedReferenceVoiceIndexes = currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex]
+        const selectedReferenceVoiceIndexes = currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex];
         if (selectedReferenceVoiceIndexes.length != 1) {
-            return
+            return;
         }
 
-
-        serverConfigState.updateReferenceVoiceIconFile(currentVoiceCharacterSlotIndex, selectedReferenceVoiceIndexes[0], f, () => { });
-    }
+        serverConfigState.updateReferenceVoiceIconFile(currentVoiceCharacterSlotIndex, selectedReferenceVoiceIndexes[0], f, () => {});
+    };
 
     const component = useMemo(() => {
-        const portraitContainerClass = isPortraitContainerFocused ? portraitContainerFocused : portraitContainer
+        const portraitContainerClass = isPortraitContainerFocused ? portraitContainerFocused : portraitContainer;
 
         // あまりきれいじゃないので、フォーカスが外れたときにボタンを消す動作はいったんやめる。
         // const showUploadButtonFlag = showUploadButton && referenceVoiceMode == "edit"
-        const showUploadButtonFlag = referenceVoiceMode == "edit"
+        const showUploadButtonFlag = referenceVoiceMode == "edit";
         return (
             <div className={portraitAreaContainer}>
                 <div className={portraitArea}>
-                    <div
-                        className={portraitContainerClass}
-                    >
-                        <div className={portraitContainerImagePasteDiv}
+                    <div className={portraitContainerClass}>
+                        <div
+                            className={portraitContainerImagePasteDiv}
                             hidden={referenceVoiceMode == "view"}
                             onClick={() => {
                                 // noop
                             }}
                             onFocus={() => {
-                                setIsPortraitContainerFocused(true)
+                                setIsPortraitContainerFocused(true);
                             }}
                             onBlur={() => {
-                                setIsPortraitContainerFocused(false)
+                                setIsPortraitContainerFocused(false);
                             }}
                             onPaste={(e) => {
-                                e.currentTarget.innerHTML = ''
+                                e.currentTarget.innerHTML = "";
                                 e.preventDefault();
                                 const items = e.clipboardData.items;
                                 for (let i = 0; i < items.length; i++) {
                                     if (items[i].type.indexOf("image") !== -1) {
                                         const file = items[i].getAsFile();
                                         if (file) {
-                                            uplodaFile(file)
+                                            uplodaFile(file);
                                         }
                                     }
                                 }
-
                             }}
                             onInput={(e) => {
-                                e.currentTarget.innerHTML = ''
-                                e.preventDefault()
+                                e.currentTarget.innerHTML = "";
+                                e.preventDefault();
                                 console.log("itemsinput");
-
                             }}
                             onDragOver={(e) => {
                                 e.preventDefault();
@@ -185,7 +177,7 @@ export const CharacterAreaPortrait = () => {
                             }}
                             onDrop={(e) => {
                                 e.preventDefault();
-                                e.currentTarget.innerHTML = '';
+                                e.currentTarget.innerHTML = "";
 
                                 // Handle dropped files
                                 if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
@@ -203,7 +195,7 @@ export const CharacterAreaPortrait = () => {
                         {selectedTermOfUseUrlLink}
                         {aboutModelAndVoice}
                     </div>
-                </div >
+                </div>
                 <div className={portraitContainerButton}>
                     <button
                         hidden={!showUploadButtonFlag}
@@ -211,10 +203,11 @@ export const CharacterAreaPortrait = () => {
                             // portraitClicked()
                         }}
                         className={`${BasicButton({ width: "large" })} ${normalButtonThema} `}
-                    >{t("character_area_portrait_upload_file_button_label")}</button>
+                    >
+                        {t("character_area_portrait_upload_file_button_label")}
+                    </button>
                 </div>
             </div>
-
         );
     }, [selectedTermOfUseUrlLink, aboutModelAndVoice, referenceVoiceMode, isPortraitContainerFocused]);
     return component;

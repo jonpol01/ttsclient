@@ -10,7 +10,7 @@ import { TextLabel } from "../../styles/style-components/labels/00_text-label.cs
 import { BackendMode, GPTSoVITSSlotInfo } from "tts-client-typescript-client-lib";
 
 export const InferenceAreaBackend = () => {
-    const { serverConfigState, guiSetting, runOnColab } = useAppRoot();
+    const { serverConfigState, guiSetting } = useAppRoot();
     const { t } = useTranslation();
 
     const options = useMemo(() => {
@@ -51,68 +51,65 @@ export const InferenceAreaBackend = () => {
         );
     }, [options, serverConfigState.serverConfiguration]);
 
-
     const BackendModeOption = useMemo(() => {
         return BackendMode.map((c) => {
             return (
                 <option key={c} value={c}>
                     {c}
                 </option>
-            )
-        })
-    }, [])
+            );
+        });
+    }, []);
 
     const BackendModeSelect = useMemo(() => {
         if (!serverConfigState.serverConfiguration) {
             return <></>;
         }
-        const currentSlotId = serverConfigState.serverConfiguration?.current_slot_index
+        const currentSlotId = serverConfigState.serverConfiguration?.current_slot_index;
 
         if (!serverConfigState.serverSlotInfos) {
-            return <></>
+            return <></>;
         }
-        const currentSlot = serverConfigState.serverSlotInfos.find(x => { return x.slot_index == currentSlotId })
+        const currentSlot = serverConfigState.serverSlotInfos.find((x) => {
+            return x.slot_index == currentSlotId;
+        });
         if (!currentSlot) {
-            console.warn("currentSlot is not found", currentSlotId)
-            return <></>
+            console.warn("currentSlot is not found", currentSlotId);
+            return <></>;
         }
 
         if (currentSlot.tts_type != "GPT-SoVITS") {
-            console.warn("currentSlot is not GPT-SoVITS", currentSlotId)
-            return <></>
+            console.warn("currentSlot is not GPT-SoVITS", currentSlotId);
+            return <></>;
         }
 
-        const gptSovitsSlot = currentSlot as GPTSoVITSSlotInfo
+        const gptSovitsSlot = currentSlot as GPTSoVITSSlotInfo;
         if (gptSovitsSlot.onnx_encoder_path == null) {
-            return <div className={TextLabel({ width: "x-large" })}>not onnx generated</div>
+            return <div className={TextLabel({ width: "x-large" })}>not onnx generated</div>;
         }
 
-
-        const selectedValue = gptSovitsSlot.backend_mode
+        const selectedValue = gptSovitsSlot.backend_mode;
 
         return (
             <select
                 defaultValue={selectedValue}
                 onChange={(e) => {
-                    gptSovitsSlot.backend_mode = e.target.value as BackendMode
-                    serverConfigState.updateServerSlotInfo(gptSovitsSlot)
+                    gptSovitsSlot.backend_mode = e.target.value as BackendMode;
+                    serverConfigState.updateServerSlotInfo(gptSovitsSlot);
                 }}
                 className={BasicInput()}
             >
                 {BackendModeOption}
             </select>
-        )
+        );
     }, [serverConfigState.serverConfiguration, serverConfigState.serverSlotInfos]);
-
-
-
 
     const component = useMemo(() => {
         // DirectMLは次のようなエラーが出るので使えなさそう。
         // DirectML scatter doesn't allow partially modified dimensions. Please update the dimension so that the indices and input only differ in the provided dimension.
 
         if (["cuda", "colab", "dml", ""].includes(guiSetting.edition || "") == false) {
-            return <></>
+            return <></>;
         }
 
         return (

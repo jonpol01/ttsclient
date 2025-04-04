@@ -4,17 +4,16 @@ import { useTranslation } from "react-i18next";
 
 import { useAppState } from "../../002_AppStateProvider";
 import { AUDIO_ELEMENT_FOR_PLAY_MONITOR, AUDIO_ELEMENT_FOR_PLAY_RESULT } from "../../const";
-import { BasicButton } from "../../styles/style-components/buttons/01_basic-button.css"
+import { BasicButton } from "../../styles/style-components/buttons/01_basic-button.css";
 import { normalButtonThema } from "../../styles/style-components/buttons/thema/button-thema.css";
 import { BasicAudio } from "../../styles/style-components/audios/01_basic-audio.css";
-import { BasicLabel } from "../../styles/style-components/labels/01_basic-label.css";
 export const TextInputAreaOutputArea = () => {
     const { t } = useTranslation();
     const { audioOutput, audioMonitor, generatedVoice } = useAppState();
 
     useEffect(() => {
         if (generatedVoice == null) {
-            return
+            return;
         }
 
         const url = URL.createObjectURL(generatedVoice);
@@ -22,50 +21,47 @@ export const TextInputAreaOutputArea = () => {
         const audioElemMonitor = document.getElementById(AUDIO_ELEMENT_FOR_PLAY_MONITOR) as HTMLAudioElement;
         audioElemOutput.src = url;
         audioElemMonitor.src = url;
-
-    }, [generatedVoice])
+    }, [generatedVoice]);
 
     useEffect(() => {
         const updateSink = async () => {
-            const audioElemOutput = document.getElementById(AUDIO_ELEMENT_FOR_PLAY_RESULT) as HTMLAudioElement
-            if (!audioElemOutput) return
+            const audioElemOutput = document.getElementById(AUDIO_ELEMENT_FOR_PLAY_RESULT) as HTMLAudioElement;
+            if (!audioElemOutput) return;
             if (audioOutput == "none") {
-                audioElemOutput.volume = 0
-                return
+                audioElemOutput.volume = 0;
+                return;
             }
 
-            audioElemOutput.volume = 1
-            await audioElemOutput.setSinkId(audioOutput)
+            audioElemOutput.volume = 1;
+            await audioElemOutput.setSinkId(audioOutput);
             if (!generatedVoice) {
-                return
+                return;
             }
             const url = URL.createObjectURL(generatedVoice);
-            audioElemOutput.src = url
-        }
-        updateSink()
-    }, [audioOutput])
+            audioElemOutput.src = url;
+        };
+        updateSink();
+    }, [audioOutput]);
 
     useEffect(() => {
         const updateSink = async () => {
-            const audioElemMonitor = document.getElementById(AUDIO_ELEMENT_FOR_PLAY_MONITOR) as HTMLAudioElement
-            if (!audioElemMonitor) return
+            const audioElemMonitor = document.getElementById(AUDIO_ELEMENT_FOR_PLAY_MONITOR) as HTMLAudioElement;
+            if (!audioElemMonitor) return;
             if (audioMonitor == "none") {
-                audioElemMonitor.volume = 0
-                return
+                audioElemMonitor.volume = 0;
+                return;
             }
-            audioElemMonitor.volume = 1
+            audioElemMonitor.volume = 1;
 
-            await audioElemMonitor.setSinkId(audioMonitor)
+            await audioElemMonitor.setSinkId(audioMonitor);
             if (!generatedVoice) {
-                return
+                return;
             }
             const url = URL.createObjectURL(generatedVoice);
-            audioElemMonitor.src = url
-        }
-        updateSink()
-
-    }, [audioMonitor])
-
+            audioElemMonitor.src = url;
+        };
+        updateSink();
+    }, [audioMonitor]);
 
     const area = useMemo(() => {
         // if (!serverConfigState.serverConfiguration) return
@@ -87,24 +83,26 @@ export const TextInputAreaOutputArea = () => {
                 <div>
                     <button
                         className={`${BasicButton()} ${normalButtonThema}`}
-                        disabled={!generatedVoice ? true : false} onClick={() => {
+                        disabled={!generatedVoice ? true : false}
+                        onClick={() => {
                             if (!generatedVoice) {
-                                return
+                                return;
                             }
-                            const a = document.createElement('a');
+                            const a = document.createElement("a");
                             const url = URL.createObjectURL(generatedVoice);
                             a.href = url;
-                            a.download = 'output.wav';
+                            a.download = "output.wav";
                             document.body.appendChild(a);
                             a.click();
                             document.body.removeChild(a);
                             URL.revokeObjectURL(url);
-                        }}>download</button>
+                        }}
+                    >
+                        download
+                    </button>
                 </div>
             </>
         );
-    }, [
-        generatedVoice,
-    ]);
+    }, [generatedVoice]);
     return area;
 };

@@ -38,7 +38,7 @@ const CloseButtonRow = (props: CloseButtonRowProps) => {
 
 type StartingNoticeDialogProps = {};
 
-export const StartingNoticeDialog = (props: StartingNoticeDialogProps) => {
+export const StartingNoticeDialog = (_props: StartingNoticeDialogProps) => {
     const { t } = useTranslation();
     const { generateGetPathFunc } = useAppRoot();
     const { setDialogName } = useGuiState();

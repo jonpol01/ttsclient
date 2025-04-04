@@ -1,15 +1,12 @@
 import { useMemo } from "react";
-import { portrait, portraitFocused } from "../../styles/characterArea.css";
+import { portrait } from "../../styles/characterArea.css";
 import React from "react";
 import { useAppRoot } from "../../001_AppRootProvider";
-import { useTranslation } from "react-i18next";
 import { useAppState } from "../../002_AppStateProvider";
 
-export type VoiceCharacterPortraitProps = {
-}
+export type VoiceCharacterPortraitProps = {};
 
-export const VoiceCharacterPortrait = (props: VoiceCharacterPortraitProps) => {
-    const { t } = useTranslation();
+export const VoiceCharacterPortrait = (_props: VoiceCharacterPortraitProps) => {
     const { serverConfigState, generateGetPathFunc } = useAppRoot();
     const { currentReferenceVoiceIndexes, currentVoiceCharacterSlotIndex } = useAppState();
 
@@ -22,44 +19,47 @@ export const VoiceCharacterPortrait = (props: VoiceCharacterPortraitProps) => {
             return <></>;
         }
 
-        const selectedReferenceVoiceIndexes = currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex]
-        let iconUrl = ""
+        const selectedReferenceVoiceIndexes = currentReferenceVoiceIndexes[currentVoiceCharacterSlotIndex];
+        let iconUrl = "";
         if (!selectedReferenceVoiceIndexes) {
             // 選択中の音声が無い場合は、キャラクターアイコンを使用。
-            iconUrl = voiceCharacter.icon_file != null ? "voice_characters" + "/" + voiceCharacter.slot_index + "/" + voiceCharacter.icon_file.split(/[\/\\]/).pop() : "./assets/icons/human.png";
-
+            iconUrl =
+                voiceCharacter.icon_file != null
+                    ? "voice_characters" + "/" + voiceCharacter.slot_index + "/" + voiceCharacter.icon_file.split(/[/\\]/).pop()
+                    : "./assets/icons/human.png";
         } else if (selectedReferenceVoiceIndexes.length == 1) {
             // 選択中の音声が一つの場合は、その音声のアイコンを使用。音声にアイコンが無ければキャラクターアイコンを使用。
-            const currentVoiceIndex = selectedReferenceVoiceIndexes[0]
-            const voice = voiceCharacter.reference_voices.filter((voice) => voice.slot_index == currentVoiceIndex)[0]
+            const currentVoiceIndex = selectedReferenceVoiceIndexes[0];
+            const voice = voiceCharacter.reference_voices.filter((voice) => voice.slot_index == currentVoiceIndex)[0];
             if (!voice) {
                 // 音声が未登録の場合、キャラアイコンを使用。
-                iconUrl = voiceCharacter.icon_file != null ? "voice_characters" + "/" + voiceCharacter.slot_index + "/" + voiceCharacter.icon_file.split(/[\/\\]/).pop() : "./assets/icons/human.png";
+                iconUrl =
+                    voiceCharacter.icon_file != null
+                        ? "voice_characters" + "/" + voiceCharacter.slot_index + "/" + voiceCharacter.icon_file.split(/[/\\]/).pop()
+                        : "./assets/icons/human.png";
             } else if (voice.icon_file) {
                 // 音声にアイコンがある場合
-                iconUrl = "voice_characters" + "/" + voiceCharacter.slot_index + "/" + voice.icon_file.split(/[\/\\]/).pop()
+                iconUrl = "voice_characters" + "/" + voiceCharacter.slot_index + "/" + voice.icon_file.split(/[/\\]/).pop();
             } else {
                 // 音声にアイコンが無い場合、キャラアイコンを使用。
-                iconUrl = voiceCharacter.icon_file != null ? "voice_characters" + "/" + voiceCharacter.slot_index + "/" + voiceCharacter.icon_file.split(/[\/\\]/).pop() : "./assets/icons/human.png";
+                iconUrl =
+                    voiceCharacter.icon_file != null
+                        ? "voice_characters" + "/" + voiceCharacter.slot_index + "/" + voiceCharacter.icon_file.split(/[/\\]/).pop()
+                        : "./assets/icons/human.png";
             }
         } else {
             // 複数の音声が選択されている場合は、キャラクターアイコンを使用。
-            iconUrl = voiceCharacter.icon_file != null ? "voice_characters" + "/" + voiceCharacter.slot_index + "/" + voiceCharacter.icon_file.split(/[\/\\]/).pop() : "./assets/icons/human.png";
+            iconUrl =
+                voiceCharacter.icon_file != null
+                    ? "voice_characters" + "/" + voiceCharacter.slot_index + "/" + voiceCharacter.icon_file.split(/[/\\]/).pop()
+                    : "./assets/icons/human.png";
         }
 
-        iconUrl = generateGetPathFunc(iconUrl)
+        iconUrl = generateGetPathFunc(iconUrl);
 
         // const imgCalss = props.isPortraitContainerFocused ? portraitFocused : portrait
-        const imgCalss = portrait
-        const portraitComponent = (
-            <img
-                contentEditable={true}
-                className={imgCalss}
-                src={iconUrl}
-                alt={voiceCharacter.name}
-            />
-
-        )
+        const imgCalss = portrait;
+        const portraitComponent = <img contentEditable={true} className={imgCalss} src={iconUrl} alt={voiceCharacter.name} />;
         return portraitComponent;
     }, [serverConfigState.voiceCharacterSlotInfos, currentReferenceVoiceIndexes, currentVoiceCharacterSlotIndex]);
     return portraitComponent;

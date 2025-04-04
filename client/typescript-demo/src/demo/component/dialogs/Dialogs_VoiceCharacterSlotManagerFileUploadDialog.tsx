@@ -10,12 +10,6 @@ import {
     fileInputAreaLabel,
     fileInputAreaValue,
     instructions,
-    selectInputArea,
-    selectInputAreaInput,
-    selectInputAreaLabel,
-    textInputArea,
-    textInputAreaInput,
-    textInputAreaLabel,
     uploadStatusArea,
 } from "../../../styles/dialog.css";
 import { useGuiState } from "../../GuiStateProvider";
@@ -24,7 +18,7 @@ import { useAppRoot } from "../../../001_AppRootProvider";
 import { checkExtention } from "../../../util/checkExctension";
 import { Logger } from "../../../util/logger";
 import { VoiceCharacterUploadFile, VoiceCharacterUploadFileKind } from "../../../const";
-import { fileSelector, TTSType, TTSTypes } from "tts-client-typescript-client-lib";
+import { fileSelector } from "tts-client-typescript-client-lib";
 type CloseButtonRowProps = {
     uploadClicked: () => void;
     backClicked: () => void;
@@ -93,7 +87,6 @@ const VoiceCharacterFileChooser = (props: VoiceCharacterFileChooserProps) => {
         );
     }, [props.uploadFiles, props.setUploadFile, isZipFileSelecting]);
 
-
     const selectFile = async (kind: VoiceCharacterUploadFileKind) => {
         let file: File | null = null;
         try {
@@ -113,13 +106,8 @@ const VoiceCharacterFileChooser = (props: VoiceCharacterFileChooserProps) => {
             props.setUploadFile({ kind: kind, file: file });
         }
     };
-    return (
-        <>
-            {zipFile}
-        </>
-    );
+    return <>{zipFile}</>;
 };
-
 
 export const VoiceCharacterSlotManagerFileUploadDialog = (props: VoiceCharacterSlotManagerFileUploadDialogProps) => {
     const { t } = useTranslation();
@@ -169,40 +157,33 @@ export const VoiceCharacterSlotManagerFileUploadDialog = (props: VoiceCharacterS
         //     return
         // }
         // if (tTSType == "GPT-SoVITS") {
-        if (true) {
-
-            setUploadProgress(0);
-            const zipFile = uploadFiles.find((x) => x.kind === "zipFile");
-            try {
-                const files: VoiceCharacterUploadFile[] = [];
-                if (!zipFile) {
-                    triggerToast("error", t("voice_character_slot_manager_fileupload_zip_input_error"));
-                    return
-                }
-                files.push(zipFile);
-                await serverConfigState.uploadVoiceCharacterFile(props.slotIndex, "VoiceCharacter", "", files, (progress, end) => {
-                    Logger.getLogger().info("progress", progress, end);
-                    setUploadProgress(Math.floor(progress - 1));
-                });
-            } catch (e) {
-                triggerToast("error", `upload failed: ${e.detail || ""}`);
-                Logger.getLogger().error(`upload failed: ${e.detail || ""}`);
+        setUploadProgress(0);
+        const zipFile = uploadFiles.find((x) => x.kind === "zipFile");
+        try {
+            const files: VoiceCharacterUploadFile[] = [];
+            if (!zipFile) {
+                triggerToast("error", t("voice_character_slot_manager_fileupload_zip_input_error"));
+                return;
             }
-            setDialogName("voiceCharacterManagerMainDialog");
-            setUploadProgress(100);
-            setUploadProgress(0);
+            files.push(zipFile);
+            await serverConfigState.uploadVoiceCharacterFile(props.slotIndex, "VoiceCharacter", "", files, (progress, end) => {
+                Logger.getLogger().info("progress", progress, end);
+                setUploadProgress(Math.floor(progress - 1));
+            });
+        } catch (e) {
+            triggerToast("error", `upload failed: ${e.detail || ""}`);
+            Logger.getLogger().error(`upload failed: ${e.detail || ""}`);
         }
+        setDialogName("voiceCharacterManagerMainDialog");
+        setUploadProgress(100);
+        setUploadProgress(0);
     };
     const backClicked = () => {
         clearUploadFiles();
         setDialogName("voiceCharacterManagerMainDialog");
     };
 
-    let fileChooserArea = <></>;
-    // if (tTSType == "GPT-SoVITS") {
-    if (true) {
-        fileChooserArea = <VoiceCharacterFileChooser setUploadFile={setUploadFile} uploadFiles={uploadFiles}></VoiceCharacterFileChooser>;
-    }
+    const fileChooserArea = <VoiceCharacterFileChooser setUploadFile={setUploadFile} uploadFiles={uploadFiles}></VoiceCharacterFileChooser>;
 
     return (
         <div className={dialogFrame}>

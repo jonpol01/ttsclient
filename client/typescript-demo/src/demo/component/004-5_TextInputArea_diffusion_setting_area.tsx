@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { GPTSoVITSSlotInfo, GPTSoVITSVersion, GPTSoVITSModelVersion } from "tts-client-typescript-client-lib";
+import { GPTSoVITSSlotInfo, GPTSoVITSModelVersion } from "tts-client-typescript-client-lib";
 import { useAppState } from "../../002_AppStateProvider";
 import { useAppRoot } from "../../001_AppRootProvider";
 export const TextInputAreaDiffusionSettingArea = () => {
@@ -10,22 +10,28 @@ export const TextInputAreaDiffusionSettingArea = () => {
     const { sampleSteps, setSampleSteps } = useAppState();
 
     const area = useMemo(() => {
-        if (!serverConfigState.serverConfiguration) return
-        if (!serverConfigState.serverSlotInfos) return
-        const slotIndex = serverConfigState.serverConfiguration.current_slot_index
-        const slotInfo = serverConfigState.serverSlotInfos[slotIndex]
-        if (!slotInfo) return
+        if (!serverConfigState.serverConfiguration) return;
+        if (!serverConfigState.serverSlotInfos) return;
+        const slotIndex = serverConfigState.serverConfiguration.current_slot_index;
+        const slotInfo = serverConfigState.serverSlotInfos[slotIndex];
+        if (!slotInfo) return;
 
-        let gptSovitsVersion: GPTSoVITSVersion | null = null
-        let gptSovitsModelVersion: GPTSoVITSModelVersion | null = null
+        let gptSovitsModelVersion: GPTSoVITSModelVersion | null = null;
         if (slotInfo.tts_type == "GPT-SoVITS") {
-            const gptSovitsSlotInfo = slotInfo as GPTSoVITSSlotInfo
-            gptSovitsVersion = gptSovitsSlotInfo.version
-            gptSovitsModelVersion = gptSovitsSlotInfo.model_version
+            const gptSovitsSlotInfo = slotInfo as GPTSoVITSSlotInfo;
+            gptSovitsModelVersion = gptSovitsSlotInfo.model_version;
         }
-        let sampleStepsInput = <></>
+        let sampleStepsInput = <></>;
         if (gptSovitsModelVersion == "v3") {
-            const sampleStepsOptions = Array(100).fill(0).map((x, i) => { return (<option key={i + 1} value={i + 1}>{i + 1}</option>) })
+            const sampleStepsOptions = Array(100)
+                .fill(0)
+                .map((x, i) => {
+                    return (
+                        <option key={i + 1} value={i + 1}>
+                            {i + 1}
+                        </option>
+                    );
+                });
 
             sampleStepsInput = (
                 <div style={{ display: "flex", flexDirection: "row", gap: "0.3rem" }}>
@@ -34,21 +40,16 @@ export const TextInputAreaDiffusionSettingArea = () => {
                         defaultValue={sampleSteps}
                         id="inference-voice-area-sample-steps-select"
                         onChange={(e) => {
-                            setSampleSteps(parseInt(e.target.value))
+                            setSampleSteps(parseInt(e.target.value));
                         }}
                     >
                         {sampleStepsOptions}
-                    </select >
+                    </select>
                 </div>
-            )
+            );
         }
 
-        return sampleStepsInput
-    }, [
-
-        serverConfigState.serverSlotInfos,
-        serverConfigState.serverConfiguration,
-        sampleSteps,
-    ]);
+        return sampleStepsInput;
+    }, [serverConfigState.serverSlotInfos, serverConfigState.serverConfiguration, sampleSteps]);
     return area;
 };

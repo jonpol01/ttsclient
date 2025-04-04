@@ -7,18 +7,12 @@ import {
     dialogItemName20,
     dialogItemRow,
     dialogItemValue,
-    dialogItemValueSlider,
-    dialogItemValueSliderContainer,
-    dialogItemValueSliderVal,
     dialogTitle,
-    execButton,
     instructions,
 } from "../../../styles/dialog.css";
 import { useGuiState } from "../../GuiStateProvider";
 import { useTranslation } from "react-i18next";
 import { useAppRoot } from "../../../001_AppRootProvider";
-import { useAppState } from "../../../002_AppStateProvider";
-import { Protocol, Protocols, VolumeTuningType, VolumeTuningTypes } from "vcclient-typescript-client-lib";
 import { TranscriberComputeType, TranscriberDevice, TranscriberModelSize } from "tts-client-typescript-client-lib";
 
 type CloseButtonRowProps = {
@@ -391,8 +385,6 @@ const CloseButtonRow = (props: CloseButtonRowProps) => {
 //     return component;
 // };
 
-
-
 // const ServerDeviceTrancateBufferRatio = () => {
 //     const { t } = useTranslation();
 //     const { serverConfigState } = useAppRoot();
@@ -467,9 +459,6 @@ const CloseButtonRow = (props: CloseButtonRowProps) => {
 //     return component;
 // };
 
-
-
-
 const TranscribeAudio = () => {
     const { t } = useTranslation();
     const { serverConfigState } = useAppRoot();
@@ -505,15 +494,17 @@ const TranscribeAudioModelSize = () => {
     const { t } = useTranslation();
     const { serverConfigState } = useAppRoot();
 
-    const options = Object.keys(TranscriberModelSize).filter((x) => {
-        return true
-    }).map((v) => {
-        return (
-            <option key={v} value={v}>
-                {v}
-            </option>
-        );
-    });
+    const options = Object.keys(TranscriberModelSize)
+        .filter((_x) => {
+            return true;
+        })
+        .map((v) => {
+            return (
+                <option key={v} value={v}>
+                    {v}
+                </option>
+            );
+        });
 
     const component = useMemo(() => {
         if (!serverConfigState.serverConfiguration) {
@@ -542,22 +533,22 @@ const TranscribeAudioModelSize = () => {
     return component;
 };
 
-
-
 const TranscribeAudioDevice = () => {
     const { t } = useTranslation();
     const { serverConfigState } = useAppRoot();
 
-    const options = Object.keys(TranscriberDevice).filter((x) => {
-        // [ "cpu"]に含まれる場合はtrue
-        return ["cpu"].includes(x);
-    }).map((v) => {
-        return (
-            <option key={v} value={v}>
-                {v}
-            </option>
-        );
-    });
+    const options = Object.keys(TranscriberDevice)
+        .filter((x) => {
+            // [ "cpu"]に含まれる場合はtrue
+            return ["cpu"].includes(x);
+        })
+        .map((v) => {
+            return (
+                <option key={v} value={v}>
+                    {v}
+                </option>
+            );
+        });
 
     const component = useMemo(() => {
         if (!serverConfigState.serverConfiguration) {
@@ -586,20 +577,21 @@ const TranscribeAudioDevice = () => {
     return component;
 };
 
-
 const TranscribeAudioComputeType = () => {
     const { t } = useTranslation();
     const { serverConfigState } = useAppRoot();
 
-    const options = Object.keys(TranscriberComputeType).filter((x) => {
-        return ["float32", "int8"].includes(x);
-    }).map((v) => {
-        return (
-            <option key={v} value={v}>
-                {v}
-            </option>
-        );
-    });
+    const options = Object.keys(TranscriberComputeType)
+        .filter((x) => {
+            return ["float32", "int8"].includes(x);
+        })
+        .map((v) => {
+            return (
+                <option key={v} value={v}>
+                    {v}
+                </option>
+            );
+        });
 
     const component = useMemo(() => {
         if (!serverConfigState.serverConfiguration) {
@@ -628,11 +620,8 @@ const TranscribeAudioComputeType = () => {
     return component;
 };
 
-
-
 export const AdvancedSettingDialog = () => {
     const { t } = useTranslation();
-    const { serverConfigState, triggerToast } = useAppRoot();
     const { setDialogName } = useGuiState();
 
     const backClicked = () => {
@@ -648,7 +637,6 @@ export const AdvancedSettingDialog = () => {
                     <TranscribeAudioModelSize></TranscribeAudioModelSize>
                     <TranscribeAudioDevice></TranscribeAudioDevice>
                     <TranscribeAudioComputeType></TranscribeAudioComputeType>
-
                 </div>
                 <CloseButtonRow closeClicked={backClicked}></CloseButtonRow>
             </div>

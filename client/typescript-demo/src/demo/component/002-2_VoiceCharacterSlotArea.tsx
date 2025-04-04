@@ -6,7 +6,6 @@ import {
     buttonActive,
     buttonGroup,
     buttons,
-    modelSlotArea,
     modelSlotArea2,
     modelSlotPane,
     modelSlotTileContainer,
@@ -15,7 +14,6 @@ import {
     modelSlotTileIcon,
     modelSlotTileIconDiv,
     modelSlotTileIconNoEntry,
-    modelSlotTileVctype,
     modelSlotTilesContainer,
     modelSlotTitle,
 } from "../../styles/modelSlot.css";
@@ -28,11 +26,12 @@ const SortTypes = {
     slot: "slot",
     name: "name",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type SortTypes = (typeof SortTypes)[keyof typeof SortTypes];
 
 export const VoiceCharacterSlotArea = (_props: VoiceCharacterSlotAreaProps) => {
     const { serverConfigState, triggerToast, generateGetPathFunc } = useAppRoot();
-    const { currentVoiceCharacterSlotIndex, setCurrentVoiceCharacterSlotIndex, referenceVoiceMode } = useAppState()
+    const { currentVoiceCharacterSlotIndex, setCurrentVoiceCharacterSlotIndex, referenceVoiceMode } = useAppState();
     const guiState = useGuiState();
     const { t } = useTranslation();
     const [sortType, setSortType] = useState<SortTypes>("slot");
@@ -44,11 +43,11 @@ export const VoiceCharacterSlotArea = (_props: VoiceCharacterSlotAreaProps) => {
         const voiceCharacterSlots =
             sortType == "slot"
                 ? serverConfigState.voiceCharacterSlotInfos.slice().sort((a, b) => {
-                    return a.slot_index - b.slot_index;
-                })
+                      return a.slot_index - b.slot_index;
+                  })
                 : serverConfigState.voiceCharacterSlotInfos.slice().sort((a, b) => {
-                    return a.name.localeCompare(b.name);
-                });
+                      return a.name.localeCompare(b.name);
+                  });
 
         return voiceCharacterSlots
             .map((x, index) => {
@@ -56,12 +55,10 @@ export const VoiceCharacterSlotArea = (_props: VoiceCharacterSlotAreaProps) => {
                     return null;
                 }
                 const tileContainerClass =
-                    x.slot_index == currentVoiceCharacterSlotIndex
-                        ? `${modelSlotTileContainer} ${modelSlotTileContainerSelected}`
-                        : modelSlotTileContainer;
+                    x.slot_index == currentVoiceCharacterSlotIndex ? `${modelSlotTileContainer} ${modelSlotTileContainerSelected}` : modelSlotTileContainer;
                 const name = x.name.length > 8 ? x.name.substring(0, 7) + "..." : x.name;
-                let icon = x.icon_file != null ? "voice_characters" + "/" + x.slot_index + "/" + x.icon_file.split(/[\/\\]/).pop() : "./assets/icons/human.png";
-                icon = generateGetPathFunc(icon)
+                let icon = x.icon_file != null ? "voice_characters" + "/" + x.slot_index + "/" + x.icon_file.split(/[/\\]/).pop() : "./assets/icons/human.png";
+                icon = generateGetPathFunc(icon);
 
                 const iconElem =
                     x.icon_file != null ? (
@@ -78,10 +75,10 @@ export const VoiceCharacterSlotArea = (_props: VoiceCharacterSlotAreaProps) => {
 
                 const clickAction = async () => {
                     if (referenceVoiceMode == "edit") {
-                        triggerToast("error", t("reference_voice_area_select_voice_error_in_edit_mode"))
-                        return
+                        triggerToast("error", t("reference_voice_area_select_voice_error_in_edit_mode"));
+                        return;
                     }
-                    setCurrentVoiceCharacterSlotIndex(x.slot_index)
+                    setCurrentVoiceCharacterSlotIndex(x.slot_index);
                 };
 
                 return (

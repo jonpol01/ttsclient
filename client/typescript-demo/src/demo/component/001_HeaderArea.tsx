@@ -1,18 +1,7 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { isDesktopApp } from "../../util/isDesctopApp";
-import {
-    button,
-    headerArea,
-    iconArea,
-    iconGroup,
-    title,
-    titleArea,
-    titleVersion,
-    tooltip,
-    tooltipText,
-    tooltipText100px,
-} from "../../styles/header.css";
+import { headerArea, iconArea, iconGroup, title, titleArea, titleVersion, tooltip, tooltipText, tooltipText100px } from "../../styles/header.css";
 import { useAppRoot } from "../../001_AppRootProvider";
 import { useGuiState } from "../GuiStateProvider";
 import { useAppState } from "../../002_AppStateProvider";
@@ -24,7 +13,7 @@ import { headerButtonThema } from "../../styles/style-components/buttons/thema/b
 
 export type HeaderAreaProps = {};
 
-export const HeaderArea = (props: HeaderAreaProps) => {
+export const HeaderArea = (_props: HeaderAreaProps) => {
     const { t, i18n } = useTranslation();
     const { guiSetting, serverConfigState, generateGetPathFunc } = useAppRoot();
     const { setDialog2Name, setDialog2Props } = useGuiState();
@@ -180,12 +169,16 @@ export const HeaderArea = (props: HeaderAreaProps) => {
         );
     }, [i18n.language, displayColorMode]);
 
-
     const displayColorModeButton = useMemo(() => {
         return (
-            <button className={`${BasicButton()} ${headerButtonThema}`} onClick={() => {
-                setDisplayColorMode(displayColorMode == "light" ? "dark" : "light")
-            }}>{displayColorMode == "light" ? t("header_to_dark_label") : t("header_to_light_label")}</button>
+            <button
+                className={`${BasicButton()} ${headerButtonThema}`}
+                onClick={() => {
+                    setDisplayColorMode(displayColorMode == "light" ? "dark" : "light");
+                }}
+            >
+                {displayColorMode == "light" ? t("header_to_dark_label") : t("header_to_light_label")}
+            </button>
         );
     }, [displayColorMode]);
 

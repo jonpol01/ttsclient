@@ -13,7 +13,7 @@ try {
 const licenses = JSON.parse(rawData);
 
 // 上書き処理
-overwrite = [
+const overwrite = [
     {
         targetModule: "tree-dump",
         correctedLicense: "Apache-2.0",
@@ -26,10 +26,10 @@ overwrite = [
     },
 ];
 
-for (let item of overwrite) {
-    targetModule = item.targetModule;
-    correctedLicense = item.correctedLicense;
-    licenseURL = item.licenseURL;
+for (const item of overwrite) {
+    const targetModule = item.targetModule;
+    const correctedLicense = item.correctedLicense;
+    const licenseURL = item.licenseURL;
     Object.keys(licenses).forEach((packageName) => {
         if (packageName.includes(targetModule)) {
             licenses[packageName].licenses = correctedLicense;

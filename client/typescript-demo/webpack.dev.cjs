@@ -22,7 +22,7 @@ module.exports = merge(common, {
                 target: "http://localhost:18000",
                 changeOrigin: true,
                 secure: false,
-                onProxyReq: (proxyReq, req, res) => {
+                onProxyReq: (proxyReq) => {
                     console.log(`Proxying request to: ${proxyReq.path}`);
                 },
             },
@@ -31,7 +31,7 @@ module.exports = merge(common, {
                 target: "http://localhost:18000",
                 changeOrigin: true,
                 secure: false,
-                onProxyReq: (proxyReq, req, res) => {
+                onProxyReq: (proxyReq) => {
                     console.log(`Proxying request to: ${proxyReq.path}`);
                 },
             },
@@ -40,7 +40,7 @@ module.exports = merge(common, {
                 target: "http://localhost:18000",
                 changeOrigin: true,
                 secure: false,
-                onProxyReq: (proxyReq, req, res) => {
+                onProxyReq: (proxyReq) => {
                     console.log(`Proxying request to: ${proxyReq.path}`);
                 },
             },

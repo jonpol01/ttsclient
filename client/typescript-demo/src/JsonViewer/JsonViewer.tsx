@@ -3,7 +3,6 @@ import hljs from "highlight.js";
 import "highlight.js/styles/default.css";
 import { loggerArea, loggerControlArea, loggerControlButton, loggerDiv } from "../styles";
 import { useAppRoot } from "../001_AppRootProvider";
-import { use } from "i18next";
 import { Logger } from "../util/logger";
 
 type JsonViewerProps = {

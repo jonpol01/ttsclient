@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { Logger } from "../../util/logger";
-import { t } from "i18next";
 
 export type AudioConfigState = {
     audioContext: AudioContext | null;

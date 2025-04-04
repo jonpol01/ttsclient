@@ -10,11 +10,9 @@ import {
     configSubAreaInputMediaFileSelectIcon,
     configSubAreaRow,
     configSubAreaRowField14,
-    configSubAreaRowTitle5,
 } from "../../styles/configArea.css";
 import { useAppRoot } from "../../001_AppRootProvider";
 import { useTranslation } from "react-i18next";
-import { left1Padding } from "../../styles/base.css";
 import { AUDIO_ELEMENT_FOR_INPUT_MEDIA, AUDIO_ELEMENT_FOR_INPUT_MEDIA_ECHOBACK, AudioDeviceType } from "../../const";
 import { isDesktopApp } from "../../util/isDesctopApp";
 import { Logger } from "../../util/logger";
@@ -32,16 +30,17 @@ const InputType = {
     file: "file",
     capture: "capture",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */ // @ts-ignore
 type InputType = (typeof InputType)[keyof typeof InputType];
 
 export const BrowserAudioDeviceAreaDeviceSelect = (props: AudioDeviceAreaDeviceSelectProps) => {
     const { serverConfigState, audioConfigState } = useAppRoot();
-    const { audioInput, audioOutput, audioMonitor, setAudioInput, setAudioOutput, setAudioMonitor } = useAppState()
+    const { audioInput, audioOutput, audioMonitor, setAudioInput, setAudioOutput, setAudioMonitor } = useAppState();
 
     const { t } = useTranslation();
     const [inputType, setInputType] = useState<InputType>(InputType.deviceId);
     const [enableEchoback, setEnableEchoback] = useState(false);
-    const audioSrcNode = useRef<MediaElementAudioSourceNode>();
+    const audioSrcNode = useRef<MediaElementAudioSourceNode | null>(null);
     const displayMediaStream = useRef<MediaStream | null>(null);
     const [nowCapturing, setNowCapturing] = useState(false);
 
@@ -135,14 +134,7 @@ export const BrowserAudioDeviceAreaDeviceSelect = (props: AudioDeviceAreaDeviceS
         } else {
             return <></>;
         }
-    }, [
-        inputType,
-        audioConfigState.audioInputs,
-        audioConfigState.audioOutputs,
-        audioInput,
-        audioOutput,
-        audioMonitor,
-    ]);
+    }, [inputType, audioConfigState.audioInputs, audioConfigState.audioOutputs, audioInput, audioOutput, audioMonitor]);
 
     const audioPlayerRow = useMemo(() => {
         if (inputType != "file") {

@@ -1,17 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import {
-    AudioRecorder,
-    DefaultSettings,
-    Settings,
-    AudioDataCallback,
-
-} from "@dannadori/audio-recorder-js";
+import { AudioRecorder, DefaultSettings, Settings, AudioDataCallback } from "@dannadori/audio-recorder-js";
 
 export type AudioRecorderState = {
     audioRecorderInitialized: boolean;
     audioRecorderStarted: boolean;
     audioRecorderSettings: Settings;
-
 };
 
 export type AudioRecorderStateAndMethod = AudioRecorderState & {
@@ -27,36 +20,31 @@ export type AudioRecorderStateAndMethod = AudioRecorderState & {
     setEnableNoiseSuppression2: (enableNoiseSuppression2: boolean) => void;
 
     setAudioDataCallback: (audioDataCallback: AudioDataCallback) => void;
-
 };
 
 type useAudioRecorderProps = {
     enableFlatPath: boolean;
     workOnColab: boolean;
 };
-export const useAudioRecorder = (props: useAudioRecorderProps): AudioRecorderStateAndMethod => {
+export const useAudioRecorder = (_props: useAudioRecorderProps): AudioRecorderStateAndMethod => {
     const audioRecorder = useRef<AudioRecorder | null>(null);
     const [audioRecorderInitialized, setAudioRecorderInitialized] = useState<boolean>(false);
-    const [audioRecorderSettings, setAudioRecorderSettings] = useState<Settings>(DefaultSettings)
+    const [audioRecorderSettings, setAudioRecorderSettings] = useState<Settings>(DefaultSettings);
 
     const [audioRecorderStarted, setAudioRecorderStarted] = useState<boolean>(false);
 
-
     const initializeAudioRecorder = async (ctx: AudioContext) => {
-        audioRecorder.current = new AudioRecorder(
-            ctx,
-            true
-        );
+        audioRecorder.current = new AudioRecorder(ctx, true);
         const initialized = await audioRecorder.current.isInitialized();
         setAudioRecorderInitialized(initialized);
-    }
+    };
 
     const audioRecorderStart = () => {
         setAudioRecorderStarted(true);
-    }
+    };
     const audioRecorderStop = () => {
         setAudioRecorderStarted(false);
-    }
+    };
 
     useEffect(() => {
         if (!audioRecorder.current) {
@@ -67,7 +55,7 @@ export const useAudioRecorder = (props: useAudioRecorderProps): AudioRecorderSta
         } else {
             audioRecorder.current.stop();
         }
-    }, [audioRecorderStarted])
+    }, [audioRecorderStarted]);
 
     // 設定
     const setAudioInput = (audioInput: string | MediaStream) => {
@@ -156,14 +144,13 @@ export const useAudioRecorder = (props: useAudioRecorderProps): AudioRecorderSta
             return;
         }
         audioRecorder.current.setAudioDataCallback(audioDataCallback);
-    }
+    };
     useEffect(() => {
         if (!audioRecorder.current || !audioRecorderInitialized) {
             return;
         }
         audioRecorder.current.updateSettings(audioRecorderSettings);
     }, [audioRecorder.current, audioRecorderInitialized, audioRecorderSettings]);
-
 
     const res = {
         audioRecorderInitialized,
@@ -180,7 +167,6 @@ export const useAudioRecorder = (props: useAudioRecorderProps): AudioRecorderSta
         setEnableNoiseSuppression,
         setEnableNoiseSuppression2,
         setAudioDataCallback,
-
     };
     return res;
 };

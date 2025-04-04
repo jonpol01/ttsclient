@@ -10,7 +10,8 @@
     "webpack:dev": "webpack --config webpack.dev.cjs",
     "webpack:prod": "webpack --config webpack.prod.cjs",
     "build:dev": "npm-run-all clean webpack:dev",
-    "build:prod": "npm-run-all clean webpack:prod"
+    "build:prod": "npm-run-all clean webpack:prod",
+    "lint": "eslint . --ext .ts,.tsx"
   },
   "keywords": [],
   "author": "",

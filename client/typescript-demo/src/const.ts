@@ -12,6 +12,7 @@ const AppMode = {
     JsonViewer: "JsonViewer",
     ApiTest: "ApiTest",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type AppMode = (typeof AppMode)[keyof typeof AppMode];
 
 export const ToastLevel = {
@@ -20,6 +21,7 @@ export const ToastLevel = {
     Warning: "Warning",
     Error: "Error",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type ToastLevel = (typeof ToastLevel)[keyof typeof ToastLevel];
 
 export const AudioDeviceType = {
@@ -27,12 +29,14 @@ export const AudioDeviceType = {
     Output: "Output",
     Monitor: "Monitor",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type AudioDeviceType = (typeof AudioDeviceType)[keyof typeof AudioDeviceType];
 
 export const PlayerType = {
     in: "in",
     out: "out",
 } as const;
+/* eslint-disable-next-line @typescript-eslint/no-redeclare */
 export type PlayerType = (typeof PlayerType)[keyof typeof PlayerType];
 
 export const UploadFileKinds = ["semanticPredictorModelFile", "synthesizerModelFile"] as const;
@@ -42,7 +46,6 @@ export type UploadFile = {
     kind: UploadFileKind;
     file: File;
 };
-
 
 export const VoiceCharacterUploadFileKinds = ["zipFile"] as const;
 export type VoiceCharacterUploadFileKind = (typeof VoiceCharacterUploadFileKinds)[number];
