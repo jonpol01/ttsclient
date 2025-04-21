@@ -21,17 +21,17 @@
       "licenseURL": ""
     },
     {
-      "name": "@babel/preset-typescript@7.26.0",
+      "name": "@babel/preset-typescript@7.27.0",
       "repository": "https://github.com/babel/babel",
       "licenseURL": ""
     },
     {
-      "name": "@babel/runtime@7.26.10",
+      "name": "@babel/runtime@7.27.0",
       "repository": "https://github.com/babel/babel",
       "licenseURL": ""
     },
     {
-      "name": "@eslint-community/eslint-utils@4.5.1",
+      "name": "@eslint-community/eslint-utils@4.6.1",
       "repository": "https://github.com/eslint-community/eslint-utils",
       "licenseURL": ""
     },
@@ -41,12 +41,12 @@
       "licenseURL": ""
     },
     {
-      "name": "@eslint/eslintrc@3.3.0",
+      "name": "@eslint/eslintrc@3.3.1",
       "repository": "https://github.com/eslint/eslintrc",
       "licenseURL": ""
     },
     {
-      "name": "@eslint/js@9.22.0",
+      "name": "@eslint/js@9.25.0",
       "repository": "https://github.com/eslint/eslint",
       "licenseURL": ""
     },
@@ -66,52 +66,52 @@
       "licenseURL": ""
     },
     {
-      "name": "@types/react-dom@19.0.4",
+      "name": "@types/react-dom@19.1.2",
       "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
       "licenseURL": ""
     },
     {
-      "name": "@types/react@19.0.12",
+      "name": "@types/react@19.1.2",
       "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/eslint-plugin@8.26.1",
+      "name": "@typescript-eslint/eslint-plugin@8.30.1",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/parser@8.26.1",
+      "name": "@typescript-eslint/parser@8.30.1",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/scope-manager@8.26.1",
+      "name": "@typescript-eslint/scope-manager@8.30.1",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/type-utils@8.26.1",
+      "name": "@typescript-eslint/type-utils@8.30.1",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/types@8.26.1",
+      "name": "@typescript-eslint/types@8.30.1",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/typescript-estree@8.26.1",
+      "name": "@typescript-eslint/typescript-estree@8.30.1",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/utils@8.26.1",
+      "name": "@typescript-eslint/utils@8.30.1",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/visitor-keys@8.26.1",
+      "name": "@typescript-eslint/visitor-keys@8.30.1",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
@@ -156,28 +156,43 @@
       "licenseURL": ""
     },
     {
-      "name": "eslint-config-prettier@10.1.1",
+      "name": "eslint-config-prettier@10.1.2",
       "repository": "https://github.com/prettier/eslint-config-prettier",
       "licenseURL": ""
     },
     {
-      "name": "eslint-plugin-prettier@5.2.3",
+      "name": "eslint-plugin-prettier@5.2.6",
       "repository": "https://github.com/prettier/eslint-plugin-prettier",
       "licenseURL": ""
     },
     {
-      "name": "eslint-plugin-react@7.37.4",
+      "name": "eslint-plugin-react-hooks@5.2.0",
+      "repository": "https://github.com/facebook/react",
+      "licenseURL": ""
+    },
+    {
+      "name": "eslint-plugin-react-refresh@0.4.19",
+      "repository": "https://github.com/ArnaudBarre/eslint-plugin-react-refresh",
+      "licenseURL": ""
+    },
+    {
+      "name": "eslint-plugin-react@7.37.5",
       "repository": "https://github.com/jsx-eslint/eslint-plugin-react",
       "licenseURL": ""
     },
     {
-      "name": "eslint-webpack-plugin@5.0.0",
+      "name": "eslint-webpack-plugin@5.0.1",
       "repository": "https://github.com/webpack-contrib/eslint-webpack-plugin",
       "licenseURL": ""
     },
     {
-      "name": "eslint@9.22.0",
+      "name": "eslint@9.25.0",
       "repository": "https://github.com/eslint/eslint",
+      "licenseURL": ""
+    },
+    {
+      "name": "globals@16.0.0",
+      "repository": "https://github.com/sindresorhus/globals",
       "licenseURL": ""
     },
     {
@@ -191,7 +206,7 @@
       "licenseURL": ""
     },
     {
-      "name": "i18next-browser-languagedetector@8.0.4",
+      "name": "i18next-browser-languagedetector@8.0.5",
       "repository": "https://github.com/i18next/i18next-browser-languageDetector",
       "licenseURL": ""
     },
@@ -201,7 +216,7 @@
       "licenseURL": ""
     },
     {
-      "name": "i18next@24.2.3",
+      "name": "i18next@25.0.1",
       "repository": "https://github.com/i18next/i18next",
       "licenseURL": ""
     },
@@ -231,7 +246,7 @@
       "licenseURL": ""
     },
     {
-      "name": "react-dom@19.0.0",
+      "name": "react-dom@19.1.0",
       "repository": "https://github.com/facebook/react",
       "licenseURL": ""
     },
@@ -256,7 +271,7 @@
       "licenseURL": ""
     },
     {
-      "name": "react@19.0.0",
+      "name": "react@19.1.0",
       "repository": "https://github.com/facebook/react",
       "licenseURL": ""
     },
@@ -271,36 +286,36 @@
       "licenseURL": ""
     },
     {
-      "name": "webpack-dev-server@5.2.0",
+      "name": "webpack-dev-server@5.2.1",
       "repository": "https://github.com/webpack/webpack-dev-server",
       "licenseURL": ""
     },
     {
-      "name": "webpack@5.98.0",
+      "name": "webpack@5.99.6",
       "repository": "https://github.com/webpack/webpack",
       "licenseURL": ""
     }
   ],
-  "Custom: https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md": [
+  "MIT*": [
     {
-      "name": "@dannadori/audio-recorder-js@0.0.1",
+      "name": "@dannadori/audio-recorder-js@0.0.2",
       "repository": "",
       "licenseURL": ""
     }
   ],
   "Apache-2.0": [
     {
-      "name": "@eslint/config-array@0.19.2",
+      "name": "@eslint/config-array@0.20.0",
       "repository": "https://github.com/eslint/rewrite",
       "licenseURL": ""
     },
     {
-      "name": "@eslint/config-helpers@0.1.0",
+      "name": "@eslint/config-helpers@0.2.1",
       "repository": "https://github.com/eslint/rewrite",
       "licenseURL": ""
     },
     {
-      "name": "@eslint/core@0.12.0",
+      "name": "@eslint/core@0.13.0",
       "repository": "https://github.com/eslint/rewrite",
       "licenseURL": ""
     },
@@ -310,7 +325,7 @@
       "licenseURL": ""
     },
     {
-      "name": "@eslint/plugin-kit@0.2.7",
+      "name": "@eslint/plugin-kit@0.2.8",
       "repository": "https://github.com/eslint/rewrite",
       "licenseURL": ""
     },
@@ -320,7 +335,7 @@
       "licenseURL": ""
     },
     {
-      "name": "typescript@5.8.2",
+      "name": "typescript@5.8.3",
       "repository": "https://github.com/microsoft/TypeScript",
       "licenseURL": ""
     }
@@ -344,7 +359,7 @@
       "licenseURL": ""
     },
     {
-      "name": "tts-client-typescript-client-lib@1.0.42",
+      "name": "tts-client-typescript-client-lib@1.0.43",
       "repository": "",
       "licenseURL": ""
     },
