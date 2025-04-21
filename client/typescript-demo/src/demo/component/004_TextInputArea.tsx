@@ -91,7 +91,7 @@ export const TextInputArea = () => {
             };
 
             console.log("gptSovitsModelVersion", gptSovitsModelVersion, useAdvanceInputMode);
-            if ((gptSovitsModelVersion == "v3" || gptSovitsModelVersion == "v2") && useAdvanceInputMode == true) {
+            if ((gptSovitsModelVersion == "v4" || gptSovitsModelVersion == "v3" || gptSovitsModelVersion == "v2") && useAdvanceInputMode == true) {
                 // v2 or v3 かつ advance input modeの場合は、phone_symbolsを設定する。
                 const phoneSymbols = (document.getElementById("text-input-area-phonearea") as HTMLTextAreaElement).value;
                 param.phone_symbols = JSON.parse(phoneSymbols);
@@ -125,7 +125,7 @@ export const TextInputArea = () => {
         let wordsList = <></>;
         let getPhoneButton = <></>;
         let phonesInputArea = <></>;
-        if (gptSovitsModelVersion == "v3" || gptSovitsModelVersion == "v2") {
+        if (gptSovitsModelVersion == "v4" || gptSovitsModelVersion == "v3" || gptSovitsModelVersion == "v2") {
             useAdvanceInputModeButton = (
                 <button
                     onClick={async () => {

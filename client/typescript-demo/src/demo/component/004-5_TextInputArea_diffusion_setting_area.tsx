@@ -22,7 +22,7 @@ export const TextInputAreaDiffusionSettingArea = () => {
             gptSovitsModelVersion = gptSovitsSlotInfo.model_version;
         }
         let sampleStepsInput = <></>;
-        if (gptSovitsModelVersion == "v3") {
+        if (gptSovitsModelVersion == "v4" ||gptSovitsModelVersion == "v3") {
             const sampleStepsOptions = Array(100)
                 .fill(0)
                 .map((x, i) => {

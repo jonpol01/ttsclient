@@ -65,7 +65,7 @@ export const AppStateProvider = ({ children }: Props) => {
     const [currentReferenceVoiceIndexes, setCurrentReferenceVoiceIndexes] = useState<{ [key: number]: number[] }>({});
     const [referenceVoiceMode, setReferenceVoiceMode] = useState<ReferenceVoiceMode>("view");
     const [inferenceLanguage, setInferenceLanguage] = useState<LanguageType>("all_ja");
-    const [cutMethod, setCutMethod] = useState<CutMethod>("Slice by every punct");
+    const [cutMethod, setCutMethod] = useState<CutMethod>("No slice");
     const [speed, setSpeed] = useState<number>(1.0);
     const [sampleSteps, setSampleSteps] = useState<number>(20);
 
