@@ -110,6 +110,15 @@ REGISTERD_MODULES: list[ModuleInfo] = [
         save_to=ModuleDir / Path("bigvgan_v2_24khz_100band_256x/config.json"),
         hash="d77e2c96583ca2296ac112a56ec7cc6bd5da4bf7681ceff18448bedc4fcf6512",
     ),
+    ModuleInfo(
+        id="v4_vocoder.pth",
+        display_name="v4_vocoder.pth",
+        url="https://huggingface.co/lj1995/GPT-SoVITS/resolve/main/gsv-v4-pretrained/vocoder.pth",
+        save_to=ModuleDir / Path("gsv-v4-pretrained/v4_vocoder.pth"),
+        hash="4d611913df7b12d49e8976c944558d2d096816365edfc6c35a9e85b67dd14ed9",
+    ),
+
+    
     # ---------------------- #
     # Intial Models
     # ---------------------- #
@@ -190,6 +199,7 @@ REQUIRED_MODULES = [
     "chinese-hubert-base_preprocessor_config",
     "bigvgan_v2_24khz_100band_256x_bigvgan_generator_pt",
     "bigvgan_v2_24khz_100band_256x_config.json",
+    "v4_vocoder.pth",
 ]
 INITIAL_MODELS = [
     # "GPT-SoVITS_icon",

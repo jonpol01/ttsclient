@@ -54,11 +54,12 @@ GPTSoVITSVersions: list[GPTSoVITSVersion] = [
     "v2",
 ]
 
-GPTSoVITSModelVersion: TypeAlias = Literal["v1", "v2", "v3"]
+GPTSoVITSModelVersion: TypeAlias = Literal["v1", "v2", "v3", "v4"]
 GPTSoVITSModelVersions: list[GPTSoVITSVersion] = [
     "v1",
     "v2",
     "v3",
+    "v4",
 ]
 
 SemanticPredictorType: TypeAlias = Literal["GPTSemanticPredictor",]

@@ -1,7 +1,7 @@
 from ttsclient.tts.tts_manager.pipeline.gpt_sovits_faster_pipeline import GPTSoVITSFasterPipeline
 from ttsclient.tts.tts_manager.pipeline.gpt_sovits_pipeline import GPTSoVITSPipeline
 from ttsclient.tts.tts_manager.pipeline.gpt_sovits_v3_pipeline import GPTSoVITSV3Pipeline
-from ttsclient.tts.tts_manager.pipeline.pipeline import Pipeline
+from ttsclient.tts.tts_manager.pipeline.gpt_sovits_v4_pipeline import GPTSoVITSV4Pipeline
 from ...data_types.slot_manager_data_types import GPTSoVITSSlotInfo, SlotInfo
 
 
@@ -18,6 +18,8 @@ class PipelineManager:
                     pipeline = GPTSoVITSPipeline(slot_info)
             if slot_info.model_version == "v3":
                 pipeline = GPTSoVITSV3Pipeline(slot_info)
+            if slot_info.model_version == "v4":
+                pipeline = GPTSoVITSV4Pipeline(slot_info)
             return pipeline
         else:
             raise RuntimeError(f"Unknown tts type:{slot_info.tts_type}")
