@@ -1,4 +1,5 @@
 from ttsclient.tts.tts_manager.pipeline.gpt_sovits_faster_pipeline import GPTSoVITSFasterPipeline
+from ttsclient.tts.tts_manager.pipeline.pipeline import Pipeline
 from ttsclient.tts.tts_manager.pipeline.gpt_sovits_pipeline import GPTSoVITSPipeline
 from ttsclient.tts.tts_manager.pipeline.gpt_sovits_v3_pipeline import GPTSoVITSV3Pipeline
 from ttsclient.tts.tts_manager.pipeline.gpt_sovits_v4_pipeline import GPTSoVITSV4Pipeline

@@ -8,6 +8,7 @@ import torch
 import torchaudio
 
 from module.mel_processing import mel_spectrogram_torch
+from module.models import Generator
 from ttsclient.gpt_sovits_utils import cut1, cut2, cut3, cut4, cut5, get_spepc, merge_short_text_in_array, process_text, splits
 from ttsclient.const import LOGGER_NAME, CutMethod, ModelDir
 from ttsclient.tts.configuration_manager.configuration_manager import ConfigurationManager
@@ -21,7 +22,6 @@ from ttsclient.tts.tts_manager.pipeline.pipeline import Pipeline
 from ttsclient.tts.tts_manager.semantic_predictor.semantic_predictor_manager import SemanticPredictorManager
 from ttsclient.tts.tts_manager.synthesizer.synthesizer_manager import SynthesizerManager
 from GPT_SoVITS.BigVGAN.bigvgan import BigVGAN
-
 
 class GPTSoVITSV4Pipeline(Pipeline):
     def __init__(self, slot_info: SlotInfoMember):
@@ -100,17 +100,61 @@ class GPTSoVITSV4Pipeline(Pipeline):
             "center": False,
         }
         self.mel_fn = lambda x: mel_spectrogram_torch(x, **mel_fn_args)
+
+        mel_fn_v4_args = {
+            "n_fft": 1280,
+            "win_size": 1280,
+            "hop_size": 320,
+            "num_mels": 100,
+            "sampling_rate": 32000,
+            "fmin": 0,
+            "fmax": None,
+            "center": False,
+        }
+        self.mel_fn_v4 = lambda x: mel_spectrogram_torch(x, **mel_fn_v4_args)
+
+
+
+
         self.resample_transform_dict = {}
 
-        bigvgan_dir = module_manager.get_module_filepath("bigvgan_v2_24khz_100band_256x_bigvgan_generator_pt").parent
-        self.bigvgan = BigVGAN.from_pretrained(bigvgan_dir, use_cuda_kernel=False)  # if True, RuntimeError: Ninja is required to load C++ extensions
+        self.vocoder_model = None
 
-        self.bigvgan.remove_weight_norm()
-        self.bigvgan = self.bigvgan.eval()
+
+        # bigvgan_dir = module_manager.get_module_filepath("bigvgan_v2_24khz_100band_256x_bigvgan_generator_pt").parent
+        # self.bigvgan = BigVGAN.from_pretrained(bigvgan_dir, use_cuda_kernel=False)  # if True, RuntimeError: Ninja is required to load C++ extensions
+
+        # self.bigvgan.remove_weight_norm()
+        # self.bigvgan = self.bigvgan.eval()
+        # if self.is_half == True:
+        #     self.bigvgan = self.bigvgan.half().to(self.device)
+        # else:
+        #     self.bigvgan = self.bigvgan.to(self.device)
+
+        # self.vocoder_model = self.bigvgan
+
+        hifigan_dir = module_manager.get_module_filepath("v4_vocoder.pth")
+        self.hifigan_model = Generator(
+            initial_channel=100,
+            resblock="1",
+            resblock_kernel_sizes=[3, 7, 11],
+            resblock_dilation_sizes=[[1, 3, 5], [1, 3, 5], [1, 3, 5]],
+            upsample_rates=[10, 6, 2, 2, 2],
+            upsample_initial_channel=512,
+            upsample_kernel_sizes=[20, 12, 4, 4, 4],
+            gin_channels=0, is_bias=True
+        )   
+        self.hifigan_model.eval()
+        self.hifigan_model.remove_weight_norm()
+        state_dict_g = torch.load(hifigan_dir, map_location=self.device)
+        self.hifigan_model.load_state_dict(state_dict_g)
         if self.is_half == True:
-            self.bigvgan = self.bigvgan.half().to(self.device)
+            self.hifigan_model = self.hifigan_model.half().to(self.device)
         else:
-            self.bigvgan = self.bigvgan.to(self.device)
+            self.hifigan_model = self.hifigan_model.to(self.device)
+
+        self.vocoder_model = self.hifigan_model
+        
 
     def get_phones(self, text: str, language: str):
         version = "v2"  # model_versionとversionの扱いが異なる。影響範囲を見極め切れていないのでとりあえずここはv2で固定。
@@ -219,10 +263,18 @@ class GPTSoVITSV4Pipeline(Pipeline):
     def force_stop(self):
         self.force_stop_flag = True
 
-    def _resample(self, audio_tensor, sr0):
-        if sr0 not in self.resample_transform_dict:
-            self.resample_transform_dict[sr0] = torchaudio.transforms.Resample(sr0, 24000).to(self.device)
-        return self.resample_transform_dict[sr0](audio_tensor)
+    # def _resample(self, audio_tensor, sr0):
+    #     if sr0 not in self.resample_transform_dict:
+    #         self.resample_transform_dict[sr0] = torchaudio.transforms.Resample(sr0, 24000).to(self.device)
+    #     return self.resample_transform_dict[sr0](audio_tensor)
+
+
+    def _resample(self, audio_tensor, sr0,sr1):
+        key="%s-%s"%(sr0,sr1)
+        if key not in self.resample_transform_dict:
+            self.resample_transform_dict[key] = torchaudio.transforms.Resample(sr0, sr1).to(self.device)
+        return self.resample_transform_dict[key](audio_tensor)
+
 
     def _norm_spec(self, x):
         spec_min = -12
@@ -355,18 +407,24 @@ class GPTSoVITSV4Pipeline(Pipeline):
                 if ref_audio.shape[0] == 2:
                     ref_audio = ref_audio.mean(0).unsqueeze(0)
                 if sr != 24000:
-                    ref_audio = self._resample(ref_audio, sr)
+                    # ref_audio = self._resample(ref_audio, sr, 24000)
+                    ref_audio = self._resample(ref_audio, sr, 32000)
 
-                mel2 = self.mel_fn(ref_audio)
+                # mel2 = self.mel_fn(ref_audio)
+                mel2 = self.mel_fn_v4(ref_audio)
                 mel2 = self._norm_spec(mel2)
                 T_min = min(mel2.shape[2], fea_ref.shape[2])
                 mel2 = mel2[:, :, :T_min]
                 fea_ref = fea_ref[:, :, :T_min]
-                if T_min > 468:
-                    mel2 = mel2[:, :, -468:]
-                    fea_ref = fea_ref[:, :, -468:]
-                    T_min = 468
-                chunk_len = 934 - T_min
+                # Tref=468
+                Tref=500
+                # Tchunk=934
+                Tchunk=1000
+                if T_min > Tref:
+                    mel2 = mel2[:, :, -Tref:]
+                    fea_ref = fea_ref[:, :, -Tref:]
+                    T_min = Tref
+                chunk_len = Tchunk - T_min
 
                 mel2 = mel2.to(self.torch_dtype)
                 fea_todo, ge = self.vq_model.decode_encp(pred_semantic, phoneme_ids1, refer, ge, speed)
@@ -388,10 +446,11 @@ class GPTSoVITSV4Pipeline(Pipeline):
                     # print("mel2in", mel2)
                     fea_ref = fea_todo_chunk[:, :, -T_min:]
                     cfm_resss.append(cfm_res)
-                cmf_res = torch.cat(cfm_resss, 2)
-                cmf_res = self._denorm_spec(cmf_res)
+                cfm_res = torch.cat(cfm_resss, 2)
+                cfm_res = self._denorm_spec(cfm_res)
                 with torch.inference_mode():
-                    wav_gen = self.bigvgan(cmf_res)
+                    # wav_gen = self.bigvgan(cmf_res)
+                    wav_gen = self.vocoder_model(cfm_res)
                     audio = wav_gen[0][0].cpu().detach().numpy()
 
                 max_audio = np.abs(audio).max()  # 简单防止16bit爆音
@@ -400,6 +459,7 @@ class GPTSoVITSV4Pipeline(Pipeline):
                 audio_opt.append(audio)
                 audio_opt.append(self.zero_wav)
 
-        sample_rate = 24000  # v3は固定
+        # sample_rate = 24000  # v3は固定
+        sample_rate = 48000  # v3は固定
 
         return sample_rate, (np.concatenate(audio_opt, 0) * 32768).astype(np.int16)
