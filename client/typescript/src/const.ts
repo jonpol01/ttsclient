@@ -113,7 +113,7 @@ export const TTSTypes = ["GPT-SoVITS", "RESERVED_FOR_SAMPLE", "BROKEN", "VoiceCh
 export type TTSType = (typeof TTSTypes)[number];
 export const GPTSoVITSVersions = ["v1", "v2"] as const;
 export type GPTSoVITSVersion = (typeof GPTSoVITSVersions)[number];
-export const GPTSoVITSModelVersions = ["v1", "v2", "v3"] as const;
+export const GPTSoVITSModelVersions = ["v1", "v2", "v3", "v4"] as const;
 export type GPTSoVITSModelVersion = (typeof GPTSoVITSModelVersions)[number];
 
 export type SlotInfoMember = SlotInfo | GPTSoVITSSlotInfo;
