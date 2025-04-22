@@ -72,11 +72,13 @@ PhoneExtractorTypes: list[PhoneExtractorType] = [
     "BertPhoneExtractor",
 ]
 
-SynthesizerType: TypeAlias = Literal["SovitsSynthesizer", "SovitsSynthesizerV3", "SovitsSynthesizerV3Lora"]
+SynthesizerType: TypeAlias = Literal["SovitsSynthesizer", "SovitsSynthesizerV3", "SovitsSynthesizerV3Lora", "SovitsSynthesizerV4", "SovitsSynthesizerV4Lora"]
 SynthesizerTypes: list[SynthesizerType] = [
     "SovitsSynthesizer",
     "SovitsSynthesizerV3",
     "SovitsSynthesizerV3Lora",
+    "SovitsSynthesizerV4",
+    "SovitsSynthesizerV4Lora",
 ]
 
 EmbedderType: TypeAlias = Literal["cnhubert",]

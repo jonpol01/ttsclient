@@ -56,14 +56,14 @@ class GPTSoVITSV4Pipeline(Pipeline):
 
         if slot_info.if_lora_v3:
             self.vq_model = SynthesizerManager.get_synthesizer(
-                "SovitsSynthesizerV3Lora",
+                "SovitsSynthesizerV4Lora",
                 sovit_model,
                 self.gpu_device_id,
                 self.slot_info.backend_mode == "all_onnx" or self.slot_info.backend_mode == "synthesizer_onnx",
             )
         else:
             self.vq_model = SynthesizerManager.get_synthesizer(
-                "SovitsSynthesizerV3",
+                "SovitsSynthesizerV4",
                 sovit_model,
                 self.gpu_device_id,
                 self.slot_info.backend_mode == "all_onnx" or self.slot_info.backend_mode == "synthesizer_onnx",

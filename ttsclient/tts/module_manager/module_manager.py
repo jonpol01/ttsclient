@@ -41,6 +41,21 @@ REGISTERD_MODULES: list[ModuleInfo] = [
         save_to=ModuleDir / Path("s2Gv3.pth"),
         hash="f33abb1920076d988e1711d5f41b5c9c6d7f92575b4acf0ad4fae6a4ebf0cf19",
     ),
+    # V4のGPTはV3と同じ。
+    # ModuleInfo(
+    #     id="gpt_model_v4",
+    #     display_name="gpt_model_v4",
+    #     url="https://huggingface.co/lj1995/GPT-SoVITS/resolve/main/s1v3.ckpt",
+    #     save_to=ModuleDir / Path("s1v3.ckpt"),
+    #     hash="aaaaaaaaaaaaaaaaaaaa",
+    # ),
+    ModuleInfo(
+        id="sovits_model_v4",
+        display_name="sovits_model_v4",
+        url="https://huggingface.co/lj1995/GPT-SoVITS/resolve/main/gsv-v4-pretrained/s2Gv4.pth",
+        save_to=ModuleDir / Path("s2Gv4.pth"),
+        hash="906fe22f48c3e037a389df291d4d32a9414e15dbb8f9628643e83aaced109ea4",
+    ),
     # // chinese-roberta-wwm-ext-large // #
     ModuleInfo(
         id="chinese-roberta-wwm-ext-large_bin",
@@ -134,7 +149,14 @@ REGISTERD_MODULES: list[ModuleInfo] = [
         display_name="GPT-SoVITS_icon_v3",
         url="https://huggingface.co/wok000/gpt-sovits-models/resolve/main/pretrained/gpt_sovits_pretrain_v3.png",
         save_to=UPLOAD_DIR / Path("gpt_sovits_pretrain_v3.png"),
-        hash="740a3754bd6cfe60a0bf032b9f6ea0cddc889299c78a7191ae8e27d7c88791c9",
+        hash="248fc10b8ffe495a6470007774d12677507c0486888d38193b01ad39cdda5c03",
+    ),
+    ModuleInfo(
+        id="GPT-SoVITS_icon_v4",
+        display_name="GPT-SoVITS_icon_v4",
+        url="https://huggingface.co/wok000/gpt-sovits-models/resolve/main/pretrained/gpt_sovits_pretrain_v4.png",
+        save_to=UPLOAD_DIR / Path("gpt_sovits_pretrain_v4.png"),
+        hash="25e2692036fc3c19567538ea333656b0d4915b5f1644336c619b514adb86f38e",
     ),
     ModuleInfo(
         id="GPT-SoVITS_FT_JVNV_semantice",
@@ -191,6 +213,7 @@ REQUIRED_MODULES = [
     # "sovits_model",
     "gpt_model_v3",
     "sovits_model_v3",
+    "sovits_model_v4",
     "chinese-roberta-wwm-ext-large_bin",
     "chinese-roberta-wwm-ext-large_config",
     "chinese-roberta-wwm-ext-large_tokenizer",
@@ -204,6 +227,7 @@ REQUIRED_MODULES = [
 INITIAL_MODELS = [
     # "GPT-SoVITS_icon",
     "GPT-SoVITS_icon_v3",
+    "GPT-SoVITS_icon_v4",
     "GPT-SoVITS_FT_JVNV_semantice",
     "GPT-SoVITS_FT_JVNV_synthesizer",
     "GPT-SoVITS_FT_JVNV_icon",

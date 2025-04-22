@@ -73,6 +73,18 @@ def download_initial_models() -> None:
     module_manager.download_initial_models(download_callback)
 
     # プレトレインの設定
+    gpt_sovits_icon_v4 = module_manager.get_module_filepath("GPT-SoVITS_icon_v4")
+    model_import_param = GPTSoVITSModelImportParam(
+        tts_type="GPT-SoVITS",
+        name="pretrained_v4",
+        terms_of_use_url="https://huggingface.co/wok000/gpt-sovits-models/raw/main/pretrained/term_of_use.txt",
+        icon_file=gpt_sovits_icon_v4,
+        semantic_predictor_model_path=module_manager.get_module_filepath("gpt_model_v3"),
+        synthesizer_model_path=module_manager.get_module_filepath("sovits_model_v4"),
+    )
+    slot_manager.set_new_slot(model_import_param, remove_src=False)
+
+
     gpt_sovits_icon_v3 = module_manager.get_module_filepath("GPT-SoVITS_icon_v3")
     model_import_param = GPTSoVITSModelImportParam(
         tts_type="GPT-SoVITS",
@@ -84,14 +96,6 @@ def download_initial_models() -> None:
     )
     slot_manager.set_new_slot(model_import_param, remove_src=False)
 
-    # gpt_sovits_icon = module_manager.get_module_filepath("GPT-SoVITS_icon")
-    # model_import_param = GPTSoVITSModelImportParam(
-    #     tts_type="GPT-SoVITS",
-    #     name="pretrained_v2(deprecated)",
-    #     terms_of_use_url="https://huggingface.co/wok000/gpt-sovits-models/raw/main/pretrained/term_of_use.txt",
-    #     icon_file=gpt_sovits_icon,
-    # )
-    # slot_manager.set_new_slot(model_import_param, remove_src=True)
 
     # finetuneの設定
     ft_semantic = module_manager.get_module_filepath("GPT-SoVITS_FT_JVNV_semantice")

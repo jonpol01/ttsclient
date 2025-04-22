@@ -24,8 +24,8 @@ from ttsclient.tts.tts_manager.synthesizer.synthesizer_info import SynthesizerIn
 
 
 class SovitsSynthesizerV3(Synthesizer):
-    def __init__(self, model_path: Path, lora_v3: bool, device_id: int, use_onnx: bool, del_enc: bool = True):
-        print("load new syntehtizer: SovitsSynthesizerV3")
+    def __init__(self, model_path: Path, lora_v3: bool, device_id: int, use_onnx: bool, del_enc: bool = True, version: str = "v3"):
+        print(f"load new syntehtizer: SovitsSynthesizerV3 model_version: {version}")
         self.device = DeviceManager.get_instance().get_pytorch_device(device_id)
         self.is_half = DeviceManager.get_instance().half_precision_available(device_id)
         self.model_path = model_path
@@ -42,18 +42,19 @@ class SovitsSynthesizerV3(Synthesizer):
         self.hps = DictToAttrRecursive(dict_s2["config"])
         if self.use_onnx is False:
             self.hps.model.semantic_frame_rate = "25hz"
-            if "enc_p.text_embedding.weight" not in dict_s2["weight"]:
-                self.hps.model.version = "v2"  # v3model,v2sybomls
-            elif dict_s2["weight"]["enc_p.text_embedding.weight"].shape[0] == 322:
-                self.hps.model.version = "v1"
-            else:
-                self.hps.model.version = "v2"
-            # print("sovits version:", hps.model.version)
-
+            # if "enc_p.text_embedding.weight" not in dict_s2["weight"]:
+            #     self.hps.model.version = "v2"  # v3model,v2sybomls
+            # elif dict_s2["weight"]["enc_p.text_embedding.weight"].shape[0] == 322:
+            #     self.hps.model.version = "v1"
+            # else:
+            #     self.hps.model.version = "v2"
+            # # print("sovits version:", hps.model.version)
+            self.hps.model.version = version
             self.vq_model = SynthesizerTrnV3(
                 self.hps.data.filter_length // 2 + 1,
                 self.hps.train.segment_size // self.hps.data.hop_length,
                 n_speakers=self.hps.data.n_speakers,
+                # version=version,
                 **self.hps.model,
             )
 
