@@ -46,7 +46,7 @@
       "licenseURL": ""
     },
     {
-      "name": "@eslint/js@9.25.0",
+      "name": "@eslint/js@9.25.1",
       "repository": "https://github.com/eslint/eslint",
       "licenseURL": ""
     },
@@ -76,42 +76,42 @@
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/eslint-plugin@8.30.1",
+      "name": "@typescript-eslint/eslint-plugin@8.31.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/parser@8.30.1",
+      "name": "@typescript-eslint/parser@8.31.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/scope-manager@8.30.1",
+      "name": "@typescript-eslint/scope-manager@8.31.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/type-utils@8.30.1",
+      "name": "@typescript-eslint/type-utils@8.31.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/types@8.30.1",
+      "name": "@typescript-eslint/types@8.31.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/typescript-estree@8.30.1",
+      "name": "@typescript-eslint/typescript-estree@8.31.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/utils@8.30.1",
+      "name": "@typescript-eslint/utils@8.31.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
     {
-      "name": "@typescript-eslint/visitor-keys@8.30.1",
+      "name": "@typescript-eslint/visitor-keys@8.31.0",
       "repository": "https://github.com/typescript-eslint/typescript-eslint",
       "licenseURL": ""
     },
@@ -171,7 +171,7 @@
       "licenseURL": ""
     },
     {
-      "name": "eslint-plugin-react-refresh@0.4.19",
+      "name": "eslint-plugin-react-refresh@0.4.20",
       "repository": "https://github.com/ArnaudBarre/eslint-plugin-react-refresh",
       "licenseURL": ""
     },
@@ -186,7 +186,7 @@
       "licenseURL": ""
     },
     {
-      "name": "eslint@9.25.0",
+      "name": "eslint@9.25.1",
       "repository": "https://github.com/eslint/eslint",
       "licenseURL": ""
     },
@@ -359,7 +359,7 @@
       "licenseURL": ""
     },
     {
-      "name": "tts-client-typescript-client-lib@1.0.43",
+      "name": "tts-client-typescript-client-lib@1.0.44",
       "repository": "",
       "licenseURL": ""
     },
