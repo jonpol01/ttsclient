@@ -1,0 +1,24 @@
+services:
+  ttsclient:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: jp-ttsclient:local
+    container_name: jp-ttsclient
+    platform: linux/arm64
+    ports:
+      - "19000:19000"
+    environment:
+      - HTTPS=true
+      - LAUNCH_CLIENT=false
+      - HOST=0.0.0.0
+      - PORT=19000
+    volumes:
+      - ./models:/app/models
+      - ./voice_characters:/app/voice_characters
+      - ./modules:/app/modules
+      - ./upload_dir:/app/upload_dir
+      - ./ssl_key:/app/ssl_key
+      - ./settings:/app/settings
+    restart: unless-stopped
+
